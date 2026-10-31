@@ -27,7 +27,7 @@ export function FoodSafetyPage() {
       description="Temperature records, cleaning and inspections, kept for the authority's self-inspection."
       loading={!ctx || equipment.isPending}
       top={
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 [&>*:last-child:nth-child(odd)]:col-span-2 sm:[&>*:last-child:nth-child(odd)]:col-span-1">
           <StatCard
             label="Cold units"
             icon={ThermometerSnowflake}

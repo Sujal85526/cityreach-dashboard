@@ -104,13 +104,13 @@ export function AttendancePage() {
     {
       key: 'hours',
       header: 'Hours',
-      className: 'hidden md:table-cell',
+      className: 'hidden lg:table-cell',
       cell: (r) => formatMinutes(r.workedMinutes),
     },
     {
       key: 'late',
       header: 'Late (min)',
-      className: 'hidden md:table-cell',
+      className: 'hidden lg:table-cell',
       cell: (r) => (r.lateMinutes > 0 ? r.lateMinutes : '—'),
     },
     {
@@ -150,7 +150,7 @@ export function AttendancePage() {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <StatCard
           label="Present"
           icon={UserCheck}
