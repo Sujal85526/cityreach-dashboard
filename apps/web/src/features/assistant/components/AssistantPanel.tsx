@@ -61,6 +61,13 @@ export function AssistantPanel({ isOpen, onClose }: { isOpen: boolean; onClose: 
   useEffect(() => {
     if (isOpen) input.current?.focus()
   }, [isOpen])
+  // Escape closes the chat wherever the focus is, not only inside it.
+  useEffect(() => {
+    if (!isOpen) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [isOpen, onClose])
 
   const send = async (text: string) => {
     const question = text.trim()
@@ -112,7 +119,6 @@ export function AssistantPanel({ isOpen, onClose }: { isOpen: boolean; onClose: 
       role="dialog"
       aria-label="Assistant"
       hidden={!isOpen}
-      onKeyDown={(e) => e.key === 'Escape' && onClose()}
       className={cn(
         'fixed inset-0 z-40 flex-col bg-card sm:inset-auto sm:right-4 sm:bottom-4 sm:h-[32rem] sm:max-h-[calc(100svh-2rem)] sm:w-96 sm:rounded-xl sm:border sm:shadow-xl',
         isOpen ? 'flex' : 'hidden',

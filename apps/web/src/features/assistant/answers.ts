@@ -105,16 +105,24 @@ const dayPlan = (d: PlannedDay) =>
   d.onLeave ? 'On leave' : d.shift ? shiftLabel(d.shift) : 'Day off'
 
 export function myShiftAnswer(
-  days: PlannedDay[],
+  allDays: PlannedDay[],
   when: When | null,
   today: string,
   to: string,
+  flexible = false,
 ): Answer {
   const link = { to, label: 'Open rota' }
+  const days = allDays.filter((d) => d.date >= today || when === 'yesterday')
+  const nothingPlanned = days.every((d) => !d.shift && !d.onLeave)
+  if (flexible && nothingPlanned)
+    return {
+      text: "You don't have a fixed shift. Your hours are flexible: clock in whenever you start work.",
+      link,
+    }
   if (when === 'week' || when === 'month' || !when) {
     return {
       text: 'Your next 7 days:',
-      lines: days.map((d) => ({
+      lines: days.slice(0, 7).map((d) => ({
         text: d.date === today ? `${formatDay(d.date)} (today)` : formatDay(d.date),
         note: dayPlan(d),
       })),

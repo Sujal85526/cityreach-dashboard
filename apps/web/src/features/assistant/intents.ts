@@ -139,7 +139,10 @@ const RULES: Rule[] = [
       [/\b(requests?|approve|approval|review|pending|waiting)\b/, 3],
     ],
   },
-  { intent: 'sales', words: [[/\b(sales|sale|takings|revenue|sold|earn|earned|income)\b/, 4]] },
+  {
+    intent: 'sales',
+    words: [[/\b(sales|sale|sell|selling|takings|revenue|turnover|sold|earn|earned|income)\b/, 4]],
+  },
   { intent: 'profit', words: [[/\b(profit|margin|loss|money|making)\b/, 4]] },
   {
     intent: 'labour',

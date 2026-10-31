@@ -33,6 +33,13 @@ describe('employee questions', () => {
     expect(understand('what should we reorder', false)).toMatchObject({ refused: true })
   })
 
+  it('refuses staff asking how much the shop sold', () => {
+    expect(understand('how much did we sell this week', false)).toMatchObject({
+      intent: null,
+      refused: true,
+    })
+  })
+
   it('admits it does not know', () => {
     expect(understand('tell me a joke about penguins', false)).toMatchObject({
       intent: null,
@@ -56,6 +63,7 @@ describe('manager questions', () => {
     ['how much waste this month', 'waste'],
     ['what is our best day', 'bestDay'],
     ['how are all my branches', 'branches'],
+    ['how much did we sell this week', 'sales'],
   ])('%s → %s', (text, intent) => {
     expect(asManager(text)).toBe(intent)
   })

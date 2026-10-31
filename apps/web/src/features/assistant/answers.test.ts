@@ -60,12 +60,26 @@ describe('my shift', () => {
   it('answers for a single day, a day off and leave', () => {
     expect(myShiftAnswer(days, 'today', TODAY, '/me/rota').text).toContain('Today you work Morning')
     expect(myShiftAnswer(days, 'tomorrow', TODAY, '/me/rota').text).toBe("You're off tomorrow.")
+    expect(myShiftAnswer(days, null, TODAY, '/me/rota').lines?.[0]?.text).toContain('(today)')
   })
 
   it('lists the week when no day is asked, showing leave', () => {
     const lines = myShiftAnswer(days, null, TODAY, '/me/rota').lines
     expect(lines?.[1]?.note).toBe('Day off')
     expect(lines?.[2]?.note).toBe('On leave')
+  })
+
+  it('does not list yesterday in the next 7 days', () => {
+    const withYesterday = [{ date: '2026-10-30', shift: morning, onLeave: false }, ...days]
+    const lines = myShiftAnswer(withYesterday, null, TODAY, '/me/rota').lines
+    expect(lines).toHaveLength(3)
+  })
+
+  it('says so for someone on flexible hours with nothing planned', () => {
+    const empty = days.map((d) => ({ ...d, shift: null, onLeave: false }))
+    const answer = myShiftAnswer(empty, null, TODAY, '/me/rota', true)
+    expect(answer.text).toContain('flexible')
+    expect(answer.lines).toBeUndefined()
   })
 })
 

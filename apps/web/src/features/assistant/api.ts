@@ -120,13 +120,14 @@ const myPlan = async (c: AskContext) => {
   const usual = profile?.shiftId ?? null
   const onLeave = new Set(leave.filter((l) => l.status === 'approved').flatMap((l) => l.dates))
   const dates = [-1, 0, 1, 2, 3, 4, 5, 6].map((n) => addDays(c.today, n))
-  return dates.map((date) => {
+  const days = dates.map((date) => {
     const id = rotaShiftId(
       usual,
       rota.find((r) => r.date === date),
     )
     return { date, shift: shifts.find((s) => s.id === id) ?? null, onLeave: onLeave.has(date) }
   })
+  return { days, flexible: usual === null }
 }
 
 const staticAnswer = (intent: Intent, c: AskContext): Answer | null => {
@@ -201,8 +202,10 @@ export async function ask(intent: Intent, when: When | null, c: AskContext): Pro
       })
       return myTasksAnswer(tasks, when, today, tz, isManager ? '/tasks' : '/me/tasks')
     }
-    case 'myShift':
-      return myShiftAnswer(await myPlan(c), when, today, isManager ? '/rota' : '/me/rota')
+    case 'myShift': {
+      const { days, flexible } = await myPlan(c)
+      return myShiftAnswer(days, when, today, isManager ? '/rota' : '/me/rota', flexible)
+    }
     case 'myAttendance': {
       const [record, records] = await Promise.all([
         getRecord(user.uid, today),
