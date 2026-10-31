@@ -43,10 +43,7 @@ export function DataTable<T>({
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             {columns.map((c) => (
-              <TableHead
-                key={c.key}
-                className={c.className}
-              >
+              <TableHead key={c.key} className={c.className}>
                 {c.header}
               </TableHead>
             ))}

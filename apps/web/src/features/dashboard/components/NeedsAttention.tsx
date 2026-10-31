@@ -1,4 +1,10 @@
-import type { Candidate, Equipment, Incident, PurchaseOrder, TemperatureLog } from '@cityreach/shared'
+import type {
+  Candidate,
+  Equipment,
+  Incident,
+  PurchaseOrder,
+  TemperatureLog,
+} from '@cityreach/shared'
 import {
   AlertTriangle,
   CalendarDays,
@@ -151,7 +157,10 @@ export function NeedsAttention({
                       <Icon className="size-4" aria-hidden />
                     </span>
                     <span className="flex-1">{item.text}</span>
-                    <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" aria-hidden />
+                    <ChevronRight
+                      className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5"
+                      aria-hidden
+                    />
                   </Link>
                 </li>
               )

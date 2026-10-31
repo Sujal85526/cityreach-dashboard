@@ -1,5 +1,12 @@
 import type { Role } from '@cityreach/shared'
-import { ArrowRight, Building2, Loader2, UserRound, UsersRound, type LucideIcon } from 'lucide-react'
+import {
+  ArrowRight,
+  Building2,
+  Loader2,
+  UserRound,
+  UsersRound,
+  type LucideIcon,
+} from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Navigate } from 'react-router'
 import { preloadHomePages } from '@/app/preload'
@@ -62,7 +69,8 @@ export function LandingPage() {
   )
   const owner = people.data?.find((p) => p.role === 'owner')
   const manager = people.data?.find((p) => p.role === 'manager')
-  const chosenEmployee = employeeId ?? (employees.find((p) => p.uid === 'maya') ?? employees[0])?.uid
+  const chosenEmployee =
+    employeeId ?? (employees.find((p) => p.uid === 'maya') ?? employees[0])?.uid
 
   if (session.status === 'signed_in')
     return <Navigate to={homePathFor(session.user.access.role)} replace />
@@ -141,7 +149,9 @@ export function LandingPage() {
                       </ul>
                       {role === 'employee' && employees.length > 0 && (
                         <label className="flex items-center gap-2 text-sm">
-                          <span className="whitespace-nowrap text-muted-foreground">Sign in as</span>
+                          <span className="whitespace-nowrap text-muted-foreground">
+                            Sign in as
+                          </span>
                           <select
                             value={chosenEmployee}
                             onChange={(e) => setEmployeeId(e.target.value)}

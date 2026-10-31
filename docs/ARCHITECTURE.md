@@ -39,14 +39,14 @@ implemented over plain objects:
 
 ## Demo mocks for server-side things
 
-| Real-world need  | Demo behaviour                                                         |
-| ---------------- | ---------------------------------------------------------------------- |
-| Login            | Role switcher on the landing screen (Owner / Manager / Employee)       |
-| Camera selfie    | Simulated viewfinder; "Take photo" generates a portrait placeholder    |
-| GPS location     | A reading a few metres from the demo branch after a short delay        |
-| File storage     | Compressed in the browser and stored in the local store (up to 1 MB)   |
-| Password emails  | A toast; nothing is sent                                               |
-| Scheduled jobs   | `features/automation` runs when a manager opens the app (idempotent)   |
+| Real-world need | Demo behaviour                                                       |
+| --------------- | -------------------------------------------------------------------- |
+| Login           | Role switcher on the landing screen (Owner / Manager / Employee)     |
+| Camera selfie   | Simulated viewfinder; "Take photo" generates a portrait placeholder  |
+| GPS location    | A reading a few metres from the demo branch after a short delay      |
+| File storage    | Compressed in the browser and stored in the local store (up to 1 MB) |
+| Password emails | A toast; nothing is sent                                             |
+| Scheduled jobs  | `features/automation` runs when a manager opens the app (idempotent) |
 
 ## Frontend
 

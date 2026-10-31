@@ -25,10 +25,7 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
   return (
     <div className="flex h-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div
-        className={cn(
-          'flex items-center gap-3 pt-5 pb-5',
-          collapsed ? 'flex-col px-2' : 'px-4',
-        )}
+        className={cn('flex items-center gap-3 pt-5 pb-5', collapsed ? 'flex-col px-2' : 'px-4')}
       >
         {/* The logo lockup as supplied: cream wordmark on a brand-green plate. */}
         {collapsed ? (
@@ -121,9 +118,7 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
           <EmployeeAvatar name={user.name} id={user.uid} size="sm" />
           {!collapsed && (
             <div className="min-w-0 flex-1 leading-tight">
-              <div className="truncate text-sm font-medium text-foreground">
-                {user.name}
-              </div>
+              <div className="truncate text-sm font-medium text-foreground">{user.name}</div>
               <div className="truncate text-xs text-sidebar-muted capitalize">
                 {user.access.role}
               </div>

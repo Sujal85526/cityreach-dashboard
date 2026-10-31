@@ -1,4 +1,10 @@
-import { COLLECTIONS, userAccessSchema, type Role, type User, type UserAccess } from '@cityreach/shared'
+import {
+  COLLECTIONS,
+  userAccessSchema,
+  type Role,
+  type User,
+  type UserAccess,
+} from '@cityreach/shared'
 import { collection, doc, getDoc, getDocs, query, where } from '@/lib/store'
 import { db } from '@/lib/store'
 import { fromDoc } from '@/lib/firestore'
@@ -62,7 +68,9 @@ export interface DemoPerson {
 
 /** Everyone who can be picked on the landing screen. */
 export async function listDemoPeople(): Promise<DemoPerson[]> {
-  const snap = await getDocs(query(collection(db, COLLECTIONS.users), where('status', '==', 'active')))
+  const snap = await getDocs(
+    query(collection(db, COLLECTIONS.users), where('status', '==', 'active')),
+  )
   return snap.docs
     .map((d) => fromDoc<User>(d))
     .map((u) => ({ uid: u.id, name: u.name, role: u.role, position: u.position }))

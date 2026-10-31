@@ -59,11 +59,7 @@ export function ChartTooltip({
       <ul className="space-y-1">
         {payload.map((p) => (
           <li key={String(p.dataKey)} className="flex items-center gap-2 text-muted-foreground">
-            <span
-              className="size-2 rounded-full"
-              style={{ background: p.color }}
-              aria-hidden
-            />
+            <span className="size-2 rounded-full" style={{ background: p.color }} aria-hidden />
             <span className="flex-1">{p.name}</span>
             <span className="font-medium text-foreground tabular-nums">
               {typeof p.value === 'number' && valueFormat ? valueFormat(p.value) : p.value}
