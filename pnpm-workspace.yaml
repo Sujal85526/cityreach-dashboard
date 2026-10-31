@@ -1,12 +1,8 @@
 packages:
   - apps/*
   - packages/*
-  - tools
 
 # Packages allowed to run install scripts (pnpm blocks all others by default).
 allowBuilds:
+  core-js: set this to true or false
   esbuild: true
-  protobufjs: true
-  '@firebase/util': true
-  core-js: false
-  re2: false

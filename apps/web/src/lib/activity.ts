@@ -1,7 +1,7 @@
 import { COLLECTIONS, type EntityRef } from '@cityreach/shared'
-import { collection, doc, serverTimestamp, type Transaction, type WriteBatch } from 'firebase/firestore'
+import { collection, doc, serverTimestamp, type Transaction, type WriteBatch } from '@/lib/store'
 import type { SessionUser } from '@/features/auth/api'
-import { db } from './firebase'
+import { db } from '@/lib/store'
 
 interface ActivityInput {
   action: string

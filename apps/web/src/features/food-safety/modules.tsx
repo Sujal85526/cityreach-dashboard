@@ -129,7 +129,7 @@ export const inspectionsModule = ({ today }: ModuleContext): RecordModule<Inspec
   fields: [
     { key: 'date', label: 'Date', type: 'date' },
     { key: 'kind', label: 'Kind', type: 'select', options: ['Authority', 'Internal'] },
-    { key: 'inspector', label: 'Inspector', type: 'text', placeholder: 'e.g. ADAFSA / Hana' },
+    { key: 'inspector', label: 'Inspector', type: 'text', placeholder: 'e.g. Environmental Health / Amara' },
     { key: 'result', label: 'Result', type: 'select', options: INSPECTION_RESULTS },
     { key: 'score', label: 'Score (0–100)', type: 'number', min: 0, max: 100, optional: true },
     { key: 'findings', label: 'Findings', type: 'textarea', optional: true },

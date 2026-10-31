@@ -94,7 +94,7 @@ export const branchSchema = z
   .extend(timestampsSchema.shape)
 export type Branch = z.infer<typeof branchSchema>
 
-/** Shop information form (Settings → Coffee shop information). */
+/** Shop information form (Settings → Business information). */
 export const branchInfoSchema = branchSchema
   .pick({ name: true, address: true, phone: true })
   .extend({

@@ -7,12 +7,12 @@ import {
   type Shift,
   type User,
 } from '@cityreach/shared'
-import { doc, serverTimestamp, Timestamp, writeBatch } from 'firebase/firestore'
+import { doc, serverTimestamp, Timestamp, writeBatch } from '@/lib/store'
 import { listAttendanceRange, recordId } from '@/features/attendance/api'
 import type { SessionUser } from '@/features/auth/api'
 import { listRota } from '@/features/rota/api'
 import { addActivity } from '@/lib/activity'
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/store'
 import { addNotification } from '@/lib/notify'
 
 const DAY_MS = 86_400_000

@@ -2,7 +2,7 @@
   "name": "cityreach-dashboard",
   "private": true,
   "version": "0.1.0",
-  "description": "Digital Manager: staff, attendance, tasks and inventory management for small coffee shops",
+  "description": "City Reach: staff, attendance, tasks and inventory dashboard. A local demo, no backend.",
   "type": "module",
   "packageManager": "pnpm@12.3.4",
   "engines": {
@@ -16,15 +16,9 @@
     "test": "pnpm -r test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "emulators": "firebase emulators:start --import=./.emulator-data --export-on-exit",
-    "seed": "pnpm --filter @cityreach/tools seed",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
-    "test:rules": "pnpm --filter @cityreach/tools test:rules",
-    "test:flows": "pnpm --filter @cityreach/web test:flows",
-    "indexes:wait": "pnpm --filter @cityreach/tools indexes:wait"
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test"
   },
   "devDependencies": {
-    "firebase-tools": "^15.31.0",
     "oxlint": "^1.85.0",
     "prettier": "^3.9.9",
     "typescript": "~6.0.3"

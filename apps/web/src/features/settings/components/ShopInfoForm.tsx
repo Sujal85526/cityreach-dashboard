@@ -104,7 +104,7 @@ export function ShopInfoForm({ branch }: { branch: Branch }) {
   return (
     <Form {...form}>
       <SettingsCard
-        title="Coffee shop information"
+        title="Business information"
         description="Shown across the app and on reports."
         onSubmit={onSubmit}
         saving={update.isPending}

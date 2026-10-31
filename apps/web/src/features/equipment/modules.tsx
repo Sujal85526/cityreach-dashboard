@@ -10,12 +10,12 @@ import {
   type Equipment,
   type Maintenance,
 } from '@cityreach/shared'
-import { doc } from 'firebase/firestore'
+import { doc } from '@/lib/store'
 import { Hammer, Wrench } from 'lucide-react'
 import { TonePill } from '@/components/common/StatusPill'
 import type { ModuleContext } from '@/features/operations/modules'
 import type { RecordModule } from '@/features/records/components/RecordList'
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/store'
 import { formatDay, formatMoney } from '@/lib/format'
 
 const STATUS_LABEL = {

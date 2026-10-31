@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
-import { SampleDataCard } from '../components/SampleDataCard'
+import { ResetDemoCard } from '../components/ResetDemoCard'
 import { SETTINGS_SECTIONS } from '../sections'
 
 export function SettingsPage() {
@@ -66,7 +66,7 @@ export function SettingsPage() {
           />
         </CardContent>
       </Card>
-      <SampleDataCard />
+      <ResetDemoCard />
     </div>
   )
 }

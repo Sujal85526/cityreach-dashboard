@@ -5,12 +5,12 @@
  * Runs after the main seed; emulator only.
  */
 import { addDays, COLLECTIONS, orderTotal, temperatureOk } from '@cityreach/shared'
-import type { Firestore } from 'firebase-admin/firestore'
+import type { SeedDb } from './adapter'
 
-const MANAGER = { uid: 'hana', name: 'Hana Malek' }
+const MANAGER = { uid: 'amara', name: 'Amara Okafor' }
 
-export async function seedBusiness(
-  db: Firestore,
+export function seedBusiness(
+  db: SeedDb,
   branchId: string,
   today: string,
   names: Record<string, string>,
@@ -25,16 +25,16 @@ export async function seedBusiness(
     updatedAt: now,
   })
   const put = (coll: string, id: string, data: Record<string, unknown>) =>
-    void writer.set(db.collection(coll).doc(id), data)
+    writer.set(db.collection(coll).doc(id), data)
   const day = (offset: number) => addDays(today, offset)
 
   // Owner of the branch (can open more branches); quarterly VAT; probation ending soon.
-  void writer.update(db.collection(COLLECTIONS.branches).doc(branchId), {
+  writer.update(db.collection(COLLECTIONS.branches).doc(branchId), {
     ownerId: MANAGER.uid,
     vat: { periodEnd: '2026-09-30', months: 3 },
   })
-  void writer.update(db.collection(COLLECTIONS.users).doc(MANAGER.uid), { role: 'owner' })
-  void writer.update(db.collection(COLLECTIONS.users).doc('youssef'), {
+  writer.update(db.collection(COLLECTIONS.users).doc(MANAGER.uid), { role: 'owner' })
+  writer.update(db.collection(COLLECTIONS.users).doc('tomas'), {
     probationEndsOn: day(10),
   })
 
@@ -91,9 +91,9 @@ export async function seedBusiness(
       note: '',
     })
   }
-  reading('seed-temp-1', 'fridge-1', day(-1), 3.5, 'sara')
-  reading('seed-temp-2', 'freezer-1', day(-1), -18, 'sara')
-  reading('seed-temp-3', 'fridge-1', today, 7.2, 'ahmed')
+  reading('seed-temp-1', 'fridge-1', day(-1), 3.5, 'liam')
+  reading('seed-temp-2', 'freezer-1', day(-1), -18, 'liam')
+  reading('seed-temp-3', 'fridge-1', today, 7.2, 'maya')
   put(COLLECTIONS.inspections, 'seed-insp-1', {
     ...base(),
     date: day(-40),
@@ -133,20 +133,20 @@ export async function seedBusiness(
   for (const [id, name, kind, items] of checklists)
     put(COLLECTIONS.checklistTemplates, id, { ...base(), name, kind, items: [...items] })
   put(COLLECTIONS.checklistRuns, `opening_${today}`, {
-    ...base('sara'),
+    ...base('liam'),
     templateId: 'opening',
     templateName: 'Opening',
     date: today,
     items: checklists[0][3].map((text, i) => ({
       text,
       done: i < 2,
-      by: i < 2 ? names.sara : null,
+      by: i < 2 ? names.liam : null,
       at: i < 2 ? now : null,
     })),
     completedAt: null,
   })
   put(COLLECTIONS.incidents, 'seed-incident-1', {
-    ...base('omar'),
+    ...base('noah'),
     date: day(-1),
     type: 'Equipment',
     severity: 'medium',
@@ -155,7 +155,7 @@ export async function seedBusiness(
     status: 'open',
   })
   put(COLLECTIONS.incidents, 'seed-incident-2', {
-    ...base('sara'),
+    ...base('liam'),
     date: day(-6),
     type: 'Customer complaint',
     severity: 'low',
@@ -164,7 +164,7 @@ export async function seedBusiness(
     status: 'closed',
   })
   put(COLLECTIONS.handovers, 'seed-handover-1', {
-    ...base('sara'),
+    ...base('liam'),
     date: day(-1),
     shiftName: 'Morning',
     notes: 'Low on oat milk; delivery expected tomorrow. Dishwasher leaking.',
@@ -262,7 +262,7 @@ export async function seedBusiness(
   for (let d = `${month}-01`; d < today; d = addDays(d, 1)) {
     const n = Number(d.slice(8))
     put(COLLECTIONS.salesDays, `${branchId}_${d}`, {
-      ...base('sara'),
+      ...base('liam'),
       date: d,
       cash: 900 + ((n * 37) % 300),
       card: 1800 + ((n * 53) % 600),
@@ -305,13 +305,13 @@ export async function seedBusiness(
       cvDocumentId: null,
     })
   candidate('seed-cand-1', 'Rania Saeed', 'interview', today)
-  candidate('seed-cand-2', 'Bilal Ahmed', 'applied', null)
+  candidate('seed-cand-2', 'Bilal Maya', 'applied', null)
   candidate('seed-cand-3', 'Lina Haddad', 'offer', day(-5))
 
   put(COLLECTIONS.training, 'seed-training-1', {
     ...base(),
-    employeeId: 'ahmed',
-    employeeName: names.ahmed,
+    employeeId: 'maya',
+    employeeName: names.maya,
     title: 'Food safety level 2',
     provider: 'Dubai Municipality',
     date: '2025-11-10',
@@ -321,8 +321,8 @@ export async function seedBusiness(
   })
   put(COLLECTIONS.goals, 'seed-goal-1', {
     ...base(),
-    employeeId: 'ahmed',
-    employeeName: names.ahmed,
+    employeeId: 'maya',
+    employeeName: names.maya,
     title: 'Learn latte art (rosetta)',
     dueOn: day(30),
     status: 'in_progress',
@@ -334,7 +334,7 @@ export async function seedBusiness(
       'In store',
       5,
       'Service',
-      'Sara was lovely, great flat white!',
+      'Liam was lovely, great flat white!',
       'resolved',
       'Thanked the customer',
     ],
@@ -354,7 +354,7 @@ export async function seedBusiness(
     }),
   )
 
-  // ---- Rota: Omar off tomorrow, Ahmed on evening; a swap waiting for approval ----
+  // ---- Rota: Noah off tomorrow, Maya on evening; a swap waiting for approval ----
   const rota = (uid: string, date: string, shiftId: string | null) =>
     put(COLLECTIONS.rota, `${uid}_${date}`, {
       branchId,
@@ -364,19 +364,19 @@ export async function seedBusiness(
       shiftId,
       updatedAt: now,
     })
-  rota('omar', day(1), null)
-  rota('ahmed', day(1), 'evening')
+  rota('noah', day(1), null)
+  rota('maya', day(1), 'evening')
   put(COLLECTIONS.swapRequests, 'seed-swap-1', {
-    ...base('mariam'),
+    ...base('ella'),
     date: day(2),
-    fromId: 'mariam',
-    fromName: names.mariam,
-    toId: 'nour',
-    toName: names.nour,
+    fromId: 'ella',
+    fromName: names.ella,
+    toId: 'priya',
+    toName: names.priya,
     reason: 'Dentist appointment',
     status: 'pending',
     decidedBy: null,
   })
 
-  await writer.close()
+  writer.close()
 }

@@ -10,9 +10,9 @@ import {
   where,
   writeBatch,
   type Query,
-} from 'firebase/firestore'
+} from '@/lib/store'
 import type { SessionUser } from '@/features/auth/api'
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/store'
 import { fromDoc } from '@/lib/firestore'
 
 const notifications = collection(db, COLLECTIONS.notifications)

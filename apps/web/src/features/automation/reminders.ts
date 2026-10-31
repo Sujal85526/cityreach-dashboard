@@ -8,10 +8,10 @@ import {
   type Training,
   type User,
 } from '@cityreach/shared'
-import { doc, where, writeBatch } from 'firebase/firestore'
+import { doc, where, writeBatch } from '@/lib/store'
 import type { SessionUser } from '@/features/auth/api'
 import { listRecords } from '@/features/records/api'
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/store'
 import { formatDay } from '@/lib/format'
 import { addNotification } from '@/lib/notify'
 

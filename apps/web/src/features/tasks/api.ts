@@ -20,10 +20,10 @@ import {
   where,
   writeBatch,
   type Query,
-} from 'firebase/firestore'
+} from '@/lib/store'
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/store'
 import { fromDoc } from '@/lib/firestore'
 import { addNotification } from '@/lib/notify'
 

@@ -24,11 +24,10 @@ import {
   Timestamp,
   where,
   writeBatch,
-} from 'firebase/firestore'
-import { sendPasswordResetEmail } from 'firebase/auth'
+  db,
+} from '@/lib/store'
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
-import { auth, createAuthAccount, db } from '@/lib/firebase'
 import { fromDoc } from '@/lib/firestore'
 
 const users = collection(db, COLLECTIONS.users)
@@ -76,10 +75,10 @@ export async function listEmployeeTasks(branchId: string, uid: string): Promise<
     .sort((a, b) => b.deadline.getTime() - a.deadline.getTime())
 }
 
-/** Creates the login first, then the profile and its activity entry in one batch. */
+/** Creates the profile and its activity entry in one batch (the demo has no passwords). */
 export async function createEmployee(input: NewEmployee, actor: SessionUser): Promise<string> {
-  const { email, password, ...form } = newEmployeeSchema.parse(input)
-  const uid = await createAuthAccount(email, password)
+  const { email, ...form } = newEmployeeSchema.parse(input)
+  const uid = `emp-${Math.random().toString(36).slice(2, 8)}`
   const batch = writeBatch(db)
   batch.set(userRef(uid), {
     ...form,
@@ -178,5 +177,7 @@ export async function addEmployeeNote(
   await batch.commit()
 }
 
-/** Firebase emails the employee a link to choose a new password. */
-export const sendPasswordReset = (email: string) => sendPasswordResetEmail(auth, email)
+/** The demo has no email service: pretend the reset link went out. */
+export const sendPasswordReset = async (_email: string) => {
+  await new Promise((resolve) => setTimeout(resolve, 400))
+}

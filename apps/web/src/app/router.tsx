@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router'
 import { AppShell } from '@/components/layout/AppShell'
-import { LoginPage } from '@/features/auth/pages/LoginPage'
+import { LandingPage } from '@/features/auth/pages/LandingPage'
 import { BranchGate } from '@/features/settings/components/BranchGate'
 import { FullScreenLoader, RequireRole } from './guards'
 
@@ -13,7 +13,7 @@ const page = (load: () => Promise<React.ComponentType>): Pick<RouteObject, 'lazy
 })
 
 export const router = createBrowserRouter([
-  { path: '/login', element: <LoginPage /> },
+  { path: '/login', element: <LandingPage /> },
   {
     element: <RequireRole role="manager" />,
     children: [

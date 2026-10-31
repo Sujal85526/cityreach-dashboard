@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App'
 import { Providers } from './app/providers'
 import { applyInitialTheme } from './hooks/use-theme'
+import '@/lib/store/seed'
 import './index.css'
 
 applyInitialTheme()

@@ -1,5 +1,5 @@
 import type { EntityRef } from '@cityreach/shared'
-import type { QueryConstraint, WriteBatch } from 'firebase/firestore'
+import type { QueryConstraint, WriteBatch } from '@/lib/store'
 import { Pencil, Plus, Trash2, type LucideIcon } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { toast } from 'sonner'

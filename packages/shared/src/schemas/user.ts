@@ -64,10 +64,9 @@ export const employeeFormSchema = userSchema.pick({
 })
 export type EmployeeForm = z.infer<typeof employeeFormSchema>
 
-/** Adding an employee also creates their login (email + first password, shared with them by the manager). */
+/** Adding an employee: profile details plus the contact email (the demo has no logins). */
 export const newEmployeeSchema = employeeFormSchema.extend({
   email: z.email('Enter a valid email'),
-  password: z.string().min(8, 'At least 8 characters'),
 })
 export type NewEmployee = z.infer<typeof newEmployeeSchema>
 

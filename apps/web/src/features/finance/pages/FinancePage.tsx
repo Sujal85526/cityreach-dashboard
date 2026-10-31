@@ -7,7 +7,7 @@ import {
   type Expense,
   type SalesDay,
 } from '@cityreach/shared'
-import { where } from 'firebase/firestore'
+import { where } from '@/lib/store'
 import { Landmark, Receipt, TrendingUp, Users, Wallet } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

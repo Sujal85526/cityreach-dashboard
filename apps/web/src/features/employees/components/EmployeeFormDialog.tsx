@@ -52,12 +52,11 @@ const roleOptions = (actorIsOwner: boolean) =>
   actorIsOwner ? ROLE_LABEL : { manager: ROLE_LABEL.manager, employee: ROLE_LABEL.employee }
 const STATUS_LABEL = { active: 'Active', on_leave: 'On Leave', inactive: 'Inactive' } as const
 
-// One form shape for add and edit; edit ignores email/password (validated with employeeFormSchema).
+// One form shape for add and edit; edit ignores the email (validated with employeeFormSchema).
 type FormValues = NewEmployee
 const EMPTY: FormValues = {
   name: '',
   email: '',
-  password: '',
   phone: '',
   position: 'Barista',
   role: 'employee',
@@ -65,8 +64,8 @@ const EMPTY: FormValues = {
   shiftId: null,
   probationEndsOn: null,
 }
-// Editing never changes the login, so email/password are carried along unvalidated.
-const editSchema = employeeFormSchema.extend({ email: z.string(), password: z.string() })
+// Editing never changes the email, so it is carried along unvalidated.
+const editSchema = employeeFormSchema.extend({ email: z.string() })
 
 interface Props {
   open: boolean
@@ -87,16 +86,16 @@ export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
   })
 
   useEffect(() => {
-    if (open) form.reset(employee ? { ...EMPTY, ...employee, password: '' } : EMPTY)
+    if (open) form.reset(employee ? { ...EMPTY, ...employee } : EMPTY)
   }, [open, employee, form])
 
   const pending = create.isPending || update.isPending
-  const onSubmit = form.handleSubmit(async ({ email, password, ...values }) => {
+  const onSubmit = form.handleSubmit(async ({ email, ...values }) => {
     try {
       if (employee) await update.mutateAsync({ current: employee, input: values })
-      else await create.mutateAsync({ ...values, email, password })
+      else await create.mutateAsync({ ...values, email })
       toast.success(
-        employee ? 'Employee updated' : `${values.name} added. Share the password with them.`,
+        employee ? 'Employee updated' : `${values.name} added to the team`,
       )
       onOpenChange(false)
     } catch (error) {
@@ -112,7 +111,7 @@ export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
           <DialogDescription>
             {isEdit
               ? 'Changes apply immediately.'
-              : 'Creates their login. They sign in with this email and password.'}
+              : 'Adds them to the team. In the demo you can switch to any employee from the profile menu.'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -124,15 +123,7 @@ export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
               className="sm:col-span-2"
             />
             {!isEdit && (
-              <>
-                <TextField control={form.control} name="email" label="Email" type="email" />
-                <TextField
-                  control={form.control}
-                  name="password"
-                  label="First password"
-                  type="text"
-                />
-              </>
+              <TextField control={form.control} name="email" label="Email" type="email" />
             )}
             <TextField control={form.control} name="phone" label="Phone" type="tel" />
             <FormField
@@ -295,10 +286,4 @@ function SelectField<K extends string>({
   )
 }
 
-function friendlyError(error: unknown): string {
-  const code = (error as { code?: string }).code
-  if (code === 'auth/email-already-in-use') return 'An account with this email already exists.'
-  if (code === 'auth/invalid-email') return 'That email address is not valid.'
-  if (code === 'auth/weak-password') return 'Choose a stronger password (at least 8 characters).'
-  return errorMessage(error)
-}
+const friendlyError = errorMessage

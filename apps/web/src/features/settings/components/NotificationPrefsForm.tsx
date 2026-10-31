@@ -48,7 +48,7 @@ const LABELS: Record<NotificationType, { title: string; example: string }> = {
   },
   task_assigned: {
     title: 'Task assigned (to employees)',
-    example: '"Hana assigned you \'Clean the grinder\'."',
+    example: '"Amara assigned you \'Clean the grinder\'."',
   },
   task_completed: {
     title: 'Task completed',

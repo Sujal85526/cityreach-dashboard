@@ -8,8 +8,8 @@ import {
   query,
   Timestamp,
   where,
-} from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+} from '@/lib/store'
+import { db } from '@/lib/store'
 import { fromDoc } from '@/lib/firestore'
 
 const activity = collection(db, COLLECTIONS.activity)

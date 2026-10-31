@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { QueryConstraint } from 'firebase/firestore'
+import type { QueryConstraint } from '@/lib/store'
 import { useCurrentUser } from '@/features/auth/session'
 import { qk, refreshLists } from '@/lib/query-keys'
 import { deleteRecord, listRecords, saveRecord, type SaveOptions, type StoredRecord } from './api'

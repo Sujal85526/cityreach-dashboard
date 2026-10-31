@@ -55,7 +55,7 @@ export function EarlyClockOutDialog({
             value={reason}
             maxLength={200}
             onChange={(e) => setReason(e.target.value)}
-            placeholder="e.g. Feeling unwell, approved by Hana"
+            placeholder="e.g. Feeling unwell, approved by Amara"
           />
         </div>
         <DialogFooter className="gap-2">

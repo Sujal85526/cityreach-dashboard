@@ -25,7 +25,7 @@ export interface SettingsSection {
 export const SETTINGS_SECTIONS: SettingsSection[] = [
   {
     slug: 'shop',
-    title: 'Coffee shop information',
+    title: 'Business information',
     description: 'Name, address, phone and timezone',
     icon: Store,
   },

@@ -10,10 +10,10 @@ import {
   type PeriodType,
   type StockMovement,
 } from '@cityreach/shared'
-import { collection, getDocs, orderBy, query, Timestamp, where } from 'firebase/firestore'
+import { collection, getDocs, orderBy, query, Timestamp, where } from '@/lib/store'
 import { loadPeriodData } from '@/features/performance/api'
 import { downloadCsv, toCsv } from '@/lib/csv'
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/store'
 import { fromDoc } from '@/lib/firestore'
 
 export const EXPORTS = {

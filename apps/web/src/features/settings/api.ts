@@ -21,10 +21,10 @@ import {
   serverTimestamp,
   where,
   writeBatch,
-} from 'firebase/firestore'
+} from '@/lib/store'
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/store'
 import { fromDoc } from '@/lib/firestore'
 
 const branchRef = (branchId: string) => doc(db, COLLECTIONS.branches, branchId)

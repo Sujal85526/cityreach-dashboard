@@ -10,7 +10,7 @@ import {
   type Training,
   type User,
 } from '@cityreach/shared'
-import { where } from 'firebase/firestore'
+import { where } from '@/lib/store'
 import { GraduationCap, Target, UserPlus } from 'lucide-react'
 import { TonePill } from '@/components/common/StatusPill'
 import { Progress } from '@/components/ui/progress'

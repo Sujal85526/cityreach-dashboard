@@ -7,11 +7,11 @@ import {
   serverTimestamp,
   where,
   writeBatch,
-} from 'firebase/firestore'
-import { forgetCachedSession, type SessionUser } from '@/features/auth/api'
+} from '@/lib/store'
+import type { SessionUser } from '@/features/auth/api'
 import { newBranchDoc } from '@/features/settings/api'
 import { addActivity } from '@/lib/activity'
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/store'
 import { fromDoc } from '@/lib/firestore'
 
 const branches = collection(db, COLLECTIONS.branches)
@@ -37,7 +37,6 @@ export async function switchBranch(branchId: string, actor: SessionUser): Promis
   const batch = writeBatch(db)
   batch.update(userRef(actor.uid), { branchId, updatedAt: serverTimestamp() })
   await batch.commit()
-  forgetCachedSession(actor.uid) // the reload that follows must not open the old branch
 }
 
 /**
@@ -57,5 +56,4 @@ export async function claimOwnership(actor: SessionUser): Promise<void> {
     entity: { collection: COLLECTIONS.branches, id: actor.access.branchId },
   })
   await batch.commit()
-  forgetCachedSession(actor.uid)
 }
