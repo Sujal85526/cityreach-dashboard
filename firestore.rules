@@ -1,0 +1,442 @@
+rules_version = '2';
+
+// Default deny. Free (Spark) plan: there is no server code, so every write comes from the web app
+// and these rules are the server-side guard. Role, branch and status are read from users/{uid}
+// (one cached get per request). Deactivated users (status == 'inactive') can do nothing.
+// List queries must filter by branchId (and by employeeId / assigneeId for employees) to pass.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function isActive() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && me().status != 'inactive';
+    }
+    // Owners can do everything a manager can, in whichever of their branches they have open.
+    function isManager() { return isActive() && me().role in ['manager', 'owner']; }
+    function isOwner() { return isActive() && me().role == 'owner'; }
+    function inBranch(branchId) { return isActive() && me().branchId == branchId; }
+    function managerOf(branchId) { return isManager() && me().branchId == branchId; }
+    function isSelf(uid) { return isActive() && request.auth.uid == uid; }
+    // Settings → "Remove sample data" may delete only records tagged by "Load sample data".
+    function sampleOf(d) { return managerOf(d.branchId) && d.get('sample', false) == true; }
+    function onlyChanges(keys) { return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys); }
+    function incoming() { return request.resource.data; }
+
+    match /branches/{branchId} {
+      // Staff read their own branch; an owner also reads every branch they own (branch switcher).
+      allow read: if inBranch(branchId)
+        || (isOwner() && resource.data.get('ownerId', null) == request.auth.uid);
+      // First run: the manager creates their own branch document (setup screen); afterwards only edits.
+      // An owner opens new branches that they own. Only the owner can change who owns a branch.
+      allow create: if managerOf(branchId)
+        || (isOwner() && incoming().get('ownerId', null) == request.auth.uid);
+      allow update: if managerOf(branchId)
+        && (incoming().get('ownerId', null) == resource.data.get('ownerId', null) || validClaim(branchId));
+    }
+    // A manager becomes the owner of a branch nobody owns yet, in the same batch as their role change.
+    function validClaim(branchId) {
+      return resource.data.get('ownerId', null) == null
+        && incoming().ownerId == request.auth.uid
+        && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'owner';
+    }
+
+    match /users/{uid} {
+      allow read: if isSelf(uid) || managerOf(resource.data.branchId);
+      // Managers add and edit staff in their branch (the Auth account is created by the app first).
+      // Only an owner can create or promote someone to owner.
+      allow create: if managerOf(incoming().branchId) && (incoming().role != 'owner' || isOwner());
+      allow update: if (managerOf(resource.data.branchId) && incoming().branchId == resource.data.branchId
+          && (incoming().role != 'owner' || isOwner() || validSelfClaim(uid)))
+        || validBranchSwitch(uid);
+      allow delete: if sampleOf(resource.data);
+    }
+    // The manager claiming an unowned branch: their own role → owner, with the branch's ownerId set
+    // to them in the same batch.
+    function validSelfClaim(uid) {
+      return isSelf(uid) && onlyChanges(['role', 'updatedAt'])
+        && get(/databases/$(database)/documents/branches/$(resource.data.branchId)).data.get('ownerId', null) == null
+        && getAfter(/databases/$(database)/documents/branches/$(resource.data.branchId)).data.ownerId == uid;
+    }
+    // An owner opens another of their branches: only their own branchId changes, to a branch they own.
+    function validBranchSwitch(uid) {
+      return isSelf(uid) && isOwner() && onlyChanges(['branchId', 'updatedAt'])
+        && get(/databases/$(database)/documents/branches/$(incoming().branchId)).data.get('ownerId', null) == uid;
+    }
+
+    match /shifts/{id} {
+      allow read: if inBranch(resource.data.branchId);
+      allow create: if managerOf(incoming().branchId);
+      allow update, delete: if managerOf(resource.data.branchId);
+    }
+
+    match /attendance/{id} {
+      // Own records only; a not-yet-created record of their own (id "{uid}_{date}") may be checked
+      // for existence before clocking in.
+      allow read: if resource == null
+        ? isActive() && id.matches(request.auth.uid + '_.*')
+        : isSelf(resource.data.employeeId) || managerOf(resource.data.branchId);
+
+      // Managers record leave / off / absent and correct times for their branch.
+      allow create: if managerOf(incoming().branchId) || validClockIn();
+      allow delete: if sampleOf(resource.data);
+      allow update: if managerOf(resource.data.branchId)
+        // Arriving after the automatic check marked the shift Absent: the clock-in replaces it (then counts as Late).
+        || (resource.data.source == 'system' && resource.data.status == 'absent' && validClockIn())
+        || validClassification() || validClockOut() || validWorkedTotal();
+    }
+
+    // ---- Employee clock-in / clock-out (docs/ARCHITECTURE.md → "Where writes happen") ----
+    // Times always come from the server (request.time); the phone's clock is never trusted.
+    function minutesFrom(a, b) { return math.floor((b.toMillis() - a.toMillis()) / 60000); }
+    function graceMinutes(branchId) {
+      return get(/databases/$(database)/documents/branches/$(branchId)).data.rules.attendance.graceMinutes;
+    }
+    // The shift someone works on a date: the rota entry when there is one (null = day off),
+    // otherwise their usual shift (mirrors rotaShiftId in @dm/shared).
+    function plannedShift(dateKey) {
+      let path = /databases/$(database)/documents/rota/$(request.auth.uid + '_' + dateKey);
+      return exists(path) ? get(path).data.shiftId : me().shiftId;
+    }
+    function shiftOf(shiftId) {
+      return get(/databases/$(database)/documents/shifts/$(shiftId)).data;
+    }
+    // Shift length in minutes from "HH:mm" strings (mirrors shiftLengthMinutes in @dm/shared).
+    // Example: 07:00–15:00 → 480; Night 23:00–07:00 → 480.
+    function minutesOfDay(t) { return int(t.split(':')[0]) * 60 + int(t.split(':')[1]); }
+    function shiftLength(start, end) {
+      let m = (minutesOfDay(end) - minutesOfDay(start) + 1440) % 1440;
+      return m == 0 ? 1440 : m;
+    }
+    function earlyLeaveGrace(branchId) {
+      return get(/databases/$(database)/documents/branches/$(branchId)).data.rules.attendance
+        .get('earlyLeaveGraceMinutes', 10);
+    }
+    // A location reading from the phone (or null when not shared). It is evidence, not proof:
+    // rules can't verify GPS, so the manager sees the distance and decides.
+    function validLocation(l) {
+      return l == null || (l is map
+        && l.keys().hasOnly(['lat', 'lng', 'accuracy', 'distance', 'inside'])
+        && l.lat is number && l.lng is number && l.accuracy is number);
+    }
+
+    // 1. Clock in: own record for the shift date, server time, the employee's assigned shift.
+    function validClockIn() {
+      let d = incoming();
+      return isSelf(d.employeeId) && inBranch(d.branchId)
+        && request.resource.id == request.auth.uid + '_' + d.dateKey
+        && d.clockInAt == request.time && d.source == 'web'
+        && d.status == 'pending' && d.lateMinutes == 0
+        && d.clockOutAt == null && d.workedMinutes == null
+        && d.shiftId == plannedShift(d.dateKey)
+        && validLocation(d.get('clockInLocation', null)) && d.get('photo', false) is bool
+        && (d.shiftId == null
+          ? d.shiftStartAt == null && d.get('shiftEndAt', null) == null
+          : d.shiftStart == shiftOf(d.shiftId).start && d.shiftEnd == shiftOf(d.shiftId).end
+            && d.shiftStartAt is timestamp
+            && d.shiftEndAt == d.shiftStartAt + duration.value(shiftLength(d.shiftStart, d.shiftEnd), 'm')
+            && request.time > d.shiftStartAt - duration.value(3, 'h')
+            && request.time < d.shiftStartAt + duration.value(16, 'h'));
+    }
+
+    // 2. Same action, next write: On Time / Late, checked exactly against the stored server times.
+    function validClassification() {
+      let r = resource.data;
+      let late = r.shiftStartAt != null
+        && minutesFrom(r.shiftStartAt, r.clockInAt) > graceMinutes(r.branchId);
+      return isSelf(r.employeeId) && r.status == 'pending'
+        && onlyChanges(['status', 'lateMinutes', 'updatedAt'])
+        && incoming().status == (late ? 'late' : 'on_time')
+        && incoming().lateMinutes == (late ? minutesFrom(r.shiftStartAt, r.clockInAt) : 0);
+    }
+
+    // 3. Clock out once, server time, with the phone's location and an optional reason for leaving early.
+    function validClockOut() {
+      let r = resource.data;
+      let reason = incoming().get('earlyLeaveReason', null);
+      return isSelf(r.employeeId) && r.clockInAt != null && r.clockOutAt == null
+        && incoming().clockOutAt == request.time
+        && onlyChanges(['clockOutAt', 'updatedAt', 'clockOutLocation', 'earlyLeaveReason'])
+        && validLocation(incoming().get('clockOutLocation', null))
+        && (reason == null || (reason is string && reason.size() <= 200));
+    }
+
+    // 4. Same action, next write: worked minutes = clock-out − clock-in, and the minutes left in
+    // the shift beyond the grace period (mirrors earlyLeaveMinutes in @dm/shared).
+    // Example: shift ends 15:00, clock-out 12:45, grace 10 → earlyLeaveMinutes 135.
+    function validWorkedTotal() {
+      let r = resource.data;
+      let worked = minutesFrom(r.clockInAt, r.clockOutAt);
+      let end = r.get('shiftEndAt', null);
+      let left = end == null ? 0 : minutesFrom(r.clockOutAt, end);
+      return isSelf(r.employeeId) && r.clockOutAt != null && r.workedMinutes == null
+        && onlyChanges(['workedMinutes', 'earlyLeaveMinutes', 'updatedAt'])
+        && incoming().workedMinutes == (worked > 0 ? worked : 0)
+        && incoming().get('earlyLeaveMinutes', 0) == (left > earlyLeaveGrace(r.branchId) ? left : 0);
+    }
+
+    // The live photo taken at clock-in: written in the same batch as the clock-in record (same id),
+    // at the same server instant, small JPEG only. Managers delete old photos (90-day retention).
+    match /attendancePhotos/{id} {
+      allow read: if isSelf(resource.data.employeeId) || managerOf(resource.data.branchId);
+      allow create: if isSelf(incoming().employeeId) && inBranch(incoming().branchId)
+        && id == request.auth.uid + '_' + incoming().dateKey
+        && incoming().takenAt == request.time
+        && getAfter(/databases/$(database)/documents/attendance/$(id)).data.clockInAt == request.time
+        && incoming().image is string && incoming().image.size() < 150000
+        && incoming().image.matches('data:image/jpeg;base64,[A-Za-z0-9+/=]+')
+        && incoming().keys().hasOnly(['branchId', 'employeeId', 'dateKey', 'image', 'takenAt']);
+      allow delete: if managerOf(resource.data.branchId);
+    }
+
+    // Leave requests: the employee asks for their own dates; only the branch manager decides.
+    // Approving also writes the Leave days on attendance (manager write, allowed above).
+    match /leaveRequests/{id} {
+      allow read: if isSelf(resource.data.employeeId) || managerOf(resource.data.branchId);
+      allow create: if validLeaveRequest(incoming());
+      allow update: if validLeaveDecision() || validLeaveCancel();
+      allow delete: if sampleOf(resource.data);
+    }
+    function validLeaveRequest(d) {
+      return isSelf(d.employeeId) && inBranch(d.branchId) && d.status == 'pending'
+        && d.paidDays == null && d.decidedBy == null && d.decidedAt == null
+        && d.managerComment == null
+        && d.dates is list && d.dates.size() >= 1 && d.dates.size() <= 90
+        && d.from is string && d.to is string && d.from <= d.to
+        && d.reason is string && d.reason.size() <= 300
+        && d.createdAt == request.time;
+    }
+    // Approve (with how many of the days are paid) or reject, once, as the deciding manager.
+    function validLeaveDecision() {
+      let r = resource.data;
+      let d = incoming();
+      return managerOf(r.branchId) && r.status == 'pending'
+        && onlyChanges(['status', 'paidDays', 'decidedBy', 'decidedByName', 'decidedAt',
+          'managerComment', 'updatedAt'])
+        && d.decidedBy == request.auth.uid && d.decidedAt == request.time
+        && (d.managerComment == null || (d.managerComment is string && d.managerComment.size() <= 300))
+        && ((d.status == 'approved' && d.paidDays is int && d.paidDays >= 0
+              && d.paidDays <= r.dates.size())
+          || (d.status == 'rejected' && d.paidDays == null));
+    }
+    // The employee may withdraw their own request while it is still pending.
+    function validLeaveCancel() {
+      return isSelf(resource.data.employeeId) && resource.data.status == 'pending'
+        && incoming().status == 'cancelled' && onlyChanges(['status', 'updatedAt']);
+    }
+
+    // The manager's private document store: details in documents/{id}, the compressed file in
+    // documentChunks/{id}_{n} (each under the 1 MiB document limit). Employees can't see any of it.
+    match /documents/{id} {
+      allow read, delete: if managerOf(resource.data.branchId);
+      allow create: if managerOf(incoming().branchId) && incoming().uploadedBy == request.auth.uid
+        && incoming().storedSize is int && incoming().storedSize <= 5242880
+        && incoming().chunkCount is int && incoming().chunkCount >= 1 && incoming().chunkCount <= 7
+        && incoming().name is string && incoming().name.size() >= 1 && incoming().name.size() <= 120
+        && validExpiry(incoming());
+      // Details, expiry, and the "reminder already sent for this date" markers set by the daily check.
+      allow update: if managerOf(resource.data.branchId)
+        && onlyChanges(['name', 'category', 'note', 'employeeId', 'employeeName', 'expiresOn',
+          'remindDaysBefore', 'remindedFor', 'expiredNotifiedFor', 'updatedAt'])
+        && incoming().name is string && incoming().name.size() >= 1 && incoming().name.size() <= 120
+        && validExpiry(incoming());
+    }
+    function validExpiry(d) {
+      let e = d.get('expiresOn', null);
+      return e == null || (e is string && e.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}'));
+    }
+    match /documentChunks/{id} {
+      allow read, delete: if managerOf(resource.data.branchId);
+      allow create: if managerOf(incoming().branchId)
+        && incoming().keys().hasOnly(['branchId', 'documentId', 'index', 'data'])
+        && incoming().data is bytes && incoming().data.size() <= 750000
+        && id == incoming().documentId + '_' + string(incoming().index);
+    }
+
+    // Payslips ({uid}_{YYYY-MM}): prepared and marked paid by the branch manager; each employee can
+    // read only their own.
+    match /payslips/{id} {
+      allow read: if isSelf(resource.data.employeeId) || managerOf(resource.data.branchId);
+      allow create: if managerOf(incoming().branchId) && validPayslip(id, incoming());
+      allow update: if managerOf(resource.data.branchId)
+        && incoming().branchId == resource.data.branchId && validPayslip(id, incoming());
+      allow delete: if managerOf(resource.data.branchId);
+    }
+    function validPayslip(id, d) {
+      return id == d.employeeId + '_' + d.month && d.preparedBy == request.auth.uid
+        && d.status in ['draft', 'paid'] && d.net is number && d.net >= 0
+        && d.gross is number && d.net <= d.gross;
+    }
+
+    // ---- Operations, finance and HR records (lists in @dm/shared schemas/business.ts) ----
+    // Every record carries branchId and createdBy (the signed-in user). One block guards them all.
+    match /{coll}/{id} {
+      // Manager records: only the branch's managers.
+      allow read, delete: if coll in ['expenses', 'salesDays', 'purchaseOrders', 'candidates',
+          'inspections', 'equipment', 'maintenance', 'feedback', 'checklistTemplates']
+        && managerOf(resource.data.branchId);
+      allow create: if coll in ['expenses', 'salesDays', 'purchaseOrders', 'candidates',
+          'inspections', 'equipment', 'maintenance', 'feedback', 'checklistTemplates']
+        && managerOf(incoming().branchId) && incoming().createdBy == request.auth.uid;
+      allow update: if coll in ['expenses', 'salesDays', 'purchaseOrders', 'candidates',
+          'inspections', 'equipment', 'maintenance', 'feedback', 'checklistTemplates']
+        && managerOf(resource.data.branchId) && incoming().branchId == resource.data.branchId;
+
+      // Staff logs: anyone in the branch reads and adds (in their own name, at server time);
+      // managers correct or delete.
+      allow read: if coll in ['incidents', 'handovers', 'temperatureLogs']
+        && inBranch(resource.data.branchId);
+      allow create: if coll in ['incidents', 'handovers', 'temperatureLogs']
+        && inBranch(incoming().branchId) && incoming().createdBy == request.auth.uid
+        && incoming().createdAt == request.time;
+      allow update, delete: if coll in ['incidents', 'handovers', 'temperatureLogs']
+        && managerOf(resource.data.branchId);
+
+      // Personal records (training, goals): managers write; the employee reads their own.
+      allow read: if coll in ['training', 'goals']
+        && (managerOf(resource.data.branchId) || isSelf(resource.data.employeeId));
+      allow create: if coll in ['training', 'goals']
+        && managerOf(incoming().branchId) && incoming().createdBy == request.auth.uid;
+      allow update: if coll in ['training', 'goals']
+        && managerOf(resource.data.branchId) && incoming().branchId == resource.data.branchId;
+      allow delete: if coll in ['training', 'goals'] && managerOf(resource.data.branchId);
+    }
+
+    // Staff need the checklist templates to tick them off, and the fridges / freezers to log
+    // temperatures (equipment has no costs; those are in maintenance, manager-only).
+    match /checklistTemplates/{id} {
+      allow read: if inBranch(resource.data.branchId);
+    }
+    match /equipment/{id} {
+      allow read: if inBranch(resource.data.branchId);
+    }
+
+    // Checklist runs ({templateId}_{date}): staff start and tick today's checklists; managers delete.
+    // The first tick of the day reads a run that doesn't exist yet (in a transaction): allowed.
+    match /checklistRuns/{id} {
+      allow read: if resource == null ? isActive() : inBranch(resource.data.branchId);
+      allow create: if inBranch(incoming().branchId) && incoming().createdBy == request.auth.uid;
+      allow update: if inBranch(resource.data.branchId) && incoming().branchId == resource.data.branchId
+        && onlyChanges(['items', 'completedAt', 'updatedAt']);
+      allow delete: if managerOf(resource.data.branchId);
+    }
+
+    // Rota ({uid}_{date}): everyone in the branch sees it; managers plan it.
+    match /rota/{id} {
+      allow read: if inBranch(resource.data.branchId);
+      allow create, update: if managerOf(incoming().branchId) && id == incoming().employeeId + '_' + incoming().date;
+      allow delete: if managerOf(resource.data.branchId);
+    }
+
+    // Shift swaps: an employee asks (as themselves), may withdraw while pending; the manager decides.
+    match /swapRequests/{id} {
+      allow read: if inBranch(resource.data.branchId);
+      allow create: if inBranch(incoming().branchId) && incoming().fromId == request.auth.uid
+        && incoming().createdBy == request.auth.uid && incoming().status == 'pending'
+        && incoming().toId != request.auth.uid;
+      allow update: if (managerOf(resource.data.branchId) && resource.data.status == 'pending'
+          && incoming().status in ['approved', 'rejected'] && incoming().decidedBy == request.auth.uid
+          && onlyChanges(['status', 'decidedBy', 'updatedAt']))
+        || (isSelf(resource.data.fromId) && resource.data.status == 'pending'
+          && incoming().status == 'cancelled' && onlyChanges(['status', 'updatedAt']));
+    }
+
+    match /tasks/{id} {
+      allow read: if isSelf(resource.data.assigneeId) || managerOf(resource.data.branchId);
+      allow create: if managerOf(incoming().branchId) && incoming().createdBy == request.auth.uid
+        && ((incoming().status == 'pending' && incoming().completedAt == null)
+          || incoming().get('sample', false) == true); // sample tasks arrive in every status
+      allow delete: if managerOf(resource.data.branchId);
+      allow update: if (managerOf(resource.data.branchId) && incoming().branchId == resource.data.branchId)
+        || validEmployeeTaskMove() || validOverdueMark();
+    }
+
+    // Employee on their own task (mirrors EMPLOYEE_TASK_MOVES in @dm/shared): start, put back,
+    // or complete (also when overdue) with the server's time. Nothing else may change.
+    function validEmployeeTaskMove() {
+      let from = resource.data.status;
+      let to = incoming().status;
+      return isSelf(resource.data.assigneeId)
+        && onlyChanges(['status', 'completedAt', 'updatedAt'])
+        && ((from == 'pending' && to == 'in_progress' && incoming().completedAt == null)
+          || (from == 'in_progress' && to == 'pending' && incoming().completedAt == null)
+          || (from in ['pending', 'in_progress', 'overdue'] && to == 'completed'
+              && incoming().completedAt == request.time));
+    }
+
+    // The automatic check: only an open task whose deadline has passed may become overdue.
+    function validOverdueMark() {
+      return inBranch(resource.data.branchId) && onlyChanges(['status', 'updatedAt'])
+        && incoming().status == 'overdue'
+        && resource.data.status in ['pending', 'in_progress']
+        && resource.data.deadline < request.time;
+    }
+
+    match /suppliers/{id} {
+      allow read, delete: if managerOf(resource.data.branchId);
+      allow create: if managerOf(incoming().branchId);
+      allow update: if managerOf(resource.data.branchId);
+    }
+
+    match /inventoryItems/{id} {
+      allow read, delete: if managerOf(resource.data.branchId);
+      allow create: if managerOf(incoming().branchId) && validStock(incoming());
+      allow update: if managerOf(resource.data.branchId)
+        && incoming().branchId == resource.data.branchId && validStock(incoming());
+    }
+
+    // Status must match the shared rule (stockStatus in @dm/shared) for the branch's critical ratio,
+    // so a wrong Low / Critical can never be stored. Example: 14 L vs min 15 L → low.
+    function validStock(d) {
+      let ratio = get(/databases/$(database)/documents/branches/$(d.branchId)).data.rules.inventory.criticalRatio;
+      return d.quantity is number && d.quantity >= 0
+        && d.minQuantity is number && d.minQuantity >= 0
+        && d.status == (d.quantity <= d.minQuantity * ratio ? 'critical'
+          : d.quantity < d.minQuantity ? 'low' : 'in_stock');
+    }
+
+    // Stock movement log: append-only, written with the stock change by the manager who made it.
+    match /stockMovements/{id} {
+      allow read: if managerOf(resource.data.branchId);
+      allow create: if managerOf(incoming().branchId) && incoming().by == request.auth.uid;
+      allow delete: if sampleOf(resource.data);
+    }
+
+    // Audit trail and alerts are written by the app in the same batch as the action that caused them.
+    // The actor must be the signed-in user, so nobody can write events in someone else's name.
+    match /activity/{id} {
+      allow read: if managerOf(resource.data.branchId);
+      allow create: if inBranch(incoming().branchId) && incoming().actorId == request.auth.uid;
+    }
+
+    match /notifications/{id} {
+      allow read: if isSelf(resource.data.recipientId)
+        || (managerOf(resource.data.branchId) && resource.data.recipientId == null);
+      allow create: if inBranch(incoming().branchId) && incoming().actorId == request.auth.uid;
+      allow update: if (isSelf(resource.data.recipientId) || managerOf(resource.data.branchId))
+        && onlyChanges(['readAt']);
+    }
+
+    // Weekly performance snapshots ({uid}_{week}), computed in the manager's browser.
+    // The manager's rating is a whole number 1–5 (or not rated).
+    match /performance/{id} {
+      allow read: if managerOf(resource.data.branchId);
+      allow create: if managerOf(incoming().branchId) && validRating(incoming());
+      allow update: if managerOf(resource.data.branchId)
+        && incoming().branchId == resource.data.branchId && validRating(incoming());
+      allow delete: if managerOf(resource.data.branchId);
+    }
+    function validRating(d) {
+      return !('managerRating' in d) || d.managerRating == null
+        || (d.managerRating is int && d.managerRating >= 1 && d.managerRating <= 5);
+    }
+
+    // Saved weekly / monthly reports ({branchId}_{type}_{period}).
+    match /reports/{id} {
+      allow read: if managerOf(resource.data.branchId);
+      allow create, update: if managerOf(incoming().branchId);
+    }
+  }
+}

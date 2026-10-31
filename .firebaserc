@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "demo-digital-manager",
+    "prod": "digital-manager-f916d"
+  }
+}

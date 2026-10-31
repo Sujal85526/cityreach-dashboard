@@ -1,0 +1,17 @@
+node_modules/
+dist/
+
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.emulator-data/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+.firebase/
+coverage/
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.vercel

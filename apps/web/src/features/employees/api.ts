@@ -1,0 +1,182 @@
+import {
+  COLLECTIONS,
+  newEmployeeSchema,
+  employeeFormSchema,
+  noteTextSchema,
+  type Attendance,
+  type EmployeeForm,
+  type EmploymentStatus,
+  type NewEmployee,
+  type NoteKind,
+  type Task,
+  type User,
+} from '@dm/shared'
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  serverTimestamp,
+  Timestamp,
+  where,
+  writeBatch,
+} from 'firebase/firestore'
+import { sendPasswordResetEmail } from 'firebase/auth'
+import type { SessionUser } from '@/features/auth/api'
+import { addActivity } from '@/lib/activity'
+import { auth, createAuthAccount, db } from '@/lib/firebase'
+import { fromDoc } from '@/lib/firestore'
+
+const users = collection(db, COLLECTIONS.users)
+const userRef = (uid: string) => doc(db, COLLECTIONS.users, uid)
+const entity = (uid: string) => ({ collection: COLLECTIONS.users, id: uid })
+
+/** Everyone in the branch (staff lists are small, so sorting happens here, not in an index). */
+export async function listEmployees(branchId: string): Promise<User[]> {
+  const snap = await getDocs(query(users, where('branchId', '==', branchId)))
+  return snap.docs.map((d) => fromDoc<User>(d)).sort((a, b) => a.name.localeCompare(b.name))
+}
+
+export async function getEmployee(uid: string): Promise<User | null> {
+  const snap = await getDoc(userRef(uid))
+  return snap.exists() ? fromDoc<User>(snap) : null
+}
+
+// Manager queries filter by branchId too: firestore.rules only allow lists they can prove are in the branch.
+
+/** Last 30 attendance records, newest first. */
+export async function listEmployeeAttendance(branchId: string, uid: string): Promise<Attendance[]> {
+  const snap = await getDocs(
+    query(
+      collection(db, COLLECTIONS.attendance),
+      where('branchId', '==', branchId),
+      where('employeeId', '==', uid),
+      orderBy('dateKey', 'desc'),
+      limit(30),
+    ),
+  )
+  return snap.docs.map((d) => fromDoc<Attendance>(d))
+}
+
+export async function listEmployeeTasks(branchId: string, uid: string): Promise<Task[]> {
+  const snap = await getDocs(
+    query(
+      collection(db, COLLECTIONS.tasks),
+      where('branchId', '==', branchId),
+      where('assigneeId', '==', uid),
+      limit(50),
+    ),
+  )
+  return snap.docs
+    .map((d) => fromDoc<Task>(d))
+    .sort((a, b) => b.deadline.getTime() - a.deadline.getTime())
+}
+
+/** Creates the login first, then the profile and its activity entry in one batch. */
+export async function createEmployee(input: NewEmployee, actor: SessionUser): Promise<string> {
+  const { email, password, ...form } = newEmployeeSchema.parse(input)
+  const uid = await createAuthAccount(email, password)
+  const batch = writeBatch(db)
+  batch.set(userRef(uid), {
+    ...form,
+    email,
+    branchId: actor.access.branchId,
+    hiredAt: serverTimestamp(),
+    stats: { attendancePct: 100, performanceScore: 0, updatedAt: serverTimestamp() },
+    notes: [],
+    warnings: [],
+    achievements: [],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  })
+  addActivity(batch, actor, {
+    action: 'employee_added',
+    summary: `${actor.name} added ${form.name} (${form.position})`,
+    entity: entity(uid),
+  })
+  await batch.commit()
+  return uid
+}
+
+/**
+ * Saves profile changes. A new name is copied onto the employee's open tasks in the
+ * same batch, because task lists show the denormalised `assigneeName`.
+ */
+export async function updateEmployee(
+  current: User,
+  input: EmployeeForm,
+  actor: SessionUser,
+): Promise<void> {
+  const form = employeeFormSchema.parse(input)
+  const batch = writeBatch(db)
+  batch.update(userRef(current.id), { ...form, updatedAt: serverTimestamp() })
+
+  if (form.name !== current.name) {
+    const open = await getDocs(
+      query(
+        collection(db, COLLECTIONS.tasks),
+        where('branchId', '==', current.branchId),
+        where('assigneeId', '==', current.id),
+        where('status', 'in', ['pending', 'in_progress', 'overdue']),
+      ),
+    )
+    open.docs.forEach((t) =>
+      batch.update(t.ref, { assigneeName: form.name, updatedAt: serverTimestamp() }),
+    )
+  }
+
+  addActivity(batch, actor, {
+    action: 'employee_updated',
+    summary: `${actor.name} updated ${form.name}'s profile`,
+    entity: entity(current.id),
+  })
+  await batch.commit()
+}
+
+/** Deactivate (never delete) or reactivate. Inactive users are blocked by firestore.rules. */
+export async function setEmployeeStatus(
+  employee: User,
+  status: EmploymentStatus,
+  actor: SessionUser,
+): Promise<void> {
+  if (employee.id === actor.uid) throw new Error("You can't change your own status.")
+  const batch = writeBatch(db)
+  batch.update(userRef(employee.id), { status, updatedAt: serverTimestamp() })
+  addActivity(batch, actor, {
+    action: status === 'inactive' ? 'employee_deactivated' : 'employee_status_changed',
+    summary: `${actor.name} set ${employee.name} to ${status.replace('_', ' ')}`,
+    entity: entity(employee.id),
+  })
+  await batch.commit()
+}
+
+/** Adds a manager note, warning or achievement to the profile. */
+export async function addEmployeeNote(
+  employee: User,
+  kind: NoteKind,
+  text: string,
+  actor: SessionUser,
+): Promise<void> {
+  const note = {
+    id: crypto.randomUUID(),
+    text: noteTextSchema.parse(text.trim()),
+    by: actor.name,
+    at: Timestamp.now(),
+  }
+  const batch = writeBatch(db)
+  batch.update(userRef(employee.id), { [kind]: arrayUnion(note), updatedAt: serverTimestamp() })
+  const label = { notes: 'a note', warnings: 'a warning', achievements: 'an achievement' }[kind]
+  addActivity(batch, actor, {
+    action: `employee_${kind.slice(0, -1)}_added`,
+    summary: `${actor.name} added ${label} for ${employee.name}`,
+    entity: entity(employee.id),
+  })
+  await batch.commit()
+}
+
+/** Firebase emails the employee a link to choose a new password. */
+export const sendPasswordReset = (email: string) => sendPasswordResetEmail(auth, email)
