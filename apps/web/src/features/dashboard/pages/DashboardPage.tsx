@@ -388,7 +388,7 @@ function Hero({
 }) {
   return (
     <section className="relative overflow-hidden rounded-3xl border bg-[linear-gradient(120deg,var(--accent)_0%,var(--card)_65%)] px-6 py-7 shadow-sm sm:px-9 sm:py-9">
-      <LogoMark className="pointer-events-none absolute top-1/2 -right-6 size-56 -translate-y-1/2 text-primary opacity-[0.045] sm:right-6 sm:size-64" />
+      <LogoMark className="pointer-events-none absolute top-1/2 -right-8 size-44 -translate-y-1/2 text-primary opacity-[0.045] sm:right-6 sm:size-64" />
       <p className="text-xs font-medium tracking-[0.16em] text-muted-foreground uppercase">
         {dateLabel} · {branch}
       </p>

@@ -29,7 +29,7 @@ export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
   const title = titleFor(pathname, user.access.role)
 
   return (
-    <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border/70 bg-background/80 px-4 py-3 backdrop-blur-xl md:px-8">
+    <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border/70 bg-background/80 px-4 py-3 backdrop-blur-xl max-md:gap-2 md:px-8">
       <Button
         variant="ghost"
         size="icon"

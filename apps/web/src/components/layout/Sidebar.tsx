@@ -1,4 +1,4 @@
-import { LogOut, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
+import { LogOut, PanelLeftClose, PanelLeftOpen, X } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { NavLink } from 'react-router'
 import { NAV } from '@/app/routes'
@@ -42,11 +42,15 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
             <button
               type="button"
               onClick={onToggle}
-              className="rounded-lg p-2 text-sidebar-muted transition-colors hover:bg-muted hover:text-foreground"
-              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              title={collapsed ? undefined : 'Collapse sidebar'}
+              className="rounded-lg p-2 text-sidebar-muted transition-colors hover:bg-muted hover:text-foreground max-md:touch-target"
+              aria-label={
+                onNavigate ? 'Close menu' : collapsed ? 'Expand sidebar' : 'Collapse sidebar'
+              }
+              title={collapsed || onNavigate ? undefined : 'Collapse sidebar'}
             >
-              {collapsed ? (
+              {onNavigate ? (
+                <X className="size-4" aria-hidden />
+              ) : collapsed ? (
                 <PanelLeftOpen className="size-4" aria-hidden />
               ) : (
                 <PanelLeftClose className="size-4" aria-hidden />
