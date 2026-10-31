@@ -255,6 +255,23 @@ describe('all branches', () => {
     })
   })
 
+  it('uses the estimated staff cost for the percentage when payslips are not all saved yet', () => {
+    const early = branchSummary({
+      now: NOW,
+      sales: 10000,
+      expenses: 0,
+      payroll: 0,
+      labourCost: 3500,
+      staff: [],
+      today: [],
+      tasks: [],
+      stock: [],
+      leave: [],
+    })
+    expect(early.labourPercent).toBe(35)
+    expect(early.profit).toBe(10000)
+  })
+
   it('adds branches up', () => {
     const totals = branchTotals([summary, { ...summary, sales: 0, profit: -500 }])
     expect(totals).toMatchObject({ sales: 10000, profit: 4500, margin: 45, staff: 4, lowStock: 4 })

@@ -276,6 +276,8 @@ export interface BranchFigures {
   sales: number
   expenses: number
   payroll: number
+  /** Staff cost for the % of sales: saved payslips plus an estimate for the rest. Defaults to `payroll`. */
+  labourCost?: number
   staff: { status: string }[]
   today: { clockInAt: Date | null; status: string }[]
   tasks: { status: TaskStatus; deadline: Date }[]
@@ -294,7 +296,7 @@ export function branchSummary(f: BranchFigures) {
     sales: money(f.sales),
     profit: money(profit),
     margin,
-    labourPercent: labourPercent(f.payroll, f.sales),
+    labourPercent: labourPercent(f.labourCost ?? f.payroll, f.sales),
     staff: f.staff.filter((s) => s.status !== 'inactive').length,
     present: f.today.filter((r) => r.clockInAt).length,
     absent: f.today.filter((r) => r.status === 'absent').length,

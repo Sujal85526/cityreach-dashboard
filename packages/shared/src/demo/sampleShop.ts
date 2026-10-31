@@ -113,6 +113,29 @@ const ITEMS: [string, string, string, number, number, string][] = [
   ['Paper Towels', 'Cleaning', 'roll', 40, 20, 'cleanco'],
 ]
 
+/**
+ * Everyday use of the busiest items, so reorder suggestions and the waste report have real history
+ * to work from. `perDay` leaves the stock every day (used up every second day in `perDay * 2`
+ * lots), the same amount comes in each week, `waste` is [quantity, every N days] and `count` is
+ * what a stock count found missing (a negative correction).
+ */
+const STOCK_PATTERN: Record<
+  string,
+  { perDay: number; waste?: [number, number]; count?: [number, number] }
+> = {
+  'Whole Milk': { perDay: 5, waste: [2, 9], count: [3, 21] },
+  'Oat Milk': { perDay: 2, waste: [1, 13] },
+  'Espresso Beans — House Blend': { perDay: 1.2, waste: [0.4, 17] },
+  'English Breakfast Tea': { perDay: 0.3, waste: [1, 20] },
+  '12oz Paper Cups': { perDay: 40, count: [30, 19] },
+  '16oz Paper Cups': { perDay: 25 },
+  'Cup Lids': { perDay: 60, count: [50, 23] },
+  'Vanilla Syrup': { perDay: 0.3, waste: [1, 24] },
+  'Butter Croissants': { perDay: 12, waste: [4, 5] },
+  'Sourdough Loaves': { perDay: 4, waste: [2, 6] },
+  'Blueberry Muffins': { perDay: 5, waste: [3, 4] },
+}
+
 type TaskRow = [
   title: string,
   description: string,
@@ -257,11 +280,12 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
     })
   const shiftOf = (key: ShiftKey) => SHIFTS.find((s) => s.id === key) ?? SHIFTS[0]
 
-  // ---- History window: 8 trend weeks and the whole of last month, whichever reaches further back ----
+  // ---- History window: 8 trend weeks and the two months before this one, whichever reaches further back ----
   const trendWeeks = lastWeeks(today, 8)
   const firstOfLastMonth = addDays(`${today.slice(0, 8)}01`, -1).slice(0, 8) + '01'
+  const firstOfTwoMonthsAgo = addDays(firstOfLastMonth, -1).slice(0, 8) + '01'
   const monday = weekRange(trendWeeks[0] ?? '').from
-  const historyStart = monday < firstOfLastMonth ? monday : firstOfLastMonth
+  const historyStart = monday < firstOfTwoMonthsAgo ? monday : firstOfTwoMonthsAgo
 
   const attRows: AttRow[] = []
   const taskRows: TaskRecord[] = []
@@ -510,7 +534,30 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
     usage(10 + (i % 3), 0.35)
     usage(13 + (i % 4), 0.3)
     delivery(16 + (i % 5), 1.3)
-    moves.push({ daysAgo: 30 + (i % 8), delta: after, reason: 'correction' })
+    const pattern = STOCK_PATTERN[itemName]
+    if (pattern) {
+      const lot = Math.round(pattern.perDay * 2 * 10) / 10
+      for (let d = 1 + (i % 2); d <= 56; d += 2) {
+        moves.push({ daysAgo: d + 0.35, delta: -lot, reason: 'usage' })
+        after += lot
+      }
+      const weekly = Math.round(pattern.perDay * 7 * 10) / 10
+      for (let d = 2 + (i % 5); d <= 56; d += 7) {
+        moves.push({ daysAgo: d + 0.5, delta: weekly, reason: 'delivery' })
+        after -= weekly
+      }
+      if (pattern.waste)
+        for (let d = 3 + (i % 4); d <= 56; d += pattern.waste[1]) {
+          moves.push({ daysAgo: d + 0.6, delta: -pattern.waste[0], reason: 'waste' })
+          after += pattern.waste[0]
+        }
+      if (pattern.count)
+        for (let d = 6 + (i % 5); d <= 56; d += pattern.count[1]) {
+          moves.push({ daysAgo: d + 0.7, delta: -pattern.count[0], reason: 'correction' })
+          after += pattern.count[0]
+        }
+    }
+    moves.push({ daysAgo: 60 + (i % 6), delta: Math.max(0, after), reason: 'correction' })
     const sorted = moves.sort((a, b) => b.daysAgo - a.daysAgo)
     let running = 0
     sorted.forEach((m, n) => {
@@ -905,6 +952,16 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
     { month: lastMonthFirst.slice(0, 7), real: true, draft: false },
     { month: monthBefore(lastMonthFirst).slice(0, 7), real: false, draft: false },
     { month: monthBefore(monthBefore(lastMonthFirst)).slice(0, 7), real: false, draft: false },
+    {
+      month: monthBefore(monthBefore(monthBefore(lastMonthFirst))).slice(0, 7),
+      real: false,
+      draft: false,
+    },
+    {
+      month: monthBefore(monthBefore(monthBefore(monthBefore(lastMonthFirst)))).slice(0, 7),
+      real: false,
+      draft: false,
+    },
   ]
   const payroll = [
     ...SAMPLE_PEOPLE.map((p) => ({
