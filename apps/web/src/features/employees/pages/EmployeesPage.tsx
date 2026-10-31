@@ -110,7 +110,7 @@ function useColumns(shifts: Shift[] | undefined, onEdit: (e: User) => void): Col
       {
         key: 'shift',
         header: 'Shift',
-        className: 'hidden md:table-cell',
+        className: 'hidden lg:table-cell',
         cell: (e) => {
           const shift = e.shiftId ? shiftById.get(e.shiftId) : undefined
           return <span className="text-muted-foreground">{shift ? shiftLabel(shift) : '—'}</span>

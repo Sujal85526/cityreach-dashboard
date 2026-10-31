@@ -168,7 +168,7 @@ export function RotaPage() {
               <table className="w-full min-w-[720px] text-sm">
                 <thead>
                   <tr className="text-left text-xs text-muted-foreground uppercase">
-                    <th className="p-2 font-medium">Employee</th>
+                    <th className="sticky left-0 z-10 bg-card p-2 font-medium">Employee</th>
                     {days.map((d) => (
                       <th key={d} className={cn('p-2 font-medium', d === today && 'text-primary')}>
                         {dayHeading(d)}
@@ -179,7 +179,9 @@ export function RotaPage() {
                 <tbody>
                   {staff.map((e) => (
                     <tr key={e.id} className="border-t">
-                      <td className="p-2 font-medium whitespace-nowrap">{e.name}</td>
+                      <td className="sticky left-0 z-10 bg-card p-2 font-medium whitespace-nowrap max-md:max-w-24 max-md:truncate">
+                        {e.name}
+                      </td>
                       {days.map((d) => {
                         const entry = rota.data.find((r) => r.employeeId === e.id && r.date === d)
                         const planned = plannedShiftId(

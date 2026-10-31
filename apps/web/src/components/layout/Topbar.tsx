@@ -42,7 +42,9 @@ export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
 
       <div className="min-w-0 flex-1">
         <p className="hidden text-xs text-muted-foreground sm:block">City Reach / {title}</p>
-        <h1 className="truncate text-xl font-medium">{title}</h1>
+        <h1 className="text-xl font-medium max-md:line-clamp-2 max-md:text-lg max-md:leading-tight md:truncate">
+          {title}
+        </h1>
       </div>
 
       {isManagerRole(user.access.role) && (
