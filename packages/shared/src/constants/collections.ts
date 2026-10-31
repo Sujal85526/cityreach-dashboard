@@ -1,4 +1,4 @@
-/** Firestore collection names. Import these; never hard-code collection strings. */
+/** Collection names of the document store. Import these; never hard-code collection strings. */
 export const COLLECTIONS = {
   branches: 'branches',
   users: 'users',

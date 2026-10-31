@@ -21,7 +21,7 @@ export function displayTaskStatus(status: TaskStatus, deadline: Date, now: Date)
 }
 
 /**
- * Status moves an employee may make on their own task (firestore.rules enforces the same list):
+ * Status moves an employee may make on their own task (the task board follows the same list):
  * start, put back, or complete — including an overdue task. Only managers reopen completed work.
  */
 export const EMPLOYEE_TASK_MOVES: Record<TaskStatus, readonly TaskStatus[]> = {

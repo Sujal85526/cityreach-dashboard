@@ -1,13 +1,5 @@
 import { COLLECTIONS, type Branch, type BranchInfo } from '@cityreach/shared'
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  serverTimestamp,
-  where,
-  writeBatch,
-} from '@/lib/store'
+import { collection, doc, getDocs, query, serverTimestamp, where, writeBatch } from '@/lib/store'
 import type { SessionUser } from '@/features/auth/api'
 import { newBranchDoc } from '@/features/settings/api'
 import { addActivity } from '@/lib/activity'

@@ -94,9 +94,7 @@ export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
     try {
       if (employee) await update.mutateAsync({ current: employee, input: values })
       else await create.mutateAsync({ ...values, email })
-      toast.success(
-        employee ? 'Employee updated' : `${values.name} added to the team`,
-      )
+      toast.success(employee ? 'Employee updated' : `${values.name} added to the team`)
       onOpenChange(false)
     } catch (error) {
       toast.error(friendlyError(error))

@@ -92,7 +92,7 @@ export type ShiftInput = z.infer<typeof shiftInputSchema>
 
 /**
  * What a signed-in user may do: read from `users/{uid}` at sign-in by the web app,
- * and by `firestore.rules` on every request (no custom claims on the free plan).
+ * and by the route guards.
  */
 export const userAccessSchema = userSchema.pick({ role: true, branchId: true, status: true })
 export type UserAccess = z.infer<typeof userAccessSchema>

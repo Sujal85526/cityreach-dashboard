@@ -1,4 +1,9 @@
-import { FEEDBACK_CHANNELS, FEEDBACK_TOPICS, feedbackSchema, type Feedback } from '@cityreach/shared'
+import {
+  FEEDBACK_CHANNELS,
+  FEEDBACK_TOPICS,
+  feedbackSchema,
+  type Feedback,
+} from '@cityreach/shared'
 import { MessageSquareHeart, Star } from 'lucide-react'
 import { StatusPill } from '@/components/common/StatusPill'
 import type { ModuleContext } from '@/features/operations/modules'

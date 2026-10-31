@@ -10,7 +10,7 @@ export const notificationSchema = z.object({
   branchId: idSchema,
   /** null = visible to every manager of the branch. */
   recipientId: idSchema.nullable(),
-  /** User whose app wrote it; firestore.rules require it to equal the writer. null only in seed data. */
+  /** User whose session wrote it. null only in seed data. */
   actorId: idSchema.nullable(),
   type: z.enum(NOTIFICATION_TYPES),
   tone: z.enum(NOTIFICATION_TONES),

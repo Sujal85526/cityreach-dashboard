@@ -367,8 +367,7 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
       let earlyLeave = 0
       let away = false
 
-      const absentOn =
-        (p.key === 'tomas' && daysAgo === 3) || (p.key === 'noah' && daysAgo === 9)
+      const absentOn = (p.key === 'tomas' && daysAgo === 3) || (p.key === 'noah' && daysAgo === 9)
       if (daysAgo === 0) {
         if (p.todayOffset === null) continue
         const clockIn = later(start, p.todayOffset)
@@ -517,7 +516,9 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
         createdAt,
       })
     })
-    const updatedAt = new Date(now.getTime() - (moves.length ? Math.min(...moves.map((m) => m.daysAgo)) : 1) * DAY_MS)
+    const updatedAt = new Date(
+      now.getTime() - (moves.length ? Math.min(...moves.map((m) => m.daysAgo)) : 1) * DAY_MS,
+    )
     put(COLLECTIONS.inventoryItems, id, {
       branchId: o.branchId,
       name: itemName,
@@ -536,82 +537,178 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
   // ---- Tasks: recently completed, open, one overdue, and older completed work for the history ----
   const board: [TaskRow, TaskStatus, { deadline: Date; completedAt: Date | null }][] = [
     [
-      ['Restock milk fridge', 'Move the new milk delivery into the front-of-house fridge.', 'Inventory', 'maya', 'high'],
+      [
+        'Restock milk fridge',
+        'Move the new milk delivery into the front-of-house fridge.',
+        'Inventory',
+        'maya',
+        'high',
+      ],
       'completed',
       { deadline: fromNow(-40), completedAt: fromNow(-100) },
     ],
     [
-      ['Check oat milk delivery against the order', 'Count the cartons and note anything short.', 'Inventory', 'jamal', 'low'],
+      [
+        'Check oat milk delivery against the order',
+        'Count the cartons and note anything short.',
+        'Inventory',
+        'jamal',
+        'low',
+      ],
       'completed',
       { deadline: fromNow(-150), completedAt: fromNow(-190) },
     ],
     [
-      ['Reconcile Saturday till takings', 'Match the cash and card totals to the till report.', 'Finance', 'ella', 'medium'],
+      [
+        'Reconcile Saturday till takings',
+        'Match the cash and card totals to the till report.',
+        'Finance',
+        'ella',
+        'medium',
+      ],
       'completed',
       { deadline: at(-2, '10:00'), completedAt: at(-2, '09:20') },
     ],
     [
-      ['Rotate pastry display and mark down day-old items', 'Check dates and update the price cards.', 'Service', 'noah', 'medium'],
+      [
+        'Rotate pastry display and mark down day-old items',
+        'Check dates and update the price cards.',
+        'Service',
+        'noah',
+        'medium',
+      ],
       'completed',
       { deadline: at(-3, '17:00'), completedAt: at(-3, '16:40') },
     ],
     [
-      ['Descale the milk steam wands', 'Soak and flush both wands, then wipe down.', 'Cleaning', 'sofia', 'high'],
+      [
+        'Descale the milk steam wands',
+        'Soak and flush both wands, then wipe down.',
+        'Cleaning',
+        'sofia',
+        'high',
+      ],
       'completed',
       { deadline: at(-5, '14:00'), completedAt: at(-5, '13:35') },
     ],
     [
-      ['Update allergen information cards', 'Check every card against the new menu.', 'Service', 'liam', 'high'],
+      [
+        'Update allergen information cards',
+        'Check every card against the new menu.',
+        'Service',
+        'liam',
+        'high',
+      ],
       'completed',
       { deadline: at(-7, '12:00'), completedAt: at(-7, '11:30') },
     ],
     [
-      ['Post weekend specials on Instagram', 'Photo and caption for Saturday and Sunday.', 'Marketing', 'sofia', 'low'],
+      [
+        'Post weekend specials on Instagram',
+        'Photo and caption for Saturday and Sunday.',
+        'Marketing',
+        'sofia',
+        'low',
+      ],
       'completed',
       { deadline: at(-9, '18:00'), completedAt: at(-9, '17:50') },
     ],
     [
-      ['Weekend stock rotation', 'Move older stock forward and date-label new deliveries.', 'Inventory', 'maya', 'medium'],
+      [
+        'Weekend stock rotation',
+        'Move older stock forward and date-label new deliveries.',
+        'Inventory',
+        'maya',
+        'medium',
+      ],
       'pending',
       { deadline: fromNow(300), completedAt: null },
     ],
     [
-      ['Staff briefing: new menu items', 'Read through the new menu and be ready to answer questions.', 'Training', 'maya', 'medium'],
+      [
+        'Staff briefing: new menu items',
+        'Read through the new menu and be ready to answer questions.',
+        'Training',
+        'maya',
+        'medium',
+      ],
       'in_progress',
       { deadline: fromNow(20 * 60), completedAt: null },
     ],
     [
-      ['Label and date all prep containers', 'Use the new colour-coded date labels.', 'Service', 'maya', 'low'],
+      [
+        'Label and date all prep containers',
+        'Use the new colour-coded date labels.',
+        'Service',
+        'maya',
+        'low',
+      ],
       'pending',
       { deadline: fromNow(30 * 60), completedAt: null },
     ],
     [
-      ['Deep clean espresso machines', 'Full backflush and group-head cleaning on both machines.', 'Cleaning', 'liam', 'high'],
+      [
+        'Deep clean espresso machines',
+        'Full backflush and group-head cleaning on both machines.',
+        'Cleaning',
+        'liam',
+        'high',
+      ],
       'in_progress',
       { deadline: fromNow(180), completedAt: null },
     ],
     [
-      ['Refresh the pastry display layout', 'Re-plan the shelves for the weekend range.', 'Service', 'noah', 'medium'],
+      [
+        'Refresh the pastry display layout',
+        'Re-plan the shelves for the weekend range.',
+        'Service',
+        'noah',
+        'medium',
+      ],
       'pending',
       { deadline: fromNow(27 * 60), completedAt: null },
     ],
     [
-      ['Weekly cash drawer audit', 'Reconcile drawer totals against the till report.', 'Finance', 'ella', 'medium'],
+      [
+        'Weekly cash drawer audit',
+        'Reconcile drawer totals against the till report.',
+        'Finance',
+        'ella',
+        'medium',
+      ],
       'pending',
       { deadline: fromNow(30 * 60), completedAt: null },
     ],
     [
-      ['Post evening social update', 'Photo of today’s specials to Instagram.', 'Marketing', 'sofia', 'low'],
+      [
+        'Post evening social update',
+        'Photo of today’s specials to Instagram.',
+        'Marketing',
+        'sofia',
+        'low',
+      ],
       'pending',
       { deadline: fromNow(6 * 60), completedAt: null },
     ],
     [
-      ['Stocktake dry goods shelf', 'Count the shelf and update the stock levels.', 'Inventory', 'jamal', 'medium'],
+      [
+        'Stocktake dry goods shelf',
+        'Count the shelf and update the stock levels.',
+        'Inventory',
+        'jamal',
+        'medium',
+      ],
       'in_progress',
       { deadline: fromNow(8 * 60), completedAt: null },
     ],
     [
-      ['Sanitise staff toilets', 'Full sanitising checklist and restock supplies.', 'Cleaning', 'tomas', 'high'],
+      [
+        'Sanitise staff toilets',
+        'Full sanitising checklist and restock supplies.',
+        'Cleaning',
+        'tomas',
+        'high',
+      ],
       'overdue',
       { deadline: fromNow(-14 * 60), completedAt: null },
     ],
@@ -625,7 +722,12 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
   ) => {
     const [title, description, category, assignee, priority] = row
     taskNo++
-    taskRows.push({ assigneeId: assignee, deadline: t.deadline, status, completedAt: t.completedAt })
+    taskRows.push({
+      assigneeId: assignee,
+      deadline: t.deadline,
+      status,
+      completedAt: t.completedAt,
+    })
     put(COLLECTIONS.tasks, `task-${taskNo}`, {
       branchId: o.branchId,
       title,
@@ -660,11 +762,20 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
       const daysAgo = 15 + w * 7 + (e % 6)
       const [title, category] = pool[(w + e) % pool.length] ?? ['Weekly check', 'Service']
       const deadline = at(-daysAgo, '17:00')
-      const lateChance = (p.key === 'tomas' ? 0.25 : p.key === 'noah' ? 0.2 : 0.1) * (0.6 + daysAgo / 70)
+      const lateChance =
+        (p.key === 'tomas' ? 0.25 : p.key === 'noah' ? 0.2 : 0.1) * (0.6 + daysAgo / 70)
       const completedAt =
-        rand() < lateChance ? later(deadline, 120 + Math.floor(rand() * 1100)) : later(deadline, -(60 + Math.floor(rand() * 300)))
+        rand() < lateChance
+          ? later(deadline, 120 + Math.floor(rand() * 1100))
+          : later(deadline, -(60 + Math.floor(rand() * 300)))
       addTask(
-        [title, 'Routine task from the weekly plan.', category, p.key, w % 3 === 0 ? 'high' : 'medium'],
+        [
+          title,
+          'Routine task from the weekly plan.',
+          category,
+          p.key,
+          w % 3 === 0 ? 'high' : 'medium',
+        ],
         'completed',
         { deadline, completedAt },
         later(deadline, -3 * 24 * 60),
@@ -710,7 +821,8 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
         period: week,
         inputs,
         managerRating: rating,
-        managerComment: rating && rand() < 0.5 ? (comments[Math.floor(rand() * comments.length)] ?? null) : null,
+        managerComment:
+          rating && rand() < 0.5 ? (comments[Math.floor(rand() * comments.length)] ?? null) : null,
         breakdown,
         score,
         computedAt: now,
@@ -789,7 +901,13 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
       salary: p.salary,
       allowances: p.allowances,
     })),
-    { key: 'daniel', name: 'Daniel Brooks', position: 'General Manager', salary: 3400, allowances: 100 },
+    {
+      key: 'daniel',
+      name: 'Daniel Brooks',
+      position: 'General Manager',
+      salary: 3400,
+      allowances: 100,
+    },
   ]
   payMonths.forEach(({ month, real, draft }, n) => {
     const monthEnd = addDays(`${month}-01`, 31).slice(0, 8) + '01'
@@ -837,7 +955,9 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
         status: draft ? 'draft' : 'paid',
         paidAt: draft ? null : paidAt,
         paymentMethod: draft ? null : 'BACS',
-        paymentRef: draft ? null : `BACS-${month.replace('-', '')}-${String(e + 1).padStart(2, '0')}`,
+        paymentRef: draft
+          ? null
+          : `BACS-${month.replace('-', '')}-${String(e + 1).padStart(2, '0')}`,
         preparedBy: o.manager.uid,
         createdAt: preparedAt,
         updatedAt: preparedAt,

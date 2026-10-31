@@ -1,4 +1,10 @@
-import { TASK_PRIORITIES, toDateKey, zonedDateTime, type Task, type TaskPriority } from '@cityreach/shared'
+import {
+  TASK_PRIORITIES,
+  toDateKey,
+  zonedDateTime,
+  type Task,
+  type TaskPriority,
+} from '@cityreach/shared'
 import { Loader2, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'

@@ -2,10 +2,9 @@ import { z } from 'zod'
 import { dateKeySchema, idSchema, timestampsSchema } from './common'
 
 /**
- * The manager's private document store (licences, certificates, contracts, paperwork). On the free plan there is
- * no file storage, so a file is compressed in the browser and kept in the database in pieces:
- * documents/{id} holds the details, documentChunks/{id}_{n} the bytes (each under Firestore's
- * 1 MiB document limit).
+ * The manager's private document store (licences, certificates, contracts, paperwork). There is no
+ * file server in the demo, so a file is compressed in the browser and kept in the local store in pieces:
+ * documents/{id} holds the details, documentChunks/{id}_{n} the bytes (each under 1 MiB).
  */
 export const DOCUMENT_CATEGORIES = [
   'Licence',

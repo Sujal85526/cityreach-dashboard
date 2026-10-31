@@ -180,13 +180,69 @@ export interface SampleLeave {
 }
 
 export const SAMPLE_LEAVES: SampleLeave[] = [
-  { id: 'seed-leave-1', key: 'maya', typeId: 'annual', from: 16, to: 18, status: 'pending', reason: 'Long weekend away with family' },
-  { id: 'seed-leave-2', key: 'priya', typeId: 'annual', from: -1, to: 3, status: 'approved', reason: 'Visiting family' },
-  { id: 'seed-leave-3', key: 'jamal', typeId: 'annual', from: 9, to: 12, status: 'approved', reason: 'Holiday' },
-  { id: 'seed-leave-4', key: 'sofia', typeId: 'sick', from: -6, to: -6, status: 'approved', reason: 'Stomach bug' },
-  { id: 'seed-leave-5', key: 'ella', typeId: 'annual', from: -12, to: -11, status: 'approved', reason: 'Moving house' },
-  { id: 'seed-leave-6', key: 'liam', typeId: 'annual', from: -40, to: -38, status: 'approved', reason: 'Family wedding' },
-  { id: 'seed-leave-7', key: 'noah', typeId: 'sick', from: -33, to: -32, status: 'approved', reason: 'Flu' },
+  {
+    id: 'seed-leave-1',
+    key: 'maya',
+    typeId: 'annual',
+    from: 16,
+    to: 18,
+    status: 'pending',
+    reason: 'Long weekend away with family',
+  },
+  {
+    id: 'seed-leave-2',
+    key: 'priya',
+    typeId: 'annual',
+    from: -1,
+    to: 3,
+    status: 'approved',
+    reason: 'Visiting family',
+  },
+  {
+    id: 'seed-leave-3',
+    key: 'jamal',
+    typeId: 'annual',
+    from: 9,
+    to: 12,
+    status: 'approved',
+    reason: 'Holiday',
+  },
+  {
+    id: 'seed-leave-4',
+    key: 'sofia',
+    typeId: 'sick',
+    from: -6,
+    to: -6,
+    status: 'approved',
+    reason: 'Stomach bug',
+  },
+  {
+    id: 'seed-leave-5',
+    key: 'ella',
+    typeId: 'annual',
+    from: -12,
+    to: -11,
+    status: 'approved',
+    reason: 'Moving house',
+  },
+  {
+    id: 'seed-leave-6',
+    key: 'liam',
+    typeId: 'annual',
+    from: -40,
+    to: -38,
+    status: 'approved',
+    reason: 'Family wedding',
+  },
+  {
+    id: 'seed-leave-7',
+    key: 'noah',
+    typeId: 'sick',
+    from: -33,
+    to: -32,
+    status: 'approved',
+    reason: 'Flu',
+  },
 ]
 
 export const weekdayOf = (dateKey: string) => new Date(`${dateKey}T12:00:00Z`).getUTCDay()
@@ -223,7 +279,8 @@ const FLEXIBLE_DAYS = [1, 2, 3, 4, 5, 6]
 
 /** The shift someone works on a date (rota first, then their usual week), or null on a day off. */
 export function plannedShiftKey(p: Person, dateKey: string, today: string): ShiftKey | null {
-  if (!p.shift) return dateKey < today && FLEXIBLE_DAYS.includes(weekdayOf(dateKey)) ? p.histShift : null
+  if (!p.shift)
+    return dateKey < today && FLEXIBLE_DAYS.includes(weekdayOf(dateKey)) ? p.histShift : null
   const override = rotaOverride(p.key, dateKey)
   return override ? override.shiftId : p.shift
 }

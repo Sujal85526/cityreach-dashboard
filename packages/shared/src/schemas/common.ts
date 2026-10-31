@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 /**
  * Domain schemas use plain `Date` for instants so this package stays free of any
- * Firebase SDK. Repositories (server) and api.ts files (web) convert Timestamps.
+ * storage SDK. The api.ts files (web) convert stored Timestamps.
  */
 
 export const idSchema = z.string().min(1)

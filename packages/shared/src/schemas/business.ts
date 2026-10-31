@@ -3,7 +3,7 @@ import { dateKeySchema, idSchema, timestampsSchema } from './common'
 
 /**
  * Operations, finance and HR records. Every record belongs to a branch and remembers who created
- * it; collections are listed in RECORD_COLLECTIONS so firestore.rules can guard them in one place.
+ * it; collections are listed in RECORD_COLLECTIONS so they can be handled in one place.
  */
 const recordBase = z
   .object({
@@ -299,7 +299,7 @@ export const swapRequestSchema = recordBase.extend({
 export type SwapRequest = z.infer<typeof swapRequestSchema>
 
 /**
- * Collections guarded by the generic rules in firestore.rules:
+ * Collections handled by the generic records module:
  * manager records (managers read and write), staff logs (everyone in the branch reads and adds,
  * managers edit) and personal records (the employee also reads their own).
  */

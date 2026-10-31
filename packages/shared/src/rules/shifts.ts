@@ -32,7 +32,7 @@ export function shiftLengthMinutes(start: string, end: string): number {
 }
 
 /**
- * When a shift instance ends: its start plus the shift length. firestore.rules check the
+ * When a shift instance ends: its start plus the shift length. the clock-in code checks the
  * stored `shiftEndAt` with the same arithmetic, so it can't be moved earlier on the phone.
  */
 export function shiftEndFrom(startAt: Date, start: string, end: string): Date {
