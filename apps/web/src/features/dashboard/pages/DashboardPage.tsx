@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router'
+import { LogoMark } from '@/components/brand/Logo'
 import { EmployeeAvatar } from '@/components/common/EmployeeAvatar'
 import { ErrorState } from '@/components/common/EmptyState'
 import { StatCard } from '@/components/common/StatCard'
@@ -124,7 +125,7 @@ export function DashboardPage() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <StatCard
           label="Employees present"
           icon={UserCheck}
@@ -368,22 +369,17 @@ function Hero({
   summary: string | null
 }) {
   return (
-    <section className="relative overflow-hidden rounded-3xl bg-brand px-6 py-7 text-brand-cream shadow-lg sm:px-9 sm:py-9">
-      <div
-        className="pointer-events-none absolute -top-24 -right-16 size-72 rounded-full border border-brand-cream/10"
-        aria-hidden
+    <section className="relative overflow-hidden rounded-3xl border bg-[linear-gradient(120deg,var(--accent)_0%,var(--card)_65%)] px-6 py-7 shadow-sm sm:px-9 sm:py-9">
+      <LogoMark
+        className="pointer-events-none absolute top-1/2 -right-6 size-56 -translate-y-1/2 text-primary opacity-[0.06] sm:right-6 sm:size-64"
       />
-      <div
-        className="pointer-events-none absolute -top-8 right-10 size-44 rounded-full border border-brand-cream/10"
-        aria-hidden
-      />
-      <p className="text-xs font-medium tracking-[0.16em] text-brand-cream/60 uppercase">
+      <p className="text-xs font-medium tracking-[0.16em] text-muted-foreground uppercase">
         {dateLabel} · {branch}
       </p>
-      <h2 className="mt-3 text-3xl leading-tight font-medium sm:text-4xl">
+      <h2 className="mt-3 text-3xl leading-tight font-medium text-foreground sm:text-4xl">
         Good {part}, {name}
       </h2>
-      <p className="mt-2 min-h-6 text-sm text-brand-cream/70 sm:text-base">
+      <p className="mt-2 min-h-6 text-sm text-muted-foreground sm:text-base">
         {summary ?? `Here's ${branch} today.`}
       </p>
     </section>

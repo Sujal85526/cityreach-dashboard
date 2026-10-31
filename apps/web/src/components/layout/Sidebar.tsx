@@ -26,21 +26,26 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
     <div className="flex h-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div
         className={cn(
-          'flex items-center gap-3 pt-6 pb-5',
-          collapsed ? 'flex-col px-2' : 'pr-3 pl-6',
+          'flex items-center gap-3 pt-5 pb-5',
+          collapsed ? 'flex-col px-2' : 'px-4',
         )}
       >
+        {/* The logo lockup as supplied: cream wordmark on a brand-green plate. */}
         {collapsed ? (
-          <LogoMark className="size-7 text-sidebar-accent-foreground" />
+          <span className="flex size-10 items-center justify-center rounded-xl bg-brand text-brand-cream">
+            <LogoMark className="size-5" />
+          </span>
         ) : (
-          <Wordmark className="h-3.5 flex-1 self-center text-sidebar-accent-foreground" />
+          <span className="flex h-11 flex-1 items-center justify-center rounded-xl bg-brand px-4 text-brand-cream">
+            <Wordmark className="h-3 w-full max-w-36" />
+          </span>
         )}
         {onToggle && (
           <Hint label="Expand sidebar" show={collapsed}>
             <button
               type="button"
               onClick={onToggle}
-              className="rounded-lg p-2 text-sidebar-muted transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              className="rounded-lg p-2 text-sidebar-muted transition-colors hover:bg-muted hover:text-foreground"
               aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
               title={collapsed ? undefined : 'Collapse sidebar'}
             >
@@ -83,7 +88,7 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
                       collapsed ? 'justify-center px-0' : 'px-3',
                       isActive
                         ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
-                        : 'hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
+                        : 'hover:bg-muted hover:text-foreground',
                     )
                   }
                 >
@@ -91,7 +96,7 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
                     <>
                       {isActive && (
                         <span
-                          className="absolute top-2 bottom-2 left-0 w-0.5 rounded-r-full bg-sidebar-accent-foreground"
+                          className="absolute top-2 bottom-2 left-0 w-0.5 rounded-r-full bg-primary"
                           aria-hidden
                         />
                       )}
@@ -116,7 +121,7 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
           <EmployeeAvatar name={user.name} id={user.uid} size="sm" />
           {!collapsed && (
             <div className="min-w-0 flex-1 leading-tight">
-              <div className="truncate text-sm font-medium text-sidebar-accent-foreground">
+              <div className="truncate text-sm font-medium text-foreground">
                 {user.name}
               </div>
               <div className="truncate text-xs text-sidebar-muted capitalize">
@@ -128,7 +133,7 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
             <button
               type="button"
               onClick={() => setConfirmLogout(true)}
-              className="rounded-lg p-2 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              className="rounded-lg p-2 transition-colors hover:bg-muted hover:text-foreground"
               aria-label="Switch role"
             >
               <LogOut className="size-4" aria-hidden />

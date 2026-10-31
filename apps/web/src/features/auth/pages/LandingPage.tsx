@@ -123,7 +123,7 @@ export function LandingPage() {
                   )}
                 >
                   <div className="flex flex-wrap items-start gap-4 sm:flex-nowrap">
-                    <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand text-brand-cream dark:bg-accent dark:text-primary">
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-accent text-primary">
                       <Icon className="size-5" aria-hidden />
                     </span>
                     <div className="min-w-0 flex-1 space-y-3">
