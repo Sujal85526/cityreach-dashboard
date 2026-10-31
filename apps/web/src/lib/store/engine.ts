@@ -34,16 +34,33 @@ interface Persisted {
 }
 const today = () => new Date().toISOString().slice(0, 10)
 
+function save() {
+  try {
+    const payload: Persisted = { version: SEED_VERSION, seededOn, data }
+    localStorage.setItem(STORAGE_KEY, serialize(payload))
+  } catch {
+    // Storage full or blocked: the demo keeps working from memory until the tab closes.
+  }
+}
+
 function persist() {
   clearTimeout(saveTimer)
   saveTimer = setTimeout(() => {
-    try {
-      const payload: Persisted = { version: SEED_VERSION, seededOn, data }
-      localStorage.setItem(STORAGE_KEY, serialize(payload))
-    } catch {
-      // Storage full or blocked: the demo keeps working from memory until the tab closes.
-    }
+    saveTimer = undefined
+    save()
   }, 150)
+}
+
+/** Writes a save that is still waiting, so a reload or tab close right after a change loses nothing. */
+function flush() {
+  if (saveTimer === undefined) return
+  clearTimeout(saveTimer)
+  saveTimer = undefined
+  save()
+}
+if (typeof window !== 'undefined') {
+  window.addEventListener('pagehide', flush)
+  window.addEventListener('beforeunload', flush)
 }
 
 let seededOn = today()
