@@ -18,6 +18,7 @@ import {
   Wrench,
   type LucideIcon,
 } from 'lucide-react'
+import { useState } from 'react'
 import { Link } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -70,6 +71,7 @@ export function NeedsAttention({
   lowStock: number | null
   criticalStock: number
 }) {
+  const [showAll, setShowAll] = useState(false)
   const branch = useBranch().data
   const leave = useBranchLeave()
   const swaps = useSwaps()
@@ -121,7 +123,7 @@ export function NeedsAttention({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Needs your attention</CardTitle>
+        <CardTitle className="text-lg">Needs your attention</CardTitle>
       </CardHeader>
       <CardContent>
         {!ready ? (
@@ -132,29 +134,38 @@ export function NeedsAttention({
           </div>
         ) : (
           <ul className="grid gap-2 md:grid-cols-2">
-            {items.map((item) => {
+            {(showAll ? items : items.slice(0, 6)).map((item) => {
               const Icon = ICON[item.kind]
               return (
                 <li key={item.text}>
                   <Link
                     to={item.to}
-                    className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50"
+                    className="group flex items-center gap-3 rounded-xl border p-3 text-sm transition-colors hover:border-primary/30 hover:bg-muted/50"
                   >
                     <span
                       className={cn(
-                        'flex size-8 shrink-0 items-center justify-center rounded-lg',
+                        'flex size-9 shrink-0 items-center justify-center rounded-xl',
                         TONE[item.tone],
                       )}
                     >
                       <Icon className="size-4" aria-hidden />
                     </span>
                     <span className="flex-1">{item.text}</span>
-                    <ChevronRight className="size-4 text-muted-foreground" aria-hidden />
+                    <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" aria-hidden />
                   </Link>
                 </li>
               )
             })}
           </ul>
+        )}
+        {ready && items.length > 6 && (
+          <button
+            type="button"
+            onClick={() => setShowAll((v) => !v)}
+            className="mt-3 text-sm font-medium text-primary hover:underline"
+          >
+            {showAll ? 'Show fewer' : `Show ${items.length - 6} more`}
+          </button>
         )}
       </CardContent>
     </Card>

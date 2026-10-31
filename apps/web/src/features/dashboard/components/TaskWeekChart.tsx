@@ -1,13 +1,13 @@
+import { useId } from 'react'
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
+  axisProps,
+  ChartLegend,
+  ChartTooltip,
+  chartMargin,
+  Gradient,
+  gridProps,
+} from '@/components/charts/chart-kit'
 
 /** Tasks due each of the past 7 days: completed vs still open (prototype "Task completion"). */
 export function TaskWeekChart({
@@ -15,54 +15,49 @@ export function TaskWeekChart({
   pendingLabel = 'Not completed',
 }: {
   data: { day: string; completed: number; pending: number }[]
-  /** "Missed" in reports (shown in red); "Not completed" on the dashboard. */
+  /** "Missed" in reports (shown in a warm clay tone); "Not completed" on the dashboard. */
   pendingLabel?: string
 }) {
+  const id = useId().replace(/:/g, '')
+  const pendingColor = pendingLabel === 'Missed' ? 'var(--chart-4)' : 'var(--chart-3)'
   return (
-    <div className="h-56" role="img" aria-label="Task completion over the past 7 days">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
-          <CartesianGrid vertical={false} stroke="var(--border)" />
-          <XAxis
-            dataKey="day"
-            tickLine={false}
-            axisLine={false}
-            fontSize={12}
-            stroke="var(--muted-foreground)"
-          />
-          <YAxis
-            allowDecimals={false}
-            tickLine={false}
-            axisLine={false}
-            fontSize={12}
-            stroke="var(--muted-foreground)"
-          />
-          <Tooltip
-            cursor={{ fill: 'var(--muted)' }}
-            contentStyle={{
-              background: 'var(--popover)',
-              border: '1px solid var(--border)',
-              borderRadius: 8,
-              fontSize: 12,
-            }}
-          />
-          <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />
-          <Bar
-            dataKey="completed"
-            name="Completed"
-            fill="var(--success)"
-            radius={[4, 4, 0, 0]}
-            maxBarSize={18}
-          />
-          <Bar
-            dataKey="pending"
-            name={pendingLabel}
-            fill={pendingLabel === 'Missed' ? 'var(--danger)' : 'var(--info)'}
-            radius={[4, 4, 0, 0]}
-            maxBarSize={18}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+    <div>
+      <div className="h-52" role="img" aria-label="Task completion over the past 7 days">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={chartMargin} barGap={4} barCategoryGap="30%">
+            <defs>
+              <Gradient id={`${id}-done`} color="var(--chart-1)" from={1} to={0.72} />
+              <Gradient id={`${id}-open`} color={pendingColor} from={1} to={0.7} />
+            </defs>
+            <CartesianGrid {...gridProps} />
+            <XAxis dataKey="day" {...axisProps} />
+            <YAxis allowDecimals={false} {...axisProps} />
+            <Tooltip cursor={{ fill: 'var(--muted)', opacity: 0.6 }} content={<ChartTooltip />} />
+            <Bar
+              dataKey="completed"
+              name="Completed"
+              fill={`url(#${id}-done)`}
+              radius={[6, 6, 0, 0]}
+              maxBarSize={16}
+              animationDuration={700}
+            />
+            <Bar
+              dataKey="pending"
+              name={pendingLabel}
+              fill={`url(#${id}-open)`}
+              radius={[6, 6, 0, 0]}
+              maxBarSize={16}
+              animationDuration={700}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <ChartLegend
+        items={[
+          { name: 'Completed', color: 'var(--chart-1)' },
+          { name: pendingLabel, color: pendingColor },
+        ]}
+      />
     </div>
   )
 }

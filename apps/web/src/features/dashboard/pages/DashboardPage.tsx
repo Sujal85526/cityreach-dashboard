@@ -109,20 +109,19 @@ export function DashboardPage() {
   if (error) return <ErrorState error={error} />
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold">
-          Good {partOfDay(now, tz)}, {user.name.split(' ')[0]}
-        </h2>
-        <p className="text-sm text-muted-foreground">Here's {branch?.name ?? 'the shop'} today.</p>
-      </div>
-
-      <NeedsAttention
-        today={today}
-        absent={att?.today.absent ?? null}
-        overdueTasks={t?.overdue ?? null}
-        lowStock={stock?.rows.length ?? null}
-        criticalStock={stock?.critical ?? 0}
+    <div className="space-y-6 md:space-y-8">
+      <Hero
+        name={user.name.split(' ')[0] ?? user.name}
+        branch={branch?.name ?? 'your business'}
+        part={partOfDay(now, tz)}
+        dateLabel={formatHeroDate(now, tz)}
+        summary={
+          att && t
+            ? `${att.today.present} of ${att.today.scheduled} on shift · ${t.open} open tasks${
+                t.overdue ? ` · ${t.overdue} overdue` : ''
+              }`
+            : null
+        }
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -190,10 +189,18 @@ export function DashboardPage() {
         />
       </div>
 
+      <NeedsAttention
+        today={today}
+        absent={att?.today.absent ?? null}
+        overdueTasks={t?.overdue ?? null}
+        lowStock={stock?.rows.length ?? null}
+        criticalStock={stock?.critical ?? 0}
+      />
+
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-base">Attendance summary</CardTitle>
+            <CardTitle className="text-lg">Attendance summary</CardTitle>
             <CardAction>
               <Link to="/attendance" className="text-sm text-primary hover:underline">
                 Details
@@ -206,7 +213,7 @@ export function DashboardPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Task completion</CardTitle>
+            <CardTitle className="text-lg">Task completion</CardTitle>
             <CardAction>
               <Link to="/tasks" className="text-sm text-primary hover:underline">
                 Board
@@ -222,7 +229,7 @@ export function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Inventory alerts</CardTitle>
+            <CardTitle className="text-lg">Inventory alerts</CardTitle>
             <CardAction>
               <Link to="/inventory" className="text-sm text-primary hover:underline">
                 Inventory
@@ -254,7 +261,7 @@ export function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Upcoming tasks</CardTitle>
+            <CardTitle className="text-lg">Upcoming tasks</CardTitle>
             <CardAction>
               <Link to="/tasks" className="text-sm text-primary hover:underline">
                 All tasks
@@ -285,7 +292,7 @@ export function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Performance trend</CardTitle>
+            <CardTitle className="text-lg">Performance trend</CardTitle>
             <CardAction>
               <Link to="/reports" className="text-sm text-primary hover:underline">
                 Reports
@@ -301,7 +308,7 @@ export function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Recent activity</CardTitle>
+            <CardTitle className="text-lg">Recent activity</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {activity.isPending ? (
@@ -315,7 +322,7 @@ export function DashboardPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Notifications</CardTitle>
+            <CardTitle className="text-lg">Notifications</CardTitle>
             <CardAction>
               <Link to="/notifications" className="text-sm text-primary hover:underline">
                 View all
@@ -345,6 +352,51 @@ export function DashboardPage() {
       </div>
     </div>
   )
+}
+
+function Hero({
+  name,
+  branch,
+  part,
+  dateLabel,
+  summary,
+}: {
+  name: string
+  branch: string
+  part: string
+  dateLabel: string
+  summary: string | null
+}) {
+  return (
+    <section className="relative overflow-hidden rounded-3xl bg-brand px-6 py-7 text-brand-cream shadow-lg sm:px-9 sm:py-9">
+      <div
+        className="pointer-events-none absolute -top-24 -right-16 size-72 rounded-full border border-brand-cream/10"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute -top-8 right-10 size-44 rounded-full border border-brand-cream/10"
+        aria-hidden
+      />
+      <p className="text-xs font-medium tracking-[0.16em] text-brand-cream/60 uppercase">
+        {dateLabel} · {branch}
+      </p>
+      <h2 className="mt-3 text-3xl leading-tight font-medium sm:text-4xl">
+        Good {part}, {name}
+      </h2>
+      <p className="mt-2 min-h-6 text-sm text-brand-cream/70 sm:text-base">
+        {summary ?? `Here's ${branch} today.`}
+      </p>
+    </section>
+  )
+}
+
+function formatHeroDate(now: Date, tz: string) {
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: tz,
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  }).format(now)
 }
 
 function ActivityRow({ a }: { a: Activity }) {

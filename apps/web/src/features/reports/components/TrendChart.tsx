@@ -1,15 +1,16 @@
+import { useId } from 'react'
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
+  axisProps,
+  ChartTooltip,
+  chartMargin,
+  Gradient,
+  gridProps,
+} from '@/components/charts/chart-kit'
 
 /** Average staff score per week (prototype "Performance trend", 8 weeks). */
 export function TrendChart({ data }: { data: { label: string; score: number | null }[] }) {
+  const id = useId().replace(/:/g, '')
   if (data.every((d) => d.score === null))
     return (
       <p className="py-10 text-center text-sm text-muted-foreground">
@@ -19,40 +20,27 @@ export function TrendChart({ data }: { data: { label: string; score: number | nu
   return (
     <div className="h-56" role="img" aria-label="Average performance score over the last 8 weeks">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 8, right: 12, bottom: 0, left: -16 }}>
-          <CartesianGrid vertical={false} stroke="var(--border)" />
-          <XAxis
-            dataKey="label"
-            tickLine={false}
-            axisLine={false}
-            fontSize={12}
-            stroke="var(--muted-foreground)"
-          />
-          <YAxis
-            domain={[0, 100]}
-            tickLine={false}
-            axisLine={false}
-            fontSize={12}
-            stroke="var(--muted-foreground)"
-          />
-          <Tooltip
-            contentStyle={{
-              background: 'var(--popover)',
-              border: '1px solid var(--border)',
-              borderRadius: 8,
-              fontSize: 12,
-            }}
-          />
-          <Line
+        <AreaChart data={data} margin={{ ...chartMargin, right: 14 }}>
+          <defs>
+            <Gradient id={`${id}-area`} color="var(--chart-1)" from={0.32} to={0} />
+          </defs>
+          <CartesianGrid {...gridProps} />
+          <XAxis dataKey="label" {...axisProps} />
+          <YAxis domain={[0, 100]} {...axisProps} />
+          <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'var(--border)' }} />
+          <Area
             type="monotone"
             dataKey="score"
             name="Avg score"
             stroke="var(--chart-1)"
             strokeWidth={2.5}
-            dot={{ r: 3 }}
+            fill={`url(#${id}-area)`}
+            dot={false}
+            activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--card)' }}
             connectNulls
+            animationDuration={900}
           />
-        </LineChart>
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   )

@@ -1,13 +1,13 @@
+import { useId } from 'react'
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
+  axisProps,
+  ChartLegend,
+  ChartTooltip,
+  chartMargin,
+  Gradient,
+  gridProps,
+} from '@/components/charts/chart-kit'
 
 export interface WeekPoint {
   day: string
@@ -17,55 +17,44 @@ export interface WeekPoint {
 }
 
 const SERIES = [
-  { key: 'onTime', name: 'On time', color: 'var(--success)' },
-  { key: 'late', name: 'Late', color: 'var(--warning)' },
-  { key: 'absent', name: 'Absent', color: 'var(--danger)' },
+  { key: 'onTime', name: 'On time', color: 'var(--chart-1)' },
+  { key: 'late', name: 'Late', color: 'var(--chart-3)' },
+  { key: 'absent', name: 'Absent', color: 'var(--chart-4)' },
 ] as const
 
 /** Stacked bars of the past 7 days (prototype "Attendance summary"). */
 export function WeekChart({ data }: { data: WeekPoint[] }) {
+  const id = useId().replace(/:/g, '')
   return (
-    <div className="h-64" role="img" aria-label="Attendance over the past 7 days">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
-          <CartesianGrid vertical={false} stroke="var(--border)" />
-          <XAxis
-            dataKey="day"
-            tickLine={false}
-            axisLine={false}
-            fontSize={12}
-            stroke="var(--muted-foreground)"
-          />
-          <YAxis
-            allowDecimals={false}
-            tickLine={false}
-            axisLine={false}
-            fontSize={12}
-            stroke="var(--muted-foreground)"
-          />
-          <Tooltip
-            cursor={{ fill: 'var(--muted)' }}
-            contentStyle={{
-              background: 'var(--popover)',
-              border: '1px solid var(--border)',
-              borderRadius: 8,
-              fontSize: 12,
-            }}
-          />
-          <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />
-          {SERIES.map((s, i) => (
-            <Bar
-              key={s.key}
-              dataKey={s.key}
-              name={s.name}
-              stackId="a"
-              fill={s.color}
-              radius={i === SERIES.length - 1 ? [4, 4, 0, 0] : 0}
-              maxBarSize={36}
-            />
-          ))}
-        </BarChart>
-      </ResponsiveContainer>
+    <div>
+      <div className="h-60" role="img" aria-label="Attendance over the past 7 days">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={chartMargin} barCategoryGap="28%">
+            <defs>
+              {SERIES.map((s) => (
+                <Gradient key={s.key} id={`${id}-${s.key}`} color={s.color} from={1} to={0.7} />
+              ))}
+            </defs>
+            <CartesianGrid {...gridProps} />
+            <XAxis dataKey="day" {...axisProps} />
+            <YAxis allowDecimals={false} {...axisProps} />
+            <Tooltip cursor={{ fill: 'var(--muted)', opacity: 0.6 }} content={<ChartTooltip />} />
+            {SERIES.map((s, i) => (
+              <Bar
+                key={s.key}
+                dataKey={s.key}
+                name={s.name}
+                stackId="a"
+                fill={`url(#${id}-${s.key})`}
+                radius={i === SERIES.length - 1 ? [6, 6, 0, 0] : 0}
+                maxBarSize={34}
+                animationDuration={700}
+              />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <ChartLegend items={SERIES.map((s) => ({ name: s.name, color: s.color }))} />
     </div>
   )
 }
