@@ -26,12 +26,12 @@ export const DEFAULT_TASK_CATEGORIES = [
   'Inventory',
 ]
 
-/** Open 07:00–23:00 Monday to Saturday; shorter hours on Sunday (0). */
+/** Open 07:00–23:00, seven days a week. */
 export const DEFAULT_BUSINESS_HOURS = [0, 1, 2, 3, 4, 5, 6].map((day) => ({
   day,
   open: '07:00',
   close: '23:00',
-  closed: day === 0,
+  closed: false,
 }))
 
 export const DEFAULT_NOTIFICATION_PREFS: Record<NotificationType, boolean> = {

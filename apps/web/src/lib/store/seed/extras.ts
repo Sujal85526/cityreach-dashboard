@@ -1,25 +1,10 @@
 /**
- * Emulator seed for the later modules (leave & pay, documents), so the dashboard's "Needs your
- * attention", the calendar, payslips and employee documents have something to show locally.
- * Runs after the main seed; emulator only.
+ * Demo documents (licences, certificates, insurance, staff papers) with their expiry dates, so the
+ * Documents page, the calendar and the dashboard's "Needs your attention" have something to show.
+ * Runs after the main seed.
  */
-import { addDays, COLLECTIONS, DEFAULT_LEAVE_TYPES } from '@cityreach/shared'
+import { addDays, COLLECTIONS } from '@cityreach/shared'
 import { bytesOf, type SeedDb } from './adapter'
-
-const SALARIES: Record<string, [salary: number, allowances: number]> = {
-  maya: [3000, 500],
-  jamal: [3200, 500],
-  sofia: [3000, 400],
-  ella: [2800, 400],
-  priya: [2800, 400],
-  noah: [3000, 500],
-  liam: [4200, 800],
-  tomas: [2500, 300],
-}
-
-const typeName = (id: string) => DEFAULT_LEAVE_TYPES.find((t) => t.id === id)?.name ?? id
-const range = (from: string, days: number) =>
-  Array.from({ length: days }, (_, i) => addDays(from, i))
 
 export function seedExtras(
   db: SeedDb,
@@ -28,82 +13,30 @@ export function seedExtras(
   names: Record<string, string>,
 ) {
   const now = new Date()
-  const stamp = { createdAt: now, updatedAt: now }
   const writer = db.bulkWriter()
-
-  for (const [uid, [salary, allowances]] of Object.entries(SALARIES))
-    writer.update(db.collection(COLLECTIONS.users).doc(uid), { salary, allowances })
-
-  const leave = (
-    id: string,
-    uid: string,
-    typeId: string,
-    dates: string[],
-    status: 'pending' | 'approved',
-    reason: string,
-  ) => {
-    writer.set(db.collection(COLLECTIONS.leaveRequests).doc(id), {
-      branchId,
-      employeeId: uid,
-      employeeName: names[uid],
-      typeId,
-      typeName: typeName(typeId),
-      from: dates[0],
-      to: dates.at(-1),
-      dates,
-      reason,
-      status,
-      paidDays: status === 'approved' ? dates.length : null,
-      decidedBy: status === 'approved' ? 'amara' : null,
-      decidedByName: status === 'approved' ? 'Amara Okafor' : null,
-      decidedAt: status === 'approved' ? now : null,
-      managerComment: null,
-      ...stamp,
-    })
-    if (status === 'approved')
-      for (const dateKey of dates)
-        writer.set(db.collection(COLLECTIONS.attendance).doc(`${uid}_${dateKey}`), {
-          branchId,
-          employeeId: uid,
-          employeeName: names[uid],
-          dateKey,
-          shiftId: null,
-          shiftStart: null,
-          shiftEnd: null,
-          shiftStartAt: null,
-          clockInAt: null,
-          clockOutAt: null,
-          workedMinutes: null,
-          lateMinutes: 0,
-          status: 'leave',
-          source: 'manager',
-          correctedBy: 'amara',
-          leaveTypeId: typeId,
-          leavePaid: true,
-          leaveRequestId: id,
-          ...stamp,
-        })
-  }
-  leave('seed-leave-1', 'noah', 'annual', range(addDays(today, 5), 3), 'pending', 'Family visit')
-  leave('seed-leave-2', 'ella', 'emergency', [addDays(today, 1)], 'pending', 'Family matter')
-  leave('seed-leave-3', 'jamal', 'annual', range(addDays(today, 9), 4), 'approved', 'Holiday')
-  leave('seed-leave-4', 'sofia', 'sick', [addDays(today, 2)], 'approved', 'Doctor appointment')
 
   const document = (
     id: string,
     name: string,
     category: string,
     expiresIn: number | null,
+    uploadedDaysAgo: number,
+    note: string,
     employee?: string,
   ) => {
     const text = `Sample document: ${name}`
     const data = bytesOf(text)
+    const uploaded = new Date(now.getTime() - uploadedDaysAgo * 86_400_000)
+    const expiresOn = expiresIn === null ? null : addDays(today, expiresIn)
+    // Documents already inside their reminder window are marked as notified, so the daily check
+    // doesn't repeat the notification the seed already shows.
+    const soon = expiresIn !== null && expiresIn <= 30
     writer.set(db.collection(COLLECTIONS.documents).doc(id), {
       branchId,
       name,
       category,
-      note: '',
-      fileName: 'sample.txt',
+      note,
+      fileName: `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.txt`,
       mimeType: 'text/plain',
       originalSize: text.length,
       storedSize: text.length,
@@ -113,11 +46,12 @@ export function seedExtras(
       uploadedByName: 'Amara Okafor',
       employeeId: employee ?? null,
       employeeName: employee ? names[employee] : null,
-      expiresOn: expiresIn === null ? null : addDays(today, expiresIn),
+      expiresOn,
       remindDaysBefore: 30,
-      remindedFor: null,
+      remindedFor: soon ? expiresOn : null,
       expiredNotifiedFor: null,
-      ...stamp,
+      createdAt: uploaded,
+      updatedAt: uploaded,
     })
     writer.set(db.collection(COLLECTIONS.documentChunks).doc(`${id}_0`), {
       branchId,
@@ -126,12 +60,14 @@ export function seedExtras(
       data,
     })
   }
-  document('seed-doc-1', 'Trade license', 'License', 18)
-  document('seed-doc-2', 'Shop insurance', 'Insurance', 200)
-  document('seed-doc-3', 'Tenancy contract', 'Contract', 120)
-  document('seed-doc-4', 'Visa', 'Visa', 25, 'maya')
-  document('seed-doc-5', 'Passport', 'Passport', -2, 'liam')
-  document('seed-doc-6', 'Emirates ID', 'Emirates ID', 400, 'tomas')
+  document('seed-doc-1', 'Food hygiene certificate (Level 2)', 'Certificate', 95, 270, 'Renew through the local council.')
+  document('seed-doc-2', 'Public liability insurance', 'Insurance', 24, 340, 'Policy renews automatically; check the cover limit.')
+  document('seed-doc-3', 'Gas safety certificate', 'Certificate', 17, 348, 'Book the annual check with the registered engineer.')
+  document('seed-doc-4', 'Lease agreement: 22 Albion Street', 'Contract', 900, 600, 'Rent review due at the end of year two.')
+  document('seed-doc-5', 'Premises licence', 'Licence', 330, 400, '')
+  document('seed-doc-6', 'Passport', 'Passport', 1400, 210, '', 'maya')
+  document('seed-doc-7', 'Right to work check', 'Right to work', 260, 60, 'Share code verified.', 'tomas')
+  document('seed-doc-8', 'DBS check', 'DBS check', null, 500, 'Enhanced check, cleared.', 'liam')
 
   writer.close()
 }

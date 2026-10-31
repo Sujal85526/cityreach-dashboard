@@ -1,13 +1,25 @@
 /**
- * Emulator seed for the operations, finance and HR modules (rota, checklists, incidents, food
- * safety, equipment, purchasing, finance, recruitment, feedback, training & goals), so every
- * screen, the dashboard's "Needs your attention" and the calendar have something to show.
- * Runs after the main seed; emulator only.
+ * Demo data for the operations, finance and HR modules (checklists, incidents, food safety,
+ * equipment, purchasing, sales and expenses, recruitment, feedback, training and goals, shift
+ * swaps), so every screen, the dashboard's "Needs your attention" and the calendar have something
+ * to show. Everything is relative to today. Runs after the main seed.
  */
-import { addDays, COLLECTIONS, orderTotal, temperatureOk } from '@cityreach/shared'
+import {
+  addDays,
+  COLLECTIONS,
+  DEFAULT_BRANCH_RULES,
+  orderTotal,
+  plannedShiftKey,
+  SAMPLE_PEOPLE,
+  temperatureOk,
+  zonedDateTime,
+} from '@cityreach/shared'
 import type { SeedDb } from './adapter'
 
 const MANAGER = { uid: 'amara', name: 'Amara Okafor' }
+const TZ = DEFAULT_BRANCH_RULES.timeZone
+
+const money = (n: number) => Math.round(n * 100) / 100
 
 export function seedBusiness(
   db: SeedDb,
@@ -17,334 +29,432 @@ export function seedBusiness(
 ) {
   const now = new Date()
   const writer = db.bulkWriter()
-  const base = (by = MANAGER.uid) => ({
+  const day = (offset: number) => addDays(today, offset)
+  const base = (by = MANAGER.uid, createdAt = now) => ({
     branchId,
     createdBy: by,
     createdByName: names[by] ?? MANAGER.name,
-    createdAt: now,
-    updatedAt: now,
+    createdAt,
+    updatedAt: createdAt,
   })
   const put = (coll: string, id: string, data: Record<string, unknown>) =>
     writer.set(db.collection(coll).doc(id), data)
-  const day = (offset: number) => addDays(today, offset)
+  const itemId = (name: string) => {
+    const found = Object.entries(db.data[COLLECTIONS.inventoryItems] ?? {}).find(
+      ([, d]) => d.name === name,
+    )
+    if (!found) throw new Error(`Seed refers to a missing stock item: ${name}`)
+    return found[0]
+  }
+  const atTime = (offset: number, time: string) => zonedDateTime(day(offset), time, TZ)
 
-  // Owner of the branch (can open more branches); quarterly VAT; probation ending soon.
+  let state = 7
+  const rand = () => {
+    state = (state * 1_103_515_245 + 12_345) % 2 ** 31
+    return state / 2 ** 31
+  }
+
+  // Owner of the branch (can open more branches); quarterly VAT; the daily jobs have run today.
   writer.update(db.collection(COLLECTIONS.branches).doc(branchId), {
     ownerId: MANAGER.uid,
-    vat: { periodEnd: '2026-09-30', months: 3 },
+    vat: { periodEnd: `${today.slice(0, 4)}-03`, months: 3 },
+    automation: { performanceDate: today },
   })
   writer.update(db.collection(COLLECTIONS.users).doc(MANAGER.uid), { role: 'owner' })
-  writer.update(db.collection(COLLECTIONS.users).doc('tomas'), {
-    probationEndsOn: day(10),
-  })
+  writer.update(db.collection(COLLECTIONS.users).doc('jamal'), { probationEndsOn: day(52) })
 
   // ---- Equipment and maintenance ----
   const equipment = [
-    ['espresso', 'La Marzocco Linea', 'Espresso machine', day(-86), 90, 'working', null, null],
-    ['grinder', 'Mazzer grinder', 'Grinder', day(-20), 180, 'working', null, null],
-    ['fridge-1', 'Milk fridge', 'Fridge', day(-60), 180, 'working', 1, 5],
-    ['freezer-1', 'Freezer', 'Freezer', day(-60), 365, 'working', -22, -16],
-    ['dishwasher', 'Dishwasher', 'Dishwasher', day(-200), 180, 'needs_repair', null, null],
+    ['espresso', 'La Marzocco Linea', 'Espresso machine', 'LM-2210473', -400, -50, 90, 140, 'working', null, null],
+    ['grinder', 'Mazzer Major grinder', 'Grinder', 'MZ-884102', -380, -20, 180, 200, 'working', null, null],
+    ['fridge-1', 'Milk fridge', 'Fridge', 'FR-55120', -400, -60, 180, 330, 'working', 1, 5],
+    ['fridge-2', 'Drinks display fridge', 'Fridge', 'FR-55188', -300, -45, 180, 420, 'working', 1, 5],
+    ['freezer-1', 'Pastry freezer', 'Freezer', 'FZ-20931', -400, -100, 365, 330, 'working', -22, -16],
+    ['oven', 'Convection oven', 'Oven', 'OV-77412', -350, -120, 180, 380, 'working', null, null],
+    ['dishwasher', 'Glasswasher', 'Dishwasher', 'GW-30415', -350, -75, 180, 380, 'working', null, null],
   ] as const
-  for (const [id, name, kind, lastServiceOn, every, status, tempMin, tempMax] of equipment)
+  for (const [id, name, kind, serial, bought, last, every, warranty, status, tempMin, tempMax] of equipment)
     put(COLLECTIONS.equipment, id, {
       ...base(),
       name,
       kind,
-      serial: '',
-      purchasedOn: '2025-03-01',
-      warrantyUntil: id === 'espresso' ? day(25) : '2027-03-01',
+      serial,
+      purchasedOn: day(bought),
+      warrantyUntil: day(warranty),
       serviceEveryDays: every,
-      lastServiceOn,
+      lastServiceOn: day(last),
       status,
       tempMin,
       tempMax,
     })
-  put(COLLECTIONS.maintenance, 'seed-maint-1', {
-    ...base(),
-    equipmentId: 'espresso',
-    equipmentName: 'La Marzocco Linea',
-    date: day(-86),
-    kind: 'Service',
-    cost: 450,
-    notes: 'Descaled, new gaskets',
-  })
+  const maintenance = [
+    ['espresso', 'La Marzocco Linea', -50, 'Service', 280, 'Descaled, new group gaskets.'],
+    ['grinder', 'Mazzer Major grinder', -20, 'Service', 95, 'Burrs replaced and recalibrated.'],
+    ['dishwasher', 'Glasswasher', -75, 'Repair', 145, 'Replaced the drain pump.'],
+    ['freezer-1', 'Pastry freezer', -100, 'Service', 120, 'Door seal replaced, defrosted.'],
+    ['fridge-1', 'Milk fridge', -60, 'Service', 85, 'Cleaned the condenser, checked the thermostat.'],
+  ] as const
+  maintenance.forEach(([equipmentId, equipmentName, date, kind, cost, notes], i) =>
+    put(COLLECTIONS.maintenance, `seed-maint-${i + 1}`, {
+      ...base('daniel', atTime(date, '12:00')),
+      equipmentId,
+      equipmentName,
+      date: day(date),
+      kind,
+      cost,
+      notes,
+    }),
+  )
 
-  // ---- Food safety: temperature checks (one out of range today) and an inspection ----
-  const reading = (
-    id: string,
-    unit: 'fridge-1' | 'freezer-1',
-    date: string,
-    value: number,
-    by: string,
-  ) => {
-    const [min, max] = unit === 'fridge-1' ? [1, 5] : [-22, -16]
-    put(COLLECTIONS.temperatureLogs, id, {
-      ...base(by),
-      date,
-      equipmentId: unit,
-      equipmentName: unit === 'fridge-1' ? 'Milk fridge' : 'Freezer',
-      reading: value,
-      min,
-      max,
-      ok: temperatureOk(value, min, max),
-      note: '',
+  // ---- Food safety: a morning reading per cold unit for a week (one slip, three days ago) ----
+  const units = [
+    ['fridge-1', 'Milk fridge', 1, 5, 3.4],
+    ['fridge-2', 'Drinks display fridge', 1, 5, 3.9],
+    ['freezer-1', 'Pastry freezer', -22, -16, -19],
+  ] as const
+  const openers = ['liam', 'jamal', 'maya', 'priya']
+  for (let back = 6; back >= 0; back--)
+    units.forEach(([unit, unitName, min, max, typical], u) => {
+      const slip = unit === 'fridge-2' && back === 3
+      const reading = slip ? 6.8 : Math.round((typical + (rand() - 0.5) * 1.6) * 10) / 10
+      put(COLLECTIONS.temperatureLogs, `seed-temp-${unit}-${day(-back)}`, {
+        ...base(openers[(back + u) % openers.length], atTime(-back, '07:25')),
+        date: day(-back),
+        equipmentId: unit,
+        equipmentName: unitName,
+        reading,
+        min,
+        max,
+        ok: temperatureOk(reading, min, max),
+        note: slip ? 'Door left ajar overnight. Rechecked two hours later: 3.2 °C.' : '',
+      })
     })
-  }
-  reading('seed-temp-1', 'fridge-1', day(-1), 3.5, 'liam')
-  reading('seed-temp-2', 'freezer-1', day(-1), -18, 'liam')
-  reading('seed-temp-3', 'fridge-1', today, 7.2, 'maya')
   put(COLLECTIONS.inspections, 'seed-insp-1', {
-    ...base(),
-    date: day(-40),
-    inspector: 'Dubai Municipality',
+    ...base('daniel', atTime(-70, '15:00')),
+    date: day(-70),
+    inspector: 'Manchester City Council: Environmental Health',
     kind: 'Authority',
+    result: 'Pass',
+    score: 95,
+    findings: 'Food hygiene rating visit. Rating of 5 (very good). Allergen records well kept.',
+    correctiveActions: '',
+  })
+  put(COLLECTIONS.inspections, 'seed-insp-2', {
+    ...base('daniel', atTime(-21, '16:00')),
+    date: day(-21),
+    inspector: 'Daniel Brooks',
+    kind: 'Internal',
     result: 'Minor issues',
     score: 88,
-    findings: 'Missing date labels on two milk jugs.',
-    correctiveActions: 'Labels added; staff reminded at briefing.',
+    findings: 'Two milk jugs without date labels; sanitiser bottle empty at the back counter.',
+    correctiveActions: 'Labels added and staff reminded at the briefing. Sanitiser refilled.',
   })
 
-  // ---- Daily operations ----
+  // ---- Daily operations: opening and closing checklists every day this week ----
   const checklists = [
     [
       'opening',
       'Opening',
       'Opening',
-      [
-        'Turn on espresso machine',
-        'Check fridge temperatures',
-        'Set up pastry display',
-        'Count the float',
-      ],
+      ['Turn on espresso machine', 'Check fridge temperatures', 'Set up pastry display', 'Count the float'],
+      '07:10',
     ],
     [
       'closing',
       'Closing',
       'Closing',
-      [
-        'Clean the steam wands',
-        'Empty and clean the grinder hopper',
-        'Mop the floor',
-        'Cash up and log the takings',
-      ],
+      ['Clean the steam wands', 'Empty and clean the grinder hopper', 'Mop the floor', 'Cash up and log the takings'],
+      '22:20',
+    ],
+    [
+      'cleaning',
+      'Weekly deep clean',
+      'Cleaning',
+      ['Descale the kettles', 'Clean behind the fridges', 'Wash the front windows', 'Wipe down the shelves'],
+      '23:30',
     ],
   ] as const
   for (const [id, name, kind, items] of checklists)
     put(COLLECTIONS.checklistTemplates, id, { ...base(), name, kind, items: [...items] })
-  put(COLLECTIONS.checklistRuns, `opening_${today}`, {
-    ...base('liam'),
-    templateId: 'opening',
-    templateName: 'Opening',
-    date: today,
-    items: checklists[0][3].map((text, i) => ({
-      text,
-      done: i < 2,
-      by: i < 2 ? names.liam : null,
-      at: i < 2 ? now : null,
-    })),
-    completedAt: null,
-  })
-  put(COLLECTIONS.incidents, 'seed-incident-1', {
-    ...base('noah'),
-    date: day(-1),
-    type: 'Equipment',
-    severity: 'medium',
-    description: 'Dishwasher leaking water onto the floor.',
-    actionTaken: 'Put a wet-floor sign, called the technician.',
-    status: 'open',
-  })
-  put(COLLECTIONS.incidents, 'seed-incident-2', {
-    ...base('liam'),
-    date: day(-6),
-    type: 'Customer complaint',
-    severity: 'low',
-    description: 'Customer said the latte was cold.',
-    actionTaken: 'Remade the drink.',
-    status: 'closed',
-  })
-  put(COLLECTIONS.handovers, 'seed-handover-1', {
-    ...base('liam'),
-    date: day(-1),
-    shiftName: 'Morning',
-    notes: 'Low on oat milk; delivery expected tomorrow. Dishwasher leaking.',
-    cashCount: 640,
-  })
+  const closers = ['sofia', 'noah', 'ella']
+  for (let back = 6; back >= 0; back--)
+    for (const [id, name, , items, time] of checklists.slice(0, 2)) {
+      if (id === 'closing' && back === 0) continue
+      const by = id === 'opening' ? (openers[back % openers.length] ?? 'liam') : (closers[back % closers.length] ?? 'sofia')
+      const done = items.map((text, i) => {
+        const at = new Date(atTime(-back, time).getTime() + i * 6 * 60_000)
+        return { text, done: at <= now, by: at <= now ? names[by] : null, at: at <= now ? at : null }
+      })
+      const complete = done.every((d) => d.done)
+      put(COLLECTIONS.checklistRuns, `${id}_${day(-back)}`, {
+        ...base(by, atTime(-back, time)),
+        templateId: id,
+        templateName: name,
+        date: day(-back),
+        items: done,
+        completedAt: complete ? done[done.length - 1]?.at : null,
+      })
+    }
+  const incidents = [
+    [-4, 'Food safety', 'low', 'Customer reported a missing allergen label on a muffin.', 'Checked the label box, reprinted and replaced all labels.', 'sofia'],
+    [-9, 'Equipment', 'medium', 'Glasswasher leaking a little water onto the floor.', 'Wet-floor sign out; engineer replaced the door seal the same day.', 'noah'],
+    [-16, 'Injury', 'low', 'Minor burn from the steam wand.', 'First aid given; added to the accident book.', 'jamal'],
+    [-24, 'Customer complaint', 'low', 'Customer said their latte was cold.', 'Remade the drink and offered a pastry.', 'liam'],
+  ] as const
+  incidents.forEach(([date, type, severity, description, actionTaken, by], i) =>
+    put(COLLECTIONS.incidents, `seed-incident-${i + 1}`, {
+      ...base(by, atTime(date, '14:00')),
+      date: day(date),
+      type,
+      severity,
+      description,
+      actionTaken,
+      status: 'closed',
+    }),
+  )
+  const handovers = [
+    [-1, 'Morning', 'Quiet start, busy lunch. Oat milk running low, order is on its way.', 640],
+    [-2, 'Evening', 'Cleaned the grinder, restocked cups. One card terminal restart at 6pm.', 585],
+    [-3, 'Morning', 'Delivery from Albion Bakehouse arrived early. All counted.', 612],
+    [-4, 'Evening', 'Busy Saturday crowd; sold out of blueberry muffins by 4pm.', 720],
+    [-5, 'Morning', 'Descaled the steam wands. Fridge readings all fine.', 598],
+  ] as const
+  handovers.forEach(([date, shiftName, notes, cashCount], i) =>
+    put(COLLECTIONS.handovers, `seed-handover-${i + 1}`, {
+      ...base(shiftName === 'Morning' ? 'liam' : 'sofia', atTime(date, shiftName === 'Morning' ? '15:05' : '23:05')),
+      date: day(date),
+      shiftName,
+      notes,
+      cashCount,
+    }),
+  )
 
-  // ---- Purchasing: one awaiting delivery, one received and unpaid, one paid ----
+  // ---- Purchasing: a draft, two on order, one received and awaiting payment, two paid ----
+  type Line = { name: string; unit: string; quantity: number; unitPrice: number }
   const order = (
     id: string,
     number: string,
-    supplierId: string,
+    supplierKey: string,
     supplierName: string,
     status: string,
-    lines: {
-      itemId: string
-      itemName: string
-      unit: string
-      quantity: number
-      unitPrice: number
-    }[],
+    lines: Line[],
     dates: Record<string, string | null>,
-  ) =>
+    invoiceNumber = '',
+  ) => {
+    const withIds = lines.map((l) => ({
+      itemId: itemId(l.name),
+      itemName: l.name,
+      unit: l.unit,
+      quantity: l.quantity,
+      unitPrice: l.unitPrice,
+    }))
     put(COLLECTIONS.purchaseOrders, id, {
-      ...base(),
+      ...base('amara', atTime(-(Number(dates.createdBack ?? 0)), '11:00')),
       number,
-      supplierId,
+      supplierId: supplierKey,
       supplierName,
       status,
-      lines,
-      total: orderTotal(lines),
-      invoiceNumber: '',
+      lines: withIds,
+      total: orderTotal(withIds),
+      invoiceNumber,
       note: '',
       orderedOn: null,
       expectedOn: null,
       receivedOn: null,
       paymentDueOn: null,
       paidOn: null,
-      ...dates,
-    })
-  order(
-    'seed-po-1',
-    'PO-0001',
-    'green-valley',
-    'Green Valley',
-    'ordered',
-    [
-      { itemId: 'item-1', itemName: 'Whole Milk', unit: 'L', quantity: 40, unitPrice: 6.5 },
-      { itemId: 'item-2', itemName: 'Oat Milk', unit: 'L', quantity: 20, unitPrice: 11 },
-    ],
-    { orderedOn: day(-1), expectedOn: day(1) },
-  )
-  order(
-    'seed-po-2',
-    'PO-0002',
-    'packpro',
-    'PackPro',
-    'received',
-    [
-      {
-        itemId: 'item-5',
-        itemName: '12oz Paper Cups',
-        unit: 'pcs',
-        quantity: 1000,
-        unitPrice: 0.35,
-      },
-    ],
-    { orderedOn: day(-12), expectedOn: day(-9), receivedOn: day(-9), paymentDueOn: day(3) },
-  )
-  order(
-    'seed-po-3',
-    'PO-0003',
-    'andes-roasters',
-    'Andes Roasters',
-    'received',
-    [
-      {
-        itemId: 'item-3',
-        itemName: 'Espresso Beans — House Blend',
-        unit: 'kg',
-        quantity: 20,
-        unitPrice: 78,
-      },
-    ],
-    {
-      orderedOn: day(-30),
-      expectedOn: day(-27),
-      receivedOn: day(-27),
-      paymentDueOn: day(-3),
-      paidOn: day(-4),
-    },
-  )
-
-  // ---- Finance: this month's takings and expenses ----
-  const month = today.slice(0, 7)
-  for (let d = `${month}-01`; d < today; d = addDays(d, 1)) {
-    const n = Number(d.slice(8))
-    put(COLLECTIONS.salesDays, `${branchId}_${d}`, {
-      ...base('liam'),
-      date: d,
-      cash: 900 + ((n * 37) % 300),
-      card: 1800 + ((n * 53) % 600),
-      online: 300 + ((n * 29) % 200),
-      note: '',
+      ...Object.fromEntries(Object.entries(dates).filter(([k]) => k !== 'createdBack')),
     })
   }
-  const expenses = [
-    ['Rent', 'Shop rent (monthly)', 15000, 0, 'Bank transfer', '01'],
-    ['Utilities', 'DEWA electricity & water', 2100, 100, 'Bank transfer', '05'],
-    ['Supplies', 'Cleaning supplies', 380, 18.1, 'Card', '08'],
-    ['Marketing', 'Instagram ads', 600, 28.57, 'Card', '12'],
+  order(
+    'seed-po-1', 'PO-0001', 'sweetline', 'Sweetline Syrups', 'draft',
+    [
+      { name: 'Vanilla Syrup', unit: 'btl', quantity: 12, unitPrice: 6.4 },
+      { name: 'Caramel Syrup', unit: 'btl', quantity: 6, unitPrice: 6.4 },
+    ],
+    { createdBack: '0' },
+  )
+  order(
+    'seed-po-2', 'PO-0002', 'green-valley', 'Green Valley Dairy', 'ordered',
+    [
+      { name: 'Oat Milk', unit: 'L', quantity: 30, unitPrice: 1.85 },
+      { name: 'Whole Milk', unit: 'L', quantity: 40, unitPrice: 1.2 },
+    ],
+    { createdBack: '1', orderedOn: day(-1), expectedOn: day(1) },
+  )
+  order(
+    'seed-po-3', 'PO-0003', 'packpro', 'PackPro Supplies', 'ordered',
+    [{ name: '12oz Paper Cups', unit: 'pcs', quantity: 1000, unitPrice: 0.045 }],
+    { createdBack: '0', orderedOn: today, expectedOn: day(3) },
+  )
+  order(
+    'seed-po-4', 'PO-0004', 'northern-roast', 'Northern Roast Co.', 'received',
+    [
+      { name: 'Espresso Beans — House Blend', unit: 'kg', quantity: 20, unitPrice: 14.8 },
+      { name: 'English Breakfast Tea', unit: 'box', quantity: 6, unitPrice: 5.2 },
+    ],
+    { createdBack: '9', orderedOn: day(-9), expectedOn: day(-6), receivedOn: day(-6), paymentDueOn: day(4) },
+    'NR-20841',
+  )
+  order(
+    'seed-po-5', 'PO-0005', 'albion-bakehouse', 'Albion Bakehouse', 'received',
+    [
+      { name: 'Butter Croissants', unit: 'pcs', quantity: 60, unitPrice: 0.62 },
+      { name: 'Sourdough Loaves', unit: 'pcs', quantity: 20, unitPrice: 2.1 },
+    ],
+    { createdBack: '20', orderedOn: day(-20), expectedOn: day(-18), receivedOn: day(-18), paymentDueOn: day(-4), paidOn: day(-6) },
+    'AB-4471',
+  )
+  order(
+    'seed-po-6', 'PO-0006', 'green-valley', 'Green Valley Dairy', 'received',
+    [{ name: 'Whole Milk', unit: 'L', quantity: 60, unitPrice: 1.2 }],
+    { createdBack: '33', orderedOn: day(-33), expectedOn: day(-31), receivedOn: day(-31), paymentDueOn: day(-17), paidOn: day(-19) },
+    'GV-10388',
+  )
+
+  // ---- Finance: 45 days of takings (weekend peak, gentle upward trend) ----
+  const weekdayFactor = [1.05, 0.82, 0.86, 0.9, 0.95, 1.12, 1.35]
+  const closing = ['sofia', 'liam', 'noah', 'ella']
+  for (let back = 45; back >= 1; back--) {
+    const date = day(-back)
+    const weekday = new Date(`${date}T12:00:00Z`).getUTCDay()
+    const trend = 1 + (0.12 * (45 - back)) / 45
+    const total = Math.round(1250 * (weekdayFactor[weekday] ?? 1) * trend * (0.92 + rand() * 0.16))
+    const card = Math.round(total * (0.54 + rand() * 0.04))
+    const online = Math.round(total * (0.14 + rand() * 0.04))
+    put(COLLECTIONS.salesDays, `${branchId}_${date}`, {
+      ...base(closing[back % closing.length], atTime(-back, '22:45')),
+      date,
+      cash: total - card - online,
+      card,
+      online,
+      note: back === 4 ? 'Street festival nearby: extra footfall.' : '',
+    })
+  }
+
+  // Expenses over the last three calendar months (amounts include VAT where the supplier charges it).
+  const monthStarts = [0, 1, 2].map((m) => {
+    let d = `${today.slice(0, 8)}01`
+    for (let i = 0; i < m; i++) d = addDays(d, -1).slice(0, 8) + '01'
+    return d.slice(0, 7)
+  })
+  const expenseTemplates = [
+    ['Rent', 'Shop rent (monthly)', 4500, false, 'Bank transfer', '01'],
+    ['Utilities', 'Electricity and gas', 640, true, 'Bank transfer', '05'],
+    ['Utilities', 'Water and drainage', 118, false, 'Bank transfer', '09'],
+    ['Utilities', 'Broadband and card terminal', 74, true, 'Bank transfer', '12'],
+    ['Supplies', 'Weekly stock top-up', 1280, false, 'Card', '04'],
+    ['Supplies', 'Weekly stock top-up', 1345, false, 'Card', '11'],
+    ['Supplies', 'Weekly stock top-up', 1210, false, 'Card', '18'],
+    ['Supplies', 'Weekly stock top-up', 1390, false, 'Card', '25'],
+    ['Supplies', 'Cleaning supplies', 86, true, 'Card', '08'],
+    ['Maintenance', 'Equipment servicing and repairs', 145, true, 'Card', '14'],
+    ['Marketing', 'Instagram and Google ads', 180, true, 'Card', '15'],
+    ['Licences & fees', 'Music licence', 185, false, 'Bank transfer', '20'],
+    ['Other', 'Accountancy fee', 240, true, 'Bank transfer', '22'],
+    ['Other', 'Public liability insurance', 96, false, 'Bank transfer', '27'],
   ] as const
-  expenses.forEach(([category, description, amount, vat, paymentMethod, dd], i) => {
-    const date = `${month}-${dd}`
-    if (date <= today)
-      put(COLLECTIONS.expenses, `seed-expense-${i + 1}`, {
-        ...base(),
+  let expenseNo = 0
+  for (const month of monthStarts)
+    for (const [category, description, amount, vatable, paymentMethod, dd] of expenseTemplates) {
+      const date = `${month}-${dd}`
+      if (date > today || date < day(-62)) continue
+      expenseNo++
+      const wobble = category === 'Supplies' || category === 'Utilities' ? 0.95 + rand() * 0.1 : 1
+      const total = Math.round(amount * wobble)
+      put(COLLECTIONS.expenses, `seed-expense-${expenseNo}`, {
+        ...base('amara', zonedDateTime(date, '10:30', TZ)),
         date,
         category,
         description,
-        amount,
-        vat,
+        amount: total,
+        vat: vatable ? money(total / 6) : 0,
         paymentMethod,
       })
-  })
+    }
 
-  // ---- People: candidates, training, goals, feedback ----
-  const candidate = (id: string, name: string, stage: string, interviewOn: string | null) =>
-    put(COLLECTIONS.candidates, id, {
-      ...base(),
-      name,
-      phone: '+971 50 000 0000',
-      email: '',
-      position: 'Barista',
-      stage,
-      source: 'Instagram',
-      interviewOn,
-      notes: '',
-      cvDocumentId: null,
-    })
-  candidate('seed-cand-1', 'Rania Saeed', 'interview', today)
-  candidate('seed-cand-2', 'Bilal Maya', 'applied', null)
-  candidate('seed-cand-3', 'Lina Haddad', 'offer', day(-5))
-
-  put(COLLECTIONS.training, 'seed-training-1', {
-    ...base(),
-    employeeId: 'maya',
-    employeeName: names.maya,
-    title: 'Food safety level 2',
-    provider: 'Dubai Municipality',
-    date: '2025-11-10',
-    expiresOn: day(20),
-    notes: '',
-    remindedFor: null,
-  })
-  put(COLLECTIONS.goals, 'seed-goal-1', {
-    ...base(),
-    employeeId: 'maya',
-    employeeName: names.maya,
-    title: 'Learn latte art (rosetta)',
-    dueOn: day(30),
-    status: 'in_progress',
-    progress: 40,
-  })
-
-  const feedback = [
-    [
-      'In store',
-      5,
-      'Service',
-      'Liam was lovely, great flat white!',
-      'resolved',
-      'Thanked the customer',
-    ],
-    ['Google', 2, 'Price', 'Too expensive for the size.', 'open', ''],
-    ['Delivery app', 4, 'Product', 'Good coffee, arrived warm.', 'resolved', ''],
+  // ---- People: recruitment, training, goals ----
+  const candidates = [
+    ['seed-cand-1', 'Rania Saeed', 'Barista', 'interview', 'Indeed', day(1), '+44 7700 900 201', 'Two years at a roastery; weekends only.'],
+    ['seed-cand-2', 'Callum Ward', 'Barista', 'interview', 'Referral', day(3), '+44 7700 900 202', 'Referred by Liam; available immediately.'],
+    ['seed-cand-3', 'Lina Haddad', 'Cashier', 'offer', 'Company website', day(-4), '+44 7700 900 203', 'Strong interview; offer sent, waiting to hear back.'],
+    ['seed-cand-4', 'Ben Okoye', 'Kitchen Assistant', 'applied', 'Indeed', null, '+44 7700 900 204', ''],
+    ['seed-cand-5', 'Hannah Pryce', 'Barista', 'applied', 'Instagram', null, '+44 7700 900 205', 'Student, wants 16 hours a week.'],
+    ['seed-cand-6', 'Dev Sharma', 'Cashier', 'rejected', 'Walk-in', day(-12), '+44 7700 900 206', 'Not available for weekend shifts.'],
   ] as const
-  feedback.forEach(([channel, rating, topic, comment, status, resolution], i) =>
+  candidates.forEach(([id, name, position, stage, source, interviewOn, phone, notes]) =>
+    put(COLLECTIONS.candidates, id, {
+      ...base('daniel', atTime(-14, '10:00')),
+      name,
+      phone,
+      email: `${name.toLowerCase().replace(/[^a-z]+/g, '.')}@example.com`,
+      position,
+      stage,
+      source,
+      interviewOn,
+      notes,
+      cvDocumentId: null,
+    }),
+  )
+
+  const training = [
+    ['maya', 'Food hygiene level 2', 'Highfield Awarding Body', -150, 215],
+    ['liam', 'First aid at work', 'St John Ambulance', -335, 28],
+    ['sofia', 'Barista skills level 2', 'Northern Roast Academy', -60, null],
+    ['priya', 'Allergen awareness', 'Food Standards Agency (online)', -200, 165],
+    ['noah', 'Food hygiene level 2', 'Highfield Awarding Body', -120, 245],
+    ['jamal', 'Manual handling', 'In-house', -90, null],
+  ] as const
+  training.forEach(([uid, title, provider, date, expires], i) =>
+    put(COLLECTIONS.training, `seed-training-${i + 1}`, {
+      ...base('daniel', atTime(date, '16:00')),
+      employeeId: uid,
+      employeeName: names[uid],
+      title,
+      provider,
+      date: day(date),
+      expiresOn: expires === null ? null : day(expires),
+      notes: '',
+      remindedFor: expires !== null && expires <= 30 ? day(expires) : null,
+    }),
+  )
+  const goals = [
+    ['maya', 'Learn latte art (rosetta)', 30, 'in_progress', 55],
+    ['liam', 'Complete the assistant manager course', 120, 'in_progress', 30],
+    ['sofia', 'Train two new baristas', 45, 'in_progress', 70],
+    ['noah', 'Arrive on time for every shift for a month', 25, 'in_progress', 60],
+    ['ella', 'Master the end-of-day cash-up', -10, 'achieved', 100],
+    ['jamal', 'Learn the full espresso menu', 60, 'not_started', 0],
+  ] as const
+  goals.forEach(([uid, title, due, status, progress], i) =>
+    put(COLLECTIONS.goals, `seed-goal-${i + 1}`, {
+      ...base('daniel', atTime(-30, '10:00')),
+      employeeId: uid,
+      employeeName: names[uid],
+      title,
+      dueOn: day(due),
+      status,
+      progress,
+    }),
+  )
+
+  // ---- Customer feedback ----
+  const feedback = [
+    [-1, 'In store', 5, 'Service', 'Liam was lovely and the flat white was perfect.', 'resolved', 'Thanked the customer.'],
+    [-2, 'Google', 5, 'Product', 'Best flat white in Manchester, and the sourdough is fantastic.', 'resolved', ''],
+    [-3, 'Delivery app', 4, 'Product', 'Arrived warm and well packed.', 'resolved', ''],
+    [-5, 'Google', 3, 'Service', 'Lovely drinks but a long wait at the till on Saturday.', 'open', ''],
+    [-6, 'In store', 5, 'Cleanliness', 'Spotless and a really friendly team.', 'resolved', ''],
+    [-8, 'Instagram', 4, 'Product', 'Loved the new seasonal menu. More vegan options please!', 'resolved', 'Passed to the manager for the next menu.'],
+    [-10, 'Google', 2, 'Price', 'Tasty, but quite pricey for the size.', 'resolved', 'Replied explaining the portion size and offered a loyalty card.'],
+    [-12, 'In store', 5, 'Service', 'Sofia remembered my order. Great atmosphere.', 'resolved', ''],
+    [-15, 'Phone', 4, 'Other', 'Easy to book a table for a group; thank you.', 'resolved', ''],
+    [-19, 'Delivery app', 5, 'Product', 'Hot, on time and delicious.', 'resolved', ''],
+  ] as const
+  feedback.forEach(([date, channel, rating, topic, comment, status, resolution], i) =>
     put(COLLECTIONS.feedback, `seed-feedback-${i + 1}`, {
-      ...base(),
-      date: day(-i * 2),
+      ...base('daniel', atTime(date, '13:00')),
+      date: day(date),
       channel,
       rating,
       topic,
@@ -354,29 +464,30 @@ export function seedBusiness(
     }),
   )
 
-  // ---- Rota: Noah off tomorrow, Maya on evening; a swap waiting for approval ----
-  const rota = (uid: string, date: string, shiftId: string | null) =>
-    put(COLLECTIONS.rota, `${uid}_${date}`, {
-      branchId,
-      employeeId: uid,
-      employeeName: names[uid],
-      date,
-      shiftId,
-      updatedAt: now,
+  // ---- Shift swap waiting for approval: Ella (evening) asks Jamal (morning) to swap a day ----
+  const ella = SAMPLE_PEOPLE.find((p) => p.key === 'ella')
+  const jamal = SAMPLE_PEOPLE.find((p) => p.key === 'jamal')
+  if (ella && jamal) {
+    let swapDate = day(4)
+    for (let d = 4; d <= 12; d++) {
+      const date = day(d)
+      if (plannedShiftKey(ella, date, today) && plannedShiftKey(jamal, date, today)) {
+        swapDate = date
+        break
+      }
+    }
+    put(COLLECTIONS.swapRequests, 'seed-swap-1', {
+      ...base('ella', new Date(now.getTime() - 3.5 * 3_600_000)),
+      date: swapDate,
+      fromId: 'ella',
+      fromName: names.ella,
+      toId: 'jamal',
+      toName: names.jamal,
+      reason: 'Dentist appointment in the evening',
+      status: 'pending',
+      decidedBy: null,
     })
-  rota('noah', day(1), null)
-  rota('maya', day(1), 'evening')
-  put(COLLECTIONS.swapRequests, 'seed-swap-1', {
-    ...base('ella'),
-    date: day(2),
-    fromId: 'ella',
-    fromName: names.ella,
-    toId: 'priya',
-    toName: names.priya,
-    reason: 'Dentist appointment',
-    status: 'pending',
-    decidedBy: null,
-  })
+  }
 
   writer.close()
 }
