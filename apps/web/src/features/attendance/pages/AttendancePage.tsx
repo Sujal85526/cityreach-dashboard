@@ -90,7 +90,11 @@ export function AttendancePage() {
         </div>
       ),
     },
-    { key: 'in', header: 'Clock in', cell: (r) => formatClock(r.record?.clockInAt ?? null, tz) },
+    {
+      key: 'in',
+      header: 'Clock in',
+      cell: (r) => formatClock(r.record?.clockInAt ?? null, tz),
+    },
     {
       key: 'out',
       header: 'Clock out',

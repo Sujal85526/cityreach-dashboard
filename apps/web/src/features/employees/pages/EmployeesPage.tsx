@@ -99,7 +99,9 @@ function useColumns(shifts: Shift[] | undefined, onEdit: (e: User) => void): Col
             <EmployeeAvatar name={e.name} id={e.id} />
             <div className="min-w-0">
               <div className="font-medium">{e.name}</div>
-              <div className="text-xs break-all text-muted-foreground">{e.email}</div>
+              <div className="max-w-52 truncate text-xs text-muted-foreground sm:max-w-none">
+                {e.email}
+              </div>
             </div>
           </div>
         ),
@@ -114,7 +116,11 @@ function useColumns(shifts: Shift[] | undefined, onEdit: (e: User) => void): Col
           return <span className="text-muted-foreground">{shift ? shiftLabel(shift) : '—'}</span>
         },
       },
-      { key: 'status', header: 'Status', cell: (e) => <StatusPill status={e.status} /> },
+      {
+        key: 'status',
+        header: 'Status',
+        cell: (e) => <StatusPill status={e.status} />,
+      },
       {
         key: 'performance',
         header: 'Performance',
