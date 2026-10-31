@@ -49,7 +49,7 @@ export function SuppliersPage() {
           {s.phone && (
             <a
               href={`tel:${s.phone}`}
-              className="flex items-center gap-1 hover:underline"
+              className="flex items-center gap-1 hover:underline max-md:min-h-11"
               onClick={(e) => e.stopPropagation()}
             >
               <Phone className="size-3.5" /> {s.phone}
@@ -58,7 +58,7 @@ export function SuppliersPage() {
           {s.email && (
             <a
               href={`mailto:${s.email}`}
-              className="flex items-center gap-1 hover:underline"
+              className="flex items-center gap-1 hover:underline max-md:min-h-11"
               onClick={(e) => e.stopPropagation()}
             >
               <Mail className="size-3.5" /> {s.email}

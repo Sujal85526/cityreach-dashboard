@@ -57,7 +57,7 @@ export function MonthCalendar({ month, selected, today, summaries, onSelect }: P
           <ChevronRight />
         </Button>
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-xs">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs max-md:gap-px">
         {WEEKDAYS.map((d) => (
           <div key={d} className="py-1 text-muted-foreground">
             {d}

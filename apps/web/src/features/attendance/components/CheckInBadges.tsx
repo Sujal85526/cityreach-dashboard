@@ -42,7 +42,7 @@ export function CheckInBadges({ record, tz }: { record: Attendance; tz: string }
         <button
           type="button"
           onClick={() => setViewing(true)}
-          className="inline-flex items-center rounded-full bg-info-soft px-2.5 py-0.5 text-xs font-medium text-info hover:underline"
+          className="inline-flex items-center rounded-full bg-info-soft px-2.5 py-0.5 text-xs font-medium text-info hover:underline max-md:touch-target"
           aria-label={`View ${record.employeeName}'s clock-in photo`}
         >
           <Camera className="mr-1 size-3" aria-hidden /> Photo
