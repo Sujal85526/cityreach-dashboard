@@ -4,5 +4,5 @@ packages:
 
 # Packages allowed to run install scripts (pnpm blocks all others by default).
 allowBuilds:
-  core-js: set this to true or false
   esbuild: true
+  core-js: false
