@@ -52,19 +52,19 @@ export function AllBranchesPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
         <StatCard
           label="Sales this month"
           icon={Wallet}
           loading={loading}
-          value={formatMoney(totals.sales)}
+          value={formatMoney(Math.round(totals.sales))}
           caption="All branches"
         />
         <StatCard
           label="Profit this month"
           icon={TrendingUp}
           loading={loading}
-          value={formatMoney(totals.profit)}
+          value={formatMoney(Math.round(totals.profit))}
           caption={totals.margin === null ? 'No sales yet' : `${totals.margin} % of sales`}
           badge={totals.profit < 0 ? { text: 'Loss', tone: 'danger' } : undefined}
         />
@@ -142,8 +142,8 @@ function BranchCard({
           <Skeleton className="h-32 w-full" />
         ) : (
           <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-3">
-            <Figure label="Sales" value={formatMoney(summary.sales)} />
-            <Figure label="Profit" value={formatMoney(summary.profit)} />
+            <Figure label="Sales" value={formatMoney(Math.round(summary.sales))} />
+            <Figure label="Profit" value={formatMoney(Math.round(summary.profit))} />
             <Figure
               label="Staff cost"
               value={

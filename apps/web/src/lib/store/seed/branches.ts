@@ -62,7 +62,7 @@ const PLANS: BranchPlan[] = [
     address: '9 Broadway, Salford Quays, Manchester',
     phone: '+44 161 555 0177',
     location: { lat: 53.4723, lng: -2.2951 },
-    dailySales: 1750,
+    dailySales: 1250,
     people: [
       { key: 'hana', name: 'Hana Yilmaz', position: 'Shift Lead', salary: 2500, allowances: 150, shift: 'morning', today: 'on_time' },
       { key: 'ravi', name: 'Ravi Menon', position: 'Barista', salary: 2100, allowances: 50, shift: 'morning', today: 'late' },
@@ -97,7 +97,7 @@ const PLANS: BranchPlan[] = [
     address: '41 Wilmslow Road, Didsbury, Manchester',
     phone: '+44 161 555 0188',
     location: { lat: 53.4136, lng: -2.2332 },
-    dailySales: 930,
+    dailySales: 600,
     people: [
       { key: 'isla', name: 'Isla Moran', position: 'Shift Lead', salary: 2350, allowances: 100, shift: 'morning', today: 'on_time' },
       { key: 'omar', name: 'Omar Farouk', position: 'Barista', salary: 1950, allowances: 50, shift: 'morning', today: 'on_time' },

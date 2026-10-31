@@ -294,8 +294,12 @@ export async function ask(intent: Intent, when: When | null, c: AskContext): Pro
       )
     }
     case 'waste': {
-      const [used, po] = await Promise.all([movements(c, monthStart, monthEnd(month)), orders(c)])
-      return wasteAnswer(used, po)
+      const [used, po, stock] = await Promise.all([
+        movements(c, monthStart, monthEnd(month)),
+        orders(c),
+        items(c),
+      ])
+      return wasteAnswer(used, po, stock)
     }
     case 'bestDay':
       return bestDayAnswer(await salesBetween(c, addDays(today, -90), today))

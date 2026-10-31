@@ -206,7 +206,7 @@ export function labourAnswer(
       ...(labour.staffWithoutPay
         ? [
             {
-              text: `${plural(labour.staffWithoutPay, 'person')} with no salary set`,
+              text: `${labour.staffWithoutPay} ${labour.staffWithoutPay === 1 ? 'person' : 'people'} with no salary set`,
               note: 'Real cost is higher',
               tone: 'warning' as const,
             },
@@ -217,7 +217,12 @@ export function labourAnswer(
   }
 }
 
-export function wasteAnswer(movements: StockMovement[], orders: PurchaseOrder[]): Answer {
+export function wasteAnswer(
+  movements: StockMovement[],
+  orders: PurchaseOrder[],
+  items: Pick<InventoryItem, 'id' | 'unit'>[] = [],
+): Answer {
+  const unit = (id: string) => items.find((i) => i.id === id)?.unit ?? ''
   const report = wasteReport(movements, lastUnitPrices(orders))
   const link = { to: '/insights?tab=waste', label: 'Open waste report' }
   if (report.items.length === 0) return { text: 'No waste recorded this month.', link }
@@ -226,8 +231,7 @@ export function wasteAnswer(movements: StockMovement[], orders: PurchaseOrder[])
     lines: capped(
       report.items.map((i) => ({
         text: i.itemName,
-        note:
-          i.cost === null ? `${i.quantity} wasted` : `${i.quantity} wasted, ${formatMoney(i.cost)}`,
+        note: `${formatQty(i.quantity, unit(i.itemId))} wasted${i.cost === null ? '' : `, ${formatMoney(i.cost)}`}`,
       })),
     ),
     link,
