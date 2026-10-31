@@ -61,6 +61,14 @@ export function mockSelfie(now = new Date()): string {
   ctx.globalAlpha = 1
   ctx.fillStyle = cream
   ctx.font = '11px ui-monospace, monospace'
-  ctx.fillText(now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }), 10, 20)
+  ctx.fillText(
+    now.toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Europe/London',
+    }),
+    10,
+    20,
+  )
   return canvas.toDataURL('image/jpeg', 0.7)
 }

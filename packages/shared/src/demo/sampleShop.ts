@@ -219,7 +219,12 @@ export function buildSampleShop(o: SampleShopOptions): SampleDoc[] {
   const today = toDateKey(now, tz)
   const stamp = { createdAt: now, updatedAt: now }
   const later = (d: Date, minutes: number) => new Date(d.getTime() + minutes * MIN_MS)
-  const fromNow = (minutes: number) => later(now, minutes)
+  // Task deadlines read like a person set them: on the half hour, not at an arbitrary minute.
+  const fromNow = (minutes: number) => {
+    const d = later(now, minutes)
+    const half = 30 * 60_000
+    return new Date(Math.round(d.getTime() / half) * half)
+  }
   const at = (days: number, time: string) => zonedDateTime(addDays(today, days), time, tz)
   const dateKeyOf = (d: Date) => toDateKey(d, tz)
   const daysAgoOf = (dateKey: string) =>

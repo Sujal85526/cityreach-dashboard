@@ -174,6 +174,27 @@
   --color-chart-grid: var(--chart-grid);
 }
 
+/* Toasts use the palette, not the library's saturated defaults. */
+:root [data-sonner-toaster][data-sonner-theme] {
+  --normal-bg: var(--popover);
+  --normal-text: var(--foreground);
+  --normal-border: var(--border);
+  --success-bg: var(--success-soft);
+  --success-text: var(--success);
+  --success-border: var(--border);
+  --error-bg: var(--danger-soft);
+  --error-text: var(--danger);
+  --error-border: var(--border);
+  --warning-bg: var(--warning-soft);
+  --warning-text: var(--warning);
+  --warning-border: var(--border);
+  --info-bg: var(--info-soft);
+  --info-text: var(--info);
+  --info-border: var(--border);
+  --border-radius: var(--radius);
+  font-family: var(--font-sans);
+}
+
 /* Motion: tasteful and short; all of it stops for people who ask for less. */
 @keyframes page-in {
   from {
