@@ -141,7 +141,7 @@ export function LandingPage() {
                       </ul>
                       {role === 'employee' && employees.length > 0 && (
                         <label className="flex items-center gap-2 text-sm">
-                          <span className="text-muted-foreground">Sign in as</span>
+                          <span className="whitespace-nowrap text-muted-foreground">Sign in as</span>
                           <select
                             value={chosenEmployee}
                             onChange={(e) => setEmployeeId(e.target.value)}
