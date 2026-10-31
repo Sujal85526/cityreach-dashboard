@@ -1,68 +1,64 @@
-# Digital Manager
+# City Reach
 
-Staff, attendance, tasks and inventory management for small coffee shops: one system instead of paper, chat groups and spreadsheets.
+Staff, attendance, tasks, stock and sales for growing local businesses: one calm dashboard for
+every branch. This repository is a **self-contained demo**. It has no backend and no secrets; all
+data lives in your browser.
 
-**Live:** https://managr.me · **Start here:** [docs/HANDOVER.md](docs/HANDOVER.md) (how it works, demo script, Capstone data, making changes, handover).
+**Live demo:** https://cityreach-dashboard.vercel.app
 
-- Managers see who's in, who's late, open tasks, low stock, performance and reports.
-- Employees clock in/out and manage their tasks from their phone.
-- Running the shop: shift rota and swaps, opening / closing checklists, handovers, incidents, food-safety temperature log, equipment servicing, purchase orders, customer feedback.
-- Business and HR: daily sales, expenses, profit and VAT estimate; payslips with WPS tracking; recruitment, probation, training & goals, end-of-service settlement; owners can run several branches.
-- Rules run automatically: lateness, absences, overdue tasks, low-stock and temperature alerts, service / certificate / probation reminders, performance scores, weekly reports.
+![City Reach dashboard](docs/screenshots/dashboard.jpg)
 
-## Tech
+## What you can do
 
-React 19 · Vite · TypeScript · Tailwind CSS · shadcn/ui · TanStack Query · Firebase (Auth, Firestore) on the **free Spark plan** · Vercel (website) · pnpm monorepo.
+Pick a role on the landing screen (no password) and explore:
 
-```
-apps/web/          React web app (reads and writes Firestore directly)
-packages/shared/   business rules, schemas, constants
-tools/             emulator seed script
-firestore.rules    server-side security: roles, branches, server time
-docs/              product, prototype, architecture, data model, build plan, deployment
-```
+![Role picker](docs/screenshots/landing.jpg)
 
-## Run locally
+- **Owner**: everything a manager sees, plus branches, sales & finance and reports.
+- **Manager**: dashboard, attendance, rota, leave & pay, tasks board, stock, suppliers, purchasing,
+  food safety, equipment, documents, customer feedback, performance reports (PDF / CSV).
+- **Employee** (phone-first): clock in with a selfie and location, my tasks, rota, attendance,
+  payslips, leave requests, training & goals.
 
-Requirements: Node 22+, pnpm, Java 21 for the Firebase emulators (`brew install openjdk@21`, then add `/opt/homebrew/opt/openjdk@21/bin` to `PATH`).
+Writes really work: clock in, create and move tasks, receive stock, approve leave, add sales, and
+so on. Changes are saved to `localStorage`. **Settings -> Reset demo data** restores the
+original sample business (it also refreshes itself daily so the dates always look current).
+
+| Manager, tablet                            | Employee, phone                                            |
+| ------------------------------------------ | ---------------------------------------------------------- |
+| ![Tasks board](docs/screenshots/tasks.jpg) | ![Employee clock in](docs/screenshots/employee-mobile.jpg) |
+
+## Run it
 
 ```bash
 pnpm install
-cp apps/web/.env.example apps/web/.env.local
-pnpm emulators     # terminal 1: Auth + Firestore; Emulator UI at http://localhost:4000
-pnpm seed          # once: sample coffee shop data
-pnpm dev           # terminal 2: web app at http://localhost:5173
+pnpm dev        # http://localhost:5173
+pnpm check      # format, lint, typecheck, tests
+pnpm build      # static build in apps/web/dist
 ```
 
-Sample logins (emulator only): `hana@dm.cafe` (manager), `ahmed@dm.cafe` (employee), password `password123`.
+Node 22+ and pnpm.
 
-## Quality
+## How it is built
 
-```bash
-pnpm check         # format, lint, typecheck, business-rule unit tests
-pnpm test:rules    # security-rule tests (needs `pnpm emulators` running)
-pnpm test:flows    # end-to-end flows through the app code (needs `pnpm emulators` running)
+React 19, Vite, TypeScript, Tailwind CSS 4, shadcn/ui primitives, TanStack Query, React Hook Form
+
+- Zod, Recharts, jsPDF. pnpm monorepo:
+
+```
+apps/web/          the app (UI -> queries -> api -> local store)
+packages/shared/   zod schemas, types and the business rules (unit-tested)
 ```
 
-## Deploy
+The feature `api.ts` files talk to an in-memory document store persisted to `localStorage`
+(`apps/web/src/lib/store`), seeded with a realistic business (staff, a week and more of
+attendance, tasks, stock, suppliers, purchase orders, sales, expenses, payslips, feedback,
+documents, rota). The camera, GPS and file upload are believable local mocks. See
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/DATA_MODEL.md](docs/DATA_MODEL.md) and
+[docs/FEATURES.md](docs/FEATURES.md).
 
-Production project: `digital-manager-f916d` (Firestore in `me-central1`, Doha). Full details, env files and handover steps: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+## Design
 
-```bash
-npx firebase login
-npx firebase deploy --project prod --only firestore   # security rules + indexes (first, when changed)
-git push origin main                                  # website: Vercel deploys every push to main
-```
-
-Everything runs on the free Spark plan; no card is needed.
-
-## Docs
-
-- [Handover guide](docs/HANDOVER.md) ← start here
-- [Product requirements](docs/PRODUCT.md)
-- [Prototype / UI reference](docs/PROTOTYPE.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Data model](docs/DATA_MODEL.md)
-- [Build plan](docs/BUILD_PLAN.md)
-- [Firebase project & deployment](docs/DEPLOYMENT.md)
-- [Scope & estimate](docs/SCOPE_ESTIMATE.md)
+The brand colours come from the logo: deep forest green `#0c2c21` and warm white `#f8f3e9`.
+All colours are tokens in `apps/web/src/index.css` (light and dark theme); type is Inter with
+Fraunces for headings. The wordmark is traced from the supplied artwork.

@@ -32,7 +32,7 @@ export function WeekChart({ data }: { data: WeekPoint[] }) {
           <BarChart data={data} margin={chartMargin} barCategoryGap="28%">
             <defs>
               {SERIES.map((s) => (
-                <Gradient key={s.key} id={`${id}-${s.key}`} color={s.color} from={1} to={0.7} />
+                <Gradient key={s.key} id={`${id}-${s.key}`} color={s.color} from={1} to={0.84} />
               ))}
             </defs>
             <CartesianGrid {...gridProps} />

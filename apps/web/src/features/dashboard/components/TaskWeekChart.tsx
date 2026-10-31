@@ -24,10 +24,10 @@ export function TaskWeekChart({
     <div>
       <div className="h-52" role="img" aria-label="Task completion over the past 7 days">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={chartMargin} barGap={4} barCategoryGap="30%">
+          <BarChart data={data} margin={chartMargin} barGap={3}>
             <defs>
-              <Gradient id={`${id}-done`} color="var(--chart-1)" from={1} to={0.72} />
-              <Gradient id={`${id}-open`} color={pendingColor} from={1} to={0.7} />
+              <Gradient id={`${id}-done`} color="var(--chart-1)" from={1} to={0.86} />
+              <Gradient id={`${id}-open`} color={pendingColor} from={1} to={0.84} />
             </defs>
             <CartesianGrid {...gridProps} />
             <XAxis dataKey="day" {...axisProps} />
@@ -38,7 +38,7 @@ export function TaskWeekChart({
               name="Completed"
               fill={`url(#${id}-done)`}
               radius={[6, 6, 0, 0]}
-              maxBarSize={16}
+              barSize={11}
               animationDuration={700}
             />
             <Bar
@@ -46,7 +46,7 @@ export function TaskWeekChart({
               name={pendingLabel}
               fill={`url(#${id}-open)`}
               radius={[6, 6, 0, 0]}
-              maxBarSize={16}
+              barSize={11}
               animationDuration={700}
             />
           </BarChart>

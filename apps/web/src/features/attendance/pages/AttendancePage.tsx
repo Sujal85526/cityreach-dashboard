@@ -190,8 +190,8 @@ export function AttendancePage() {
         <div className="flex-1">
           <div className="font-medium">Digital check-in</div>
           <div className="text-sm text-muted-foreground">
-            Staff clock in from their phone with their location and a live photo; times come from
-            the server.
+            Staff clock in from their phone with their location and a photo; every time is stamped
+            automatically.
           </div>
         </div>
         <TonePill tone="success">Live</TonePill>

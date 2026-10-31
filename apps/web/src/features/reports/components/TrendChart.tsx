@@ -34,7 +34,10 @@ export function TrendChart({ data }: { data: { label: string; score: number | nu
           </defs>
           <CartesianGrid {...gridProps} />
           <XAxis dataKey="label" {...axisProps} />
-          <YAxis domain={[0, 100]} {...axisProps} />
+          <YAxis
+            domain={[(min: number) => Math.max(0, Math.floor(min / 10) * 10 - 10), 100]}
+            {...axisProps}
+          />
           <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'var(--border)' }} />
           <Area
             type="monotone"
@@ -43,6 +46,7 @@ export function TrendChart({ data }: { data: { label: string; score: number | nu
             stroke="var(--chart-1)"
             strokeWidth={2.5}
             fill={`url(#${id}-area)`}
+            fillOpacity={1}
             dot={false}
             activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--card)' }}
             connectNulls
