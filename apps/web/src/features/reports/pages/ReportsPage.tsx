@@ -6,7 +6,7 @@ import {
   shiftDate,
   toDateKey,
   type PeriodType,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   Award,
   FileSpreadsheet,

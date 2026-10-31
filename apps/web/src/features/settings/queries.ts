@@ -1,4 +1,4 @@
-import { DEFAULT_BRANCH_RULES, type BranchInfo, type Shift, type ShiftInput } from '@dm/shared'
+import { DEFAULT_BRANCH_RULES, type BranchInfo, type Shift, type ShiftInput } from '@cityreach/shared'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCurrentUser } from '@/features/auth/session'
 import { qk, refreshLists } from '@/lib/query-keys'

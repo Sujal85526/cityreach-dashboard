@@ -7,7 +7,7 @@ import {
   type Shift,
   type SwapRequest,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   collection,
   doc,

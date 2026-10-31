@@ -17,7 +17,7 @@ import {
   type GeoFix,
   type Shift,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   collection,
   doc,

@@ -1,4 +1,4 @@
-import { shiftInputSchema, type Shift, type ShiftInput } from '@dm/shared'
+import { shiftInputSchema, type Shift, type ShiftInput } from '@cityreach/shared'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useEffect } from 'react'

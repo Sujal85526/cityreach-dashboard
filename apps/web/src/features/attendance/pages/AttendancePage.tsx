@@ -1,4 +1,4 @@
-import { toDateKey } from '@dm/shared'
+import { toDateKey } from '@cityreach/shared'
 import { CalendarCheck, Clock, Pencil, Smartphone, TimerOff, UserCheck } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { DataTable, type Column } from '@/components/common/DataTable'

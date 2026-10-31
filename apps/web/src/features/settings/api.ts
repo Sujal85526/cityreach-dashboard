@@ -10,7 +10,7 @@ import {
   type BranchInfo,
   type Shift,
   type ShiftInput,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   collection,
   doc,

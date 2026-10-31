@@ -1,4 +1,4 @@
-import type { Attendance, AttendancePhoto } from '@dm/shared'
+import type { Attendance, AttendancePhoto } from '@cityreach/shared'
 import { Camera, CameraOff, MapPin, MapPinOff } from 'lucide-react'
 import { useState } from 'react'
 import { TonePill } from '@/components/common/StatusPill'

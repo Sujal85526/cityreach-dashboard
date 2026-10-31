@@ -9,7 +9,7 @@ import {
   type PerformanceSnapshot,
   type Task,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   collection,
   doc,

@@ -1,4 +1,4 @@
-import { stockStatus, toDateKey, type Activity } from '@dm/shared'
+import { stockStatus, toDateKey, type Activity } from '@cityreach/shared'
 import {
   Activity as ActivityIcon,
   AlertTriangle,

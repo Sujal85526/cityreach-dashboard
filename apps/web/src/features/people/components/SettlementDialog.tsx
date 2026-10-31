@@ -1,4 +1,4 @@
-import { finalSettlement, toDateKey, type Branch, type User } from '@dm/shared'
+import { finalSettlement, toDateKey, type Branch, type User } from '@cityreach/shared'
 import { Download } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'

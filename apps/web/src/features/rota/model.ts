@@ -1,4 +1,4 @@
-import { addDays, plannedShiftOn, type RotaEntry, type Shift } from '@dm/shared'
+import { addDays, plannedShiftOn, type RotaEntry, type Shift } from '@cityreach/shared'
 
 /** Monday of the week containing `dateKey`. */
 export function weekStartOf(dateKey: string): string {

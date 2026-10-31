@@ -1,5 +1,5 @@
 {
-  "name": "@dm/tools",
+  "name": "@cityreach/tools",
   "private": true,
   "version": "0.1.0",
   "description": "Developer scripts (emulator seed). Admin SDK is used here only, never in the app.",
@@ -12,7 +12,7 @@
     "indexes:wait": "tsx wait-indexes.ts"
   },
   "devDependencies": {
-    "@dm/shared": "workspace:*",
+    "@cityreach/shared": "workspace:*",
     "@firebase/rules-unit-testing": "^5.0.2",
     "@types/node": "^26.6.2",
     "firebase": "^12.19.0",

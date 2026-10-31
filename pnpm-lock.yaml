@@ -124,7 +124,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@dm/shared':
+      '@cityreach/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@hookform/resolvers':
@@ -249,7 +249,7 @@ importers:
 
   tools:
     devDependencies:
-      '@dm/shared':
+      '@cityreach/shared':
         specifier: workspace:*
         version: link:../packages/shared
       '@firebase/rules-unit-testing':

@@ -1,4 +1,4 @@
-import type { Branch, Task, TaskInput, TaskStatus, User } from '@dm/shared'
+import type { Branch, Task, TaskInput, TaskStatus, User } from '@cityreach/shared'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCurrentUser } from '@/features/auth/session'
 import { useLive } from '@/lib/live'

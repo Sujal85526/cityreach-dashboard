@@ -1,4 +1,4 @@
-import type { Supplier } from '@dm/shared'
+import type { Supplier } from '@cityreach/shared'
 import { Mail, Pencil, Phone, Plus, Trash2, Truck } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

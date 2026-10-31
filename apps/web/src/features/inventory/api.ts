@@ -12,7 +12,7 @@ import {
   type StockMovement,
   type StockStatus,
   type Supplier,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   collection,
   doc,

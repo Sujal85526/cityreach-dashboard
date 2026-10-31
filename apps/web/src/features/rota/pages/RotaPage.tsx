@@ -1,4 +1,4 @@
-import { addDays, type SwapRequest } from '@dm/shared'
+import { addDays, type SwapRequest } from '@cityreach/shared'
 import { CalendarCheck2, ChevronLeft, ChevronRight, Repeat } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

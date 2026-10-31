@@ -1,4 +1,4 @@
-import { displayTaskStatus, TASK_PRIORITIES, type Task, type TaskStatus } from '@dm/shared'
+import { displayTaskStatus, TASK_PRIORITIES, type Task, type TaskStatus } from '@cityreach/shared'
 import { KanbanSquare, List, Plus, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'

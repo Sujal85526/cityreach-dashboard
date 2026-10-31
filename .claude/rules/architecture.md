@@ -30,7 +30,7 @@ lib/                    firebase, utils, query-keys, format (dates, numbers, dur
 
 - UI → queries → api → Firebase. Pages never call `api.ts` or Firebase directly.
 - Server state in TanStack Query only; UI state local (`useState`) or URL params (filters, tabs, period). No global store unless a real need appears.
-- Types and zod schemas come from `@dm/shared`; forms use `zodResolver` with the shared schema, and `api.ts` parses again before writing.
+- Types and zod schemas come from `@cityreach/shared`; forms use `zodResolver` with the shared schema, and `api.ts` parses again before writing.
 
 ## Shared (`packages/shared/src`)
 

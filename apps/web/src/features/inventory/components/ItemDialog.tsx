@@ -1,4 +1,4 @@
-import type { Branch, InventoryItem } from '@dm/shared'
+import type { Branch, InventoryItem } from '@cityreach/shared'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'

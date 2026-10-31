@@ -1,4 +1,4 @@
-import type { Feedback } from '@dm/shared'
+import type { Feedback } from '@cityreach/shared'
 import { MessageSquareWarning, Star, ThumbsUp } from 'lucide-react'
 import { StatCard } from '@/components/common/StatCard'
 import { Skeleton } from '@/components/ui/skeleton'

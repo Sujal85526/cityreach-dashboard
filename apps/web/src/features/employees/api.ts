@@ -10,7 +10,7 @@ import {
   type NoteKind,
   type Task,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   arrayUnion,
   collection,

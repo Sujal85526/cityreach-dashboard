@@ -1,4 +1,4 @@
-import { DEFAULT_EARLY_LEAVE_GRACE_MINUTES, type Branch } from '@dm/shared'
+import { DEFAULT_EARLY_LEAVE_GRACE_MINUTES, type Branch } from '@cityreach/shared'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { errorMessage } from '@/lib/errors'

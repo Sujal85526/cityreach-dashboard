@@ -1,4 +1,4 @@
-import type { EntityRef } from '@dm/shared'
+import type { EntityRef } from '@cityreach/shared'
 import {
   collection,
   doc,

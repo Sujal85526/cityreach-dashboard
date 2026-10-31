@@ -9,7 +9,7 @@ import {
   type StoredDocument,
   type Training,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { where } from 'firebase/firestore'
 import { GraduationCap, Target, UserPlus } from 'lucide-react'
 import { TonePill } from '@/components/common/StatusPill'

@@ -1,4 +1,4 @@
-import { daysUntil, DEFAULT_REMIND_DAYS, expiryState, type StoredDocument } from '@dm/shared'
+import { daysUntil, DEFAULT_REMIND_DAYS, expiryState, type StoredDocument } from '@cityreach/shared'
 import { TonePill } from '@/components/common/StatusPill'
 import { formatDate } from '@/lib/format'
 

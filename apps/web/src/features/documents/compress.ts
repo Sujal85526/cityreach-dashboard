@@ -1,4 +1,4 @@
-import type { StoredDocument } from '@dm/shared'
+import type { StoredDocument } from '@cityreach/shared'
 
 /** A file made ready for storage: the bytes to keep and how to turn them back into the file. */
 export interface Packed {

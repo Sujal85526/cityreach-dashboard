@@ -1,4 +1,4 @@
-import { canEmployeeMoveTask, displayTaskStatus, type Task, type TaskStatus } from '@dm/shared'
+import { canEmployeeMoveTask, displayTaskStatus, type Task, type TaskStatus } from '@cityreach/shared'
 import { CalendarClock, Check, ListChecks, Loader2, Play } from 'lucide-react'
 import { toast } from 'sonner'
 import { EmptyState, ErrorState } from '@/components/common/EmptyState'

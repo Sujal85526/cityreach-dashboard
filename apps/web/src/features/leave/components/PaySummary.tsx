@@ -1,4 +1,4 @@
-import { monthlyPay, payFacts, type Attendance } from '@dm/shared'
+import { monthlyPay, payFacts, type Attendance } from '@cityreach/shared'
 import { plural, formatMoney } from '../model'
 
 /**

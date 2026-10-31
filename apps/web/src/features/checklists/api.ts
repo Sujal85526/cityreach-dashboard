@@ -1,4 +1,4 @@
-import { COLLECTIONS, type ChecklistRun, type ChecklistTemplate } from '@dm/shared'
+import { COLLECTIONS, type ChecklistRun, type ChecklistTemplate } from '@cityreach/shared'
 import {
   collection,
   doc,

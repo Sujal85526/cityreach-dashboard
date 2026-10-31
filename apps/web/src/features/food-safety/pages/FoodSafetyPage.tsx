@@ -1,4 +1,4 @@
-import { COLD_UNITS, type Equipment, type TemperatureLog } from '@dm/shared'
+import { COLD_UNITS, type Equipment, type TemperatureLog } from '@cityreach/shared'
 import { ShieldCheck, Thermometer, ThermometerSnowflake } from 'lucide-react'
 import { StatCard } from '@/components/common/StatCard'
 import { ChecklistsPanel } from '@/features/checklists/components/ChecklistsPanel'

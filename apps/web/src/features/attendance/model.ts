@@ -8,7 +8,7 @@ import {
   type RotaEntry,
   type Shift,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 
 /** What a day looks like for one employee: a saved record, or what the rules say about the gap. */
 export type DayStatus = AttendanceStatus | 'upcoming' | 'not_in_yet'

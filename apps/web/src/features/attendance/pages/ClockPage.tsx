@@ -1,4 +1,4 @@
-import { earlyLeaveMinutes, resolveAttendance, type Attendance } from '@dm/shared'
+import { earlyLeaveMinutes, resolveAttendance, type Attendance } from '@cityreach/shared'
 import { CalendarClock, Clock, Loader2, LogIn, LogOut } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'

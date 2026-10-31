@@ -1,4 +1,4 @@
-import type { Branch, LeaveRequest, Shift, User } from '@dm/shared'
+import type { Branch, LeaveRequest, Shift, User } from '@cityreach/shared'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

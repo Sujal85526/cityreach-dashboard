@@ -8,7 +8,7 @@ import {
   type PerformanceSnapshot,
   type Task,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 
 export interface PeriodData {
   attendance: Attendance[]

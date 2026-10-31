@@ -6,7 +6,7 @@ import {
   salesTotal,
   type Expense,
   type SalesDay,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { Receipt, Wallet } from 'lucide-react'
 import { TonePill } from '@/components/common/StatusPill'
 import type { RecordModule } from '@/features/records/components/RecordList'

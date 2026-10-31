@@ -3,7 +3,7 @@
  * attention", the calendar, payslips and employee documents have something to show locally.
  * Runs after the main seed; emulator only.
  */
-import { addDays, COLLECTIONS, DEFAULT_LEAVE_TYPES } from '@dm/shared'
+import { addDays, COLLECTIONS, DEFAULT_LEAVE_TYPES } from '@cityreach/shared'
 import type { Firestore } from 'firebase-admin/firestore'
 
 const SALARIES: Record<string, [salary: number, allowances: number]> = {

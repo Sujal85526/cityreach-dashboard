@@ -1,4 +1,4 @@
-import { DEFAULT_BRANCH_RULES } from '@dm/shared'
+import { DEFAULT_BRANCH_RULES } from '@cityreach/shared'
 import { Coffee } from 'lucide-react'
 import { Outlet } from 'react-router'
 import { toast } from 'sonner'

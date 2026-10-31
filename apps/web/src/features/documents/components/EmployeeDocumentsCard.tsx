@@ -1,4 +1,4 @@
-import { toDateKey, type User } from '@dm/shared'
+import { toDateKey, type User } from '@cityreach/shared'
 import { FolderLock, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { EmptyState, ErrorState } from '@/components/common/EmptyState'

@@ -1,4 +1,4 @@
-import type { PurchaseOrder } from '@dm/shared'
+import type { PurchaseOrder } from '@cityreach/shared'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CreditCard, PackageCheck, Plus, ShoppingCart, Truck } from 'lucide-react'
 import { useState } from 'react'

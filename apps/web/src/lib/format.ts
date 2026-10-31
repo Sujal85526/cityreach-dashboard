@@ -1,4 +1,4 @@
-import type { Shift } from '@dm/shared'
+import type { Shift } from '@cityreach/shared'
 import { format } from 'date-fns'
 
 /** "07:00" → "7am", "15:30" → "3:30pm" (prototype style). */

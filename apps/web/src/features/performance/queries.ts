@@ -1,4 +1,4 @@
-import { lastWeeks, toDateKey, weekRange } from '@dm/shared'
+import { lastWeeks, toDateKey, weekRange } from '@cityreach/shared'
 import { useQuery } from '@tanstack/react-query'
 import { useBranch } from '@/features/settings/queries'
 import { listSnapshots, TREND_WEEKS } from './api'

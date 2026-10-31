@@ -13,7 +13,7 @@ import {
   type PayAndLeave,
   type Shift,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   collection,
   doc,

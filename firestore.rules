@@ -95,7 +95,7 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/branches/$(branchId)).data.rules.attendance.graceMinutes;
     }
     // The shift someone works on a date: the rota entry when there is one (null = day off),
-    // otherwise their usual shift (mirrors rotaShiftId in @dm/shared).
+    // otherwise their usual shift (mirrors rotaShiftId in @cityreach/shared).
     function plannedShift(dateKey) {
       let path = /databases/$(database)/documents/rota/$(request.auth.uid + '_' + dateKey);
       return exists(path) ? get(path).data.shiftId : me().shiftId;
@@ -103,7 +103,7 @@ service cloud.firestore {
     function shiftOf(shiftId) {
       return get(/databases/$(database)/documents/shifts/$(shiftId)).data;
     }
-    // Shift length in minutes from "HH:mm" strings (mirrors shiftLengthMinutes in @dm/shared).
+    // Shift length in minutes from "HH:mm" strings (mirrors shiftLengthMinutes in @cityreach/shared).
     // Example: 07:00–15:00 → 480; Night 23:00–07:00 → 480.
     function minutesOfDay(t) { return int(t.split(':')[0]) * 60 + int(t.split(':')[1]); }
     function shiftLength(start, end) {
@@ -164,7 +164,7 @@ service cloud.firestore {
     }
 
     // 4. Same action, next write: worked minutes = clock-out − clock-in, and the minutes left in
-    // the shift beyond the grace period (mirrors earlyLeaveMinutes in @dm/shared).
+    // the shift beyond the grace period (mirrors earlyLeaveMinutes in @cityreach/shared).
     // Example: shift ends 15:00, clock-out 12:45, grace 10 → earlyLeaveMinutes 135.
     function validWorkedTotal() {
       let r = resource.data;
@@ -270,7 +270,7 @@ service cloud.firestore {
         && d.gross is number && d.net <= d.gross;
     }
 
-    // ---- Operations, finance and HR records (lists in @dm/shared schemas/business.ts) ----
+    // ---- Operations, finance and HR records (lists in @cityreach/shared schemas/business.ts) ----
     // Every record carries branchId and createdBy (the signed-in user). One block guards them all.
     match /{coll}/{id} {
       // Manager records: only the branch's managers.
@@ -353,7 +353,7 @@ service cloud.firestore {
         || validEmployeeTaskMove() || validOverdueMark();
     }
 
-    // Employee on their own task (mirrors EMPLOYEE_TASK_MOVES in @dm/shared): start, put back,
+    // Employee on their own task (mirrors EMPLOYEE_TASK_MOVES in @cityreach/shared): start, put back,
     // or complete (also when overdue) with the server's time. Nothing else may change.
     function validEmployeeTaskMove() {
       let from = resource.data.status;
@@ -387,7 +387,7 @@ service cloud.firestore {
         && incoming().branchId == resource.data.branchId && validStock(incoming());
     }
 
-    // Status must match the shared rule (stockStatus in @dm/shared) for the branch's critical ratio,
+    // Status must match the shared rule (stockStatus in @cityreach/shared) for the branch's critical ratio,
     // so a wrong Low / Critical can never be stored. Example: 14 L vs min 15 L → low.
     function validStock(d) {
       let ratio = get(/databases/$(database)/documents/branches/$(d.branchId)).data.rules.inventory.criticalRatio;

@@ -1,4 +1,4 @@
-import { isManagerRole } from '@dm/shared'
+import { isManagerRole } from '@cityreach/shared'
 import { useCurrentUser } from '@/features/auth/session'
 import { useBranch } from '@/features/settings/queries'
 import { useToday } from '@/hooks/use-today'

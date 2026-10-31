@@ -1,4 +1,4 @@
-import { isManagerRole } from '@dm/shared'
+import { isManagerRole } from '@cityreach/shared'
 import { ChevronDown, LogOut, Menu, Moon, Search, Sun } from 'lucide-react'
 import { useState } from 'react'
 import { useLocation } from 'react-router'

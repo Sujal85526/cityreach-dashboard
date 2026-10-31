@@ -1,4 +1,4 @@
-import type { Branch } from '@dm/shared'
+import type { Branch } from '@cityreach/shared'
 import { Plus, X } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

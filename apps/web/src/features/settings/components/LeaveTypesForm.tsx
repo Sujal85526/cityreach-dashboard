@@ -1,4 +1,4 @@
-import type { Branch, LeaveType } from '@dm/shared'
+import type { Branch, LeaveType } from '@cityreach/shared'
 import { Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

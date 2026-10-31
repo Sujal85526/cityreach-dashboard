@@ -4,7 +4,7 @@ import {
   userAccessSchema,
   type User,
   type UserAccess,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,

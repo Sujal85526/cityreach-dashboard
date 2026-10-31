@@ -5,7 +5,7 @@
 - **SOLID in practice:** one reason to change per file (page = composition, queries = caching, api = storage and batched writes); depend on the shared rules, not on copies.
 - **Size limits:** files < 300 lines (hard max 500), functions < 50 lines. Split by responsibility, not arbitrarily.
 - **Types:** `strict` + `noUncheckedIndexedAccess`. No `any`, no non-null `!` except on known DOM roots. Validate every external input with zod (forms, URL params, documents read from Firestore).
-- **Enums:** string literal unions from `as const` arrays in `@dm/shared` (e.g. `TASK_STATUSES`). No TS `enum`.
+- **Enums:** string literal unions from `as const` arrays in `@cityreach/shared` (e.g. `TASK_STATUSES`). No TS `enum`.
 - **Errors:** never swallow. `api.ts` throws `Error` with a user-readable message; UI shows a toast from the error message; unexpected errors are logged once at the boundary.
 - **Logging:** the `activity` collection is the audit log. No `console` left in committed code.
 - **Naming:** files `kebab-case.ts`, components `PascalCase.tsx`, hooks `useThing`. Booleans read as questions (`isOverdue`).

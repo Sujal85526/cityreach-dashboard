@@ -1,4 +1,4 @@
-import type { EntityRef } from '@dm/shared'
+import type { EntityRef } from '@cityreach/shared'
 import type { QueryConstraint, WriteBatch } from 'firebase/firestore'
 import { Pencil, Plus, Trash2, type LucideIcon } from 'lucide-react'
 import { useState, type ReactNode } from 'react'

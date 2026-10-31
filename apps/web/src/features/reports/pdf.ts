@@ -1,4 +1,4 @@
-import { periodLabel, type PerformanceWeights, type PeriodType } from '@dm/shared'
+import { periodLabel, type PerformanceWeights, type PeriodType } from '@cityreach/shared'
 import type { ReportView } from './model'
 
 /**

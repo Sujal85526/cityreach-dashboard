@@ -1,4 +1,4 @@
-import { isManagerRole, type Role } from '@dm/shared'
+import { isManagerRole, type Role } from '@cityreach/shared'
 import { Loader2 } from 'lucide-react'
 import { Navigate, Outlet, useLocation } from 'react-router'
 import { useSession } from '@/features/auth/session'

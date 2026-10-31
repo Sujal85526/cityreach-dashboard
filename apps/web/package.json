@@ -1,5 +1,5 @@
 {
-  "name": "@dm/web",
+  "name": "@cityreach/web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,7 +13,7 @@
     "test:flows": "vitest run --config vitest.flows.config.ts"
   },
   "dependencies": {
-    "@dm/shared": "workspace:*",
+    "@cityreach/shared": "workspace:*",
     "@hookform/resolvers": "^5.9.1",
     "@tanstack/react-query": "^5.104.5",
     "@tanstack/react-query-persist-client": "^5.104.5",

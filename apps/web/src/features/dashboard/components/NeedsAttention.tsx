@@ -1,4 +1,4 @@
-import type { Candidate, Equipment, Incident, PurchaseOrder, TemperatureLog } from '@dm/shared'
+import type { Candidate, Equipment, Incident, PurchaseOrder, TemperatureLog } from '@cityreach/shared'
 import {
   AlertTriangle,
   CalendarDays,

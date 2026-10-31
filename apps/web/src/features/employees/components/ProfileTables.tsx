@@ -1,4 +1,4 @@
-import type { Attendance, Task } from '@dm/shared'
+import type { Attendance, Task } from '@cityreach/shared'
 import { CalendarCheck, ListChecks } from 'lucide-react'
 import { useMemo } from 'react'
 import { DataTable, type Column } from '@/components/common/DataTable'

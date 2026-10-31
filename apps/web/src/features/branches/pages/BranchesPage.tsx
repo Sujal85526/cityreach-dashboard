@@ -1,4 +1,4 @@
-import { branchInfoSchema, type BranchInfo } from '@dm/shared'
+import { branchInfoSchema, type BranchInfo } from '@cityreach/shared'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Building2, Crown, Loader2, Plus } from 'lucide-react'
 import { useState } from 'react'

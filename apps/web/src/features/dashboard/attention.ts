@@ -15,7 +15,7 @@ import {
   type SwapRequest,
   type TemperatureLog,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { formatDay } from '@/lib/format'
 
 export type AttentionKind =

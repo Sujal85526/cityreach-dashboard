@@ -1,4 +1,4 @@
-import type { User } from '@dm/shared'
+import type { User } from '@cityreach/shared'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { RecordList } from '@/features/records/components/RecordList'

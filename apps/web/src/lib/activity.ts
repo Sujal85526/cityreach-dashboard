@@ -1,4 +1,4 @@
-import { COLLECTIONS, type EntityRef } from '@dm/shared'
+import { COLLECTIONS, type EntityRef } from '@cityreach/shared'
 import { collection, doc, serverTimestamp, type Transaction, type WriteBatch } from 'firebase/firestore'
 import type { SessionUser } from '@/features/auth/api'
 import { db } from './firebase'

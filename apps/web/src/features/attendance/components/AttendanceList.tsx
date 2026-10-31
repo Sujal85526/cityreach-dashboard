@@ -1,4 +1,4 @@
-import { resolveAttendance, type Attendance } from '@dm/shared'
+import { resolveAttendance, type Attendance } from '@cityreach/shared'
 import { CalendarCheck } from 'lucide-react'
 import { EmptyState } from '@/components/common/EmptyState'
 import { StatusPill, TonePill } from '@/components/common/StatusPill'

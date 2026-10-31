@@ -1,4 +1,4 @@
-import type { Notification } from '@dm/shared'
+import type { Notification } from '@cityreach/shared'
 import { BellOff } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'

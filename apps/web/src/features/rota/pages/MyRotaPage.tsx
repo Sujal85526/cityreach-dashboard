@@ -1,4 +1,4 @@
-import { addDays } from '@dm/shared'
+import { addDays } from '@cityreach/shared'
 import { ChevronLeft, ChevronRight, Loader2, Repeat } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

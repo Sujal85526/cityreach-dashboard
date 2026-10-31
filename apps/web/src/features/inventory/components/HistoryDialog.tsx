@@ -1,4 +1,4 @@
-import type { InventoryItem } from '@dm/shared'
+import type { InventoryItem } from '@cityreach/shared'
 import { History } from 'lucide-react'
 import { EmptyState, ErrorState } from '@/components/common/EmptyState'
 import {

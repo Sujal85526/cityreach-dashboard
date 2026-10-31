@@ -6,7 +6,7 @@ import {
   type Equipment,
   type Inspection,
   type TemperatureLog,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { ClipboardList, Thermometer } from 'lucide-react'
 import { TonePill } from '@/components/common/StatusPill'
 import type { ModuleContext } from '@/features/operations/modules'

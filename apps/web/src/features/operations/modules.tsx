@@ -6,7 +6,7 @@ import {
   type Branch,
   type Handover,
   type Incident,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { ArrowRightLeft, ShieldAlert } from 'lucide-react'
 import { StatusPill, TonePill } from '@/components/common/StatusPill'
 import type { SessionUser } from '@/features/auth/api'

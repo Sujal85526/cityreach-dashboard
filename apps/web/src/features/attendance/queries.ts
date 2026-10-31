@@ -13,7 +13,7 @@ import {
   type ClockOutCapture,
   type Correction,
 } from './api'
-import type { Attendance, Branch } from '@dm/shared'
+import type { Attendance, Branch } from '@cityreach/shared'
 
 export function useMyAttendance() {
   const { uid } = useCurrentUser()

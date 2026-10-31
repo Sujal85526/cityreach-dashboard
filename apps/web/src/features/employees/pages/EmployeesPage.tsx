@@ -1,4 +1,4 @@
-import type { Shift, User } from '@dm/shared'
+import type { Shift, User } from '@cityreach/shared'
 import { Plus, Search, Users } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'

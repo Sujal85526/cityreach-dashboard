@@ -1,4 +1,4 @@
-import { isManagerRole, type Notification } from '@dm/shared'
+import { isManagerRole, type Notification } from '@cityreach/shared'
 import { Bell } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'

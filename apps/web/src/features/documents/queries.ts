@@ -1,4 +1,4 @@
-import type { StoredDocument } from '@dm/shared'
+import type { StoredDocument } from '@cityreach/shared'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCurrentUser } from '@/features/auth/session'
 import { qk, refreshLists } from '@/lib/query-keys'

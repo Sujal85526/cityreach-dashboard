@@ -9,7 +9,7 @@ import {
   type PerformanceSnapshot,
   type PeriodType,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   attendancePct,
   measuredStaff,

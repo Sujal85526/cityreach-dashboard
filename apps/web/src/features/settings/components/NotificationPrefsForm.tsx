@@ -1,4 +1,4 @@
-import { NOTIFICATION_TYPES, type Branch, type NotificationType } from '@dm/shared'
+import { NOTIFICATION_TYPES, type Branch, type NotificationType } from '@cityreach/shared'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { errorMessage } from '@/lib/errors'

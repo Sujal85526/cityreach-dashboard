@@ -1,4 +1,4 @@
-import type { EmployeeForm, EmploymentStatus, NewEmployee, NoteKind, User } from '@dm/shared'
+import type { EmployeeForm, EmploymentStatus, NewEmployee, NoteKind, User } from '@cityreach/shared'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCurrentUser } from '@/features/auth/session'
 import { qk, refreshLists } from '@/lib/query-keys'

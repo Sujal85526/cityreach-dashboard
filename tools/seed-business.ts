@@ -4,7 +4,7 @@
  * screen, the dashboard's "Needs your attention" and the calendar have something to show.
  * Runs after the main seed; emulator only.
  */
-import { addDays, COLLECTIONS, orderTotal, temperatureOk } from '@dm/shared'
+import { addDays, COLLECTIONS, orderTotal, temperatureOk } from '@cityreach/shared'
 import type { Firestore } from 'firebase-admin/firestore'
 
 const MANAGER = { uid: 'hana', name: 'Hana Malek' }

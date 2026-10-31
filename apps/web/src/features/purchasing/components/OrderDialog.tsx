@@ -5,7 +5,7 @@ import {
   type OrderLineInput,
   type PurchaseOrder,
   type Supplier,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { Loader2, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

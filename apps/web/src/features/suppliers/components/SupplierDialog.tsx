@@ -1,4 +1,4 @@
-import type { Supplier } from '@dm/shared'
+import type { Supplier } from '@cityreach/shared'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'

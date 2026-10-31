@@ -4,7 +4,7 @@
     {
       "name": "web",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@dm/web", "dev", "--port", "5173", "--strictPort"],
+      "runtimeArgs": ["--filter", "@cityreach/web", "dev", "--port", "5173", "--strictPort"],
       "port": 5173
     }
   ]

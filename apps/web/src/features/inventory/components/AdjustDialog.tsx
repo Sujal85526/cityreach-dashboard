@@ -4,7 +4,7 @@ import {
   type Branch,
   type InventoryItem,
   type StockChange,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { Loader2, Minus, Plus, ClipboardCheck } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'

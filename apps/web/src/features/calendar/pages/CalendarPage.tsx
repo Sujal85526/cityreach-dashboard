@@ -1,5 +1,5 @@
-import type { Candidate, Equipment, PurchaseOrder, Training } from '@dm/shared'
-import { addDays, toDateKey } from '@dm/shared'
+import type { Candidate, Equipment, PurchaseOrder, Training } from '@cityreach/shared'
+import { addDays, toDateKey } from '@cityreach/shared'
 import {
   CalendarDays,
   ChevronLeft,

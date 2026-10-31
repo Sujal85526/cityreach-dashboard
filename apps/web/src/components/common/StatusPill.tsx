@@ -12,7 +12,7 @@ const TONE_CLASSES: Record<Tone, string> = {
 
 /**
  * Every status in the app maps to a label and tone here, and only here.
- * Keys are the lowercase enum values from @dm/shared.
+ * Keys are the lowercase enum values from @cityreach/shared.
  */
 const STATUS: Record<string, { label: string; tone: Tone }> = {
   // attendance

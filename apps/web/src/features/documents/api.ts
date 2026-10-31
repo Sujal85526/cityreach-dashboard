@@ -12,7 +12,7 @@ import {
   MAX_UPLOAD_BYTES,
   type DocumentDetails,
   type StoredDocument,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   Bytes,
   collection,

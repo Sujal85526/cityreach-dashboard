@@ -1,4 +1,4 @@
-import type { Payslip, User } from '@dm/shared'
+import type { Payslip, User } from '@cityreach/shared'
 import { Download, FileText, Wallet } from 'lucide-react'
 import { useState } from 'react'
 import { DataTable, type Column } from '@/components/common/DataTable'

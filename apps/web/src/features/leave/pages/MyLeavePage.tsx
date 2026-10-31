@@ -1,4 +1,4 @@
-import { toDateKey } from '@dm/shared'
+import { toDateKey } from '@cityreach/shared'
 import { Plus, Wallet } from 'lucide-react'
 import { useState } from 'react'
 import { ErrorState } from '@/components/common/EmptyState'

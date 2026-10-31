@@ -6,7 +6,7 @@ import {
   type Branch,
   type Expense,
   type SalesDay,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { where } from 'firebase/firestore'
 import { Landmark, Receipt, TrendingUp, Users, Wallet } from 'lucide-react'
 import { useState } from 'react'

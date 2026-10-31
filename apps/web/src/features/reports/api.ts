@@ -12,7 +12,7 @@ import {
   type Notification,
   type PeriodType,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   collection,
   doc,

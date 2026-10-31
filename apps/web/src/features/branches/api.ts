@@ -1,4 +1,4 @@
-import { COLLECTIONS, type Branch, type BranchInfo } from '@dm/shared'
+import { COLLECTIONS, type Branch, type BranchInfo } from '@cityreach/shared'
 import {
   collection,
   doc,

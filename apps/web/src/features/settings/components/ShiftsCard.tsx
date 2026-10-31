@@ -1,4 +1,4 @@
-import type { Shift } from '@dm/shared'
+import type { Shift } from '@cityreach/shared'
 import { CalendarClock, Pencil, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

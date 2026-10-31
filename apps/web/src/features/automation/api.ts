@@ -6,7 +6,7 @@ import {
   type Branch,
   type Shift,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { doc, serverTimestamp, Timestamp, writeBatch } from 'firebase/firestore'
 import { listAttendanceRange, recordId } from '@/features/attendance/api'
 import type { SessionUser } from '@/features/auth/api'

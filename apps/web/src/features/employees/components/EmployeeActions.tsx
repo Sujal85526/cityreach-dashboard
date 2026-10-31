@@ -1,4 +1,4 @@
-import type { User } from '@dm/shared'
+import type { User } from '@cityreach/shared'
 import { MoreHorizontal } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'

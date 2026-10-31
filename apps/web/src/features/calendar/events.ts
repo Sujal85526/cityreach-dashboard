@@ -10,7 +10,7 @@ import {
   type StoredDocument,
   type Training,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 
 export const EVENT_KINDS = [
   'leave',

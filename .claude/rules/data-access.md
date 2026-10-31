@@ -14,4 +14,4 @@ Firestore bills per document read/write, and every round trip adds latency on a 
 - **Real-time listeners** (`onSnapshot`) only where live updates matter: notification bell unread count, employee's own clock-in status, Kanban board. Everything else is a cached query (staleTime 30 s).
 - **Automation on open** (`features/automation`) queries narrowly (status + deadline range, since the last run) and writes in chunks of ≤ 500.
 - **External API calls:** none in v1. If one is added, call it from a service, with timeout and retry, never from the client.
-- **Time:** store instants as UTC Timestamps; convert with `@dm/shared` time helpers using the branch `timeZone`. Clock-in time always comes from the server (`serverTimestamp()`, checked in rules).
+- **Time:** store instants as UTC Timestamps; convert with `@cityreach/shared` time helpers using the branch `timeZone`. Clock-in time always comes from the server (`serverTimestamp()`, checked in rules).

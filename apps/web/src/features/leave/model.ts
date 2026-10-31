@@ -8,7 +8,7 @@ import {
   type LeaveType,
   type Shift,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 
 /** The leave types the shop offers (Settings → Leave types), or the defaults until saved. */
 export const leaveTypesOf = (branch: Pick<Branch, 'leaveTypes'>): LeaveType[] =>

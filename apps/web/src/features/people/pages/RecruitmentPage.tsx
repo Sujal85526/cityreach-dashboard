@@ -1,4 +1,4 @@
-import { CANDIDATE_STAGES, type Candidate } from '@dm/shared'
+import { CANDIDATE_STAGES, type Candidate } from '@cityreach/shared'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TonePill } from '@/components/common/StatusPill'

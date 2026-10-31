@@ -1,4 +1,4 @@
-import type { EmployeeNote, NoteKind, User } from '@dm/shared'
+import type { EmployeeNote, NoteKind, User } from '@cityreach/shared'
 import { Award, Loader2, StickyNote, TriangleAlert, type LucideIcon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

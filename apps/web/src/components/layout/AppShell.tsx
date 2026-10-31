@@ -1,4 +1,4 @@
-import { isManagerRole } from '@dm/shared'
+import { isManagerRole } from '@cityreach/shared'
 import { useState } from 'react'
 import { Outlet } from 'react-router'
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet'

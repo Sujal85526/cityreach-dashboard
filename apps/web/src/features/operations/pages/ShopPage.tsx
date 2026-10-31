@@ -1,4 +1,4 @@
-import { COLD_UNITS, type Equipment } from '@dm/shared'
+import { COLD_UNITS, type Equipment } from '@cityreach/shared'
 import { ChecklistsPanel } from '@/features/checklists/components/ChecklistsPanel'
 import { temperatureModule } from '@/features/food-safety/modules'
 import { ModuleTabs } from '@/features/records/components/ModuleTabs'

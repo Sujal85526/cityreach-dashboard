@@ -1,4 +1,4 @@
-import { COLLECTIONS, type Activity } from '@dm/shared'
+import { COLLECTIONS, type Activity } from '@cityreach/shared'
 import {
   collection,
   getCountFromServer,

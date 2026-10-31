@@ -4,7 +4,7 @@ import {
   expiryState,
   toDateKey,
   type StoredDocument,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { CalendarClock, CalendarX, FileText, FolderLock, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { EmptyState, ErrorState } from '@/components/common/EmptyState'

@@ -1,4 +1,4 @@
-import type { GeoFix } from '@dm/shared'
+import type { GeoFix } from '@cityreach/shared'
 
 /** Why there is no location reading; the clock-in still goes ahead and the manager sees it. */
 export type LocationProblem = 'denied' | 'unavailable'

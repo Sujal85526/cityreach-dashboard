@@ -1,4 +1,4 @@
-import type { Task, TaskStatus } from '@dm/shared'
+import type { Task, TaskStatus } from '@cityreach/shared'
 import { CalendarClock, MoreHorizontal } from 'lucide-react'
 import { EmployeeAvatar } from '@/components/common/EmployeeAvatar'
 import { StatusPill } from '@/components/common/StatusPill'

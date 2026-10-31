@@ -1,4 +1,4 @@
-import type { Branch } from '@dm/shared'
+import type { Branch } from '@cityreach/shared'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { errorMessage } from '@/lib/errors'

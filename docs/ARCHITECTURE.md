@@ -34,13 +34,13 @@ Trade-off: nothing is written while nobody has the app open. Every screen is sti
 
 | Layer            | Location                                             | May import                                     | Must not                        |
 | ---------------- | ---------------------------------------------------- | ---------------------------------------------- | ------------------------------- |
-| Page / component | `apps/web/src/features/<domain>/components`, `pages` | queries hooks, `@/components/ui`, `@dm/shared` | Firebase SDK, `api.ts` directly |
+| Page / component | `apps/web/src/features/<domain>/components`, `pages` | queries hooks, `@/components/ui`, `@cityreach/shared` | Firebase SDK, `api.ts` directly |
 | Query hooks      | `features/<domain>/queries.ts`                       | `api.ts`, `qk`                                 | UI                              |
-| Client API       | `features/<domain>/api.ts`                           | `@/lib/firebase`, `@dm/shared` rules           | React                           |
+| Client API       | `features/<domain>/api.ts`                           | `@/lib/firebase`, `@cityreach/shared` rules           | React                           |
 | Shared rules     | `packages/shared/src/rules`                          | nothing (pure)                                 | I/O of any kind                 |
 | Security rules   | `firestore.rules`                                    | —                                              | trust anything from the client  |
 
-Calls go one way only: page → queries → api → Firestore. Business rules (lateness, stock status, overdue, score) live **only** in `@dm/shared`; `api.ts` calls them before writing and `firestore.rules` re-checks what can be checked (who, which branch, server time, which fields).
+Calls go one way only: page → queries → api → Firestore. Business rules (lateness, stock status, overdue, score) live **only** in `@cityreach/shared`; `api.ts` calls them before writing and `firestore.rules` re-checks what can be checked (who, which branch, server time, which fields).
 
 ## Where writes happen
 

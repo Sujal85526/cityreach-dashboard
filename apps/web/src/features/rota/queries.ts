@@ -5,7 +5,7 @@ import {
   type Shift,
   type SwapRequest,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCurrentUser } from '@/features/auth/session'
 import { useToday } from '@/hooks/use-today'

@@ -1,4 +1,4 @@
-import { resolveAttendance, toDateKey } from '@dm/shared'
+import { resolveAttendance, toDateKey } from '@cityreach/shared'
 import { CalendarCheck, Clock, TimerOff } from 'lucide-react'
 import { ErrorState } from '@/components/common/EmptyState'
 import { StatCard } from '@/components/common/StatCard'

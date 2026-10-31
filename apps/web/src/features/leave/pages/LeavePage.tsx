@@ -1,4 +1,4 @@
-import { toDateKey, type LeaveRequest } from '@dm/shared'
+import { toDateKey, type LeaveRequest } from '@cityreach/shared'
 import { CalendarClock, CalendarDays, Hourglass, Wallet } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { DataTable, type Column } from '@/components/common/DataTable'

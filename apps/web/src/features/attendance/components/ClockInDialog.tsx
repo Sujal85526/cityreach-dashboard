@@ -1,4 +1,4 @@
-import { distanceMeters, isAtShop, type Branch, type GeoFix } from '@dm/shared'
+import { distanceMeters, isAtShop, type Branch, type GeoFix } from '@cityreach/shared'
 import { Loader2, LogIn, MapPin, MapPinOff } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'

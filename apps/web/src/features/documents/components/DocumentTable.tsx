@@ -1,4 +1,4 @@
-import type { StoredDocument } from '@dm/shared'
+import type { StoredDocument } from '@cityreach/shared'
 import { Download, ExternalLink, Loader2, Pencil, Trash2 } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { toast } from 'sonner'

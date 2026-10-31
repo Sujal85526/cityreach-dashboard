@@ -7,7 +7,7 @@ import {
   type Equipment,
   type Training,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { doc, where, writeBatch } from 'firebase/firestore'
 import type { SessionUser } from '@/features/auth/api'
 import { listRecords } from '@/features/records/api'

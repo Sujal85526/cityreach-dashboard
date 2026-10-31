@@ -1,4 +1,4 @@
-import { TASK_STATUSES, type Task, type TaskStatus } from '@dm/shared'
+import { TASK_STATUSES, type Task, type TaskStatus } from '@cityreach/shared'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'

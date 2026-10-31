@@ -1,4 +1,4 @@
-import type { PeriodType, User } from '@dm/shared'
+import type { PeriodType, User } from '@cityreach/shared'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCurrentUser } from '@/features/auth/session'
 import { useEmployees } from '@/features/employees/queries'

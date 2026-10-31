@@ -1,4 +1,4 @@
-import { SALARY_PAYMENT_METHODS, type Attendance, type Payslip, type User } from '@dm/shared'
+import { SALARY_PAYMENT_METHODS, type Attendance, type Payslip, type User } from '@cityreach/shared'
 import { Download, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

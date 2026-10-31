@@ -1,4 +1,4 @@
-import { zonedDateTime, type Branch } from '@dm/shared'
+import { zonedDateTime, type Branch } from '@cityreach/shared'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'

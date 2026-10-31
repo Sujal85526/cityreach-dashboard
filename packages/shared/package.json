@@ -1,5 +1,5 @@
 {
-  "name": "@dm/shared",
+  "name": "@cityreach/shared",
   "private": true,
   "version": "0.1.0",
   "description": "Domain types, validation schemas and pure business rules shared by web and functions",

@@ -1,4 +1,4 @@
-import { branchInfoSchema, type Branch, type BranchInfo } from '@dm/shared'
+import { branchInfoSchema, type Branch, type BranchInfo } from '@cityreach/shared'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'

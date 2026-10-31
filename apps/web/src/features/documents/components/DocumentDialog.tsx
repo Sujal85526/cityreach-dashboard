@@ -7,7 +7,7 @@ import {
   type DocumentDetails,
   type StoredDocument,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { FileUp, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

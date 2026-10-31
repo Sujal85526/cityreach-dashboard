@@ -1,4 +1,4 @@
-import { stockStatus, type InventoryItem, type StockStatus } from '@dm/shared'
+import { stockStatus, type InventoryItem, type StockStatus } from '@cityreach/shared'
 import {
   AlertTriangle,
   Boxes,

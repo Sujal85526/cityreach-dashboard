@@ -1,4 +1,4 @@
-import { COLLECTIONS, isManagerRole, type Notification } from '@dm/shared'
+import { COLLECTIONS, isManagerRole, type Notification } from '@cityreach/shared'
 import {
   collection,
   doc,

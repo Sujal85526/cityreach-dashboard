@@ -1,4 +1,4 @@
-import { buildSampleShop, COLLECTIONS, type Branch } from '@dm/shared'
+import { buildSampleShop, COLLECTIONS, type Branch } from '@cityreach/shared'
 import { collection, doc, getDocs, limit, query, where, writeBatch } from 'firebase/firestore'
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'

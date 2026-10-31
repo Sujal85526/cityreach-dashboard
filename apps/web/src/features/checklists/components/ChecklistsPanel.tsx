@@ -3,7 +3,7 @@ import {
   checklistTemplateSchema,
   type ChecklistRun,
   type ChecklistTemplate,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CheckCircle2, ClipboardCheck, ListChecks, Settings2 } from 'lucide-react'
 import { useState } from 'react'

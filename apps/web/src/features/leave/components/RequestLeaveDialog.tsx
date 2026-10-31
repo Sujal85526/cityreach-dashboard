@@ -1,4 +1,4 @@
-import { leaveDates, splitPaidDays, toDateKey, type LeaveRequestInput } from '@dm/shared'
+import { leaveDates, splitPaidDays, toDateKey, type LeaveRequestInput } from '@cityreach/shared'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

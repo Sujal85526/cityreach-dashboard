@@ -18,7 +18,7 @@ import {
   type Shift,
   type Task,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { readFileSync } from 'node:fs'
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'

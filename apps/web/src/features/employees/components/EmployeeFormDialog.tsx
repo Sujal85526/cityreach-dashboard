@@ -5,7 +5,7 @@ import {
   ROLES,
   type NewEmployee,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useEffect } from 'react'

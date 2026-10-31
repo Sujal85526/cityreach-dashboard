@@ -1,4 +1,4 @@
-import { periodLabel } from '@dm/shared'
+import { periodLabel } from '@cityreach/shared'
 import { Loader2, Star } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'

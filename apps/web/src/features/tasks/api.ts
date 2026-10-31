@@ -6,7 +6,7 @@ import {
   type TaskInput,
   type TaskStatus,
   type User,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import {
   collection,
   doc,

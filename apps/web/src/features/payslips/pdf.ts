@@ -1,4 +1,4 @@
-import type { Payslip } from '@dm/shared'
+import type { Payslip } from '@cityreach/shared'
 import { formatMoney } from '@/features/leave/model'
 import { formatMinutes } from '@/lib/format'
 

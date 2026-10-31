@@ -1,4 +1,4 @@
-import type { Equipment } from '@dm/shared'
+import type { Equipment } from '@cityreach/shared'
 import { ModuleTabs } from '@/features/records/components/ModuleTabs'
 import { RecordList } from '@/features/records/components/RecordList'
 import { useModuleContext } from '@/features/records/context'

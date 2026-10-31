@@ -1,4 +1,4 @@
-import { toDateKey, type Branch, type User } from '@dm/shared'
+import { toDateKey, type Branch, type User } from '@cityreach/shared'
 import { Loader2, Pencil } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'

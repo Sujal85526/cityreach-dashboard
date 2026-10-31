@@ -1,4 +1,4 @@
-import { displayTaskStatus, toDateKey, type Task, type User } from '@dm/shared'
+import { displayTaskStatus, toDateKey, type Task, type User } from '@cityreach/shared'
 import { addDays } from '@/features/attendance/model'
 
 /** Task numbers for today's stat cards (local dates in the shop's timezone). */

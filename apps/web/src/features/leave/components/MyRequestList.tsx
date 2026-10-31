@@ -1,4 +1,4 @@
-import type { LeaveRequest } from '@dm/shared'
+import type { LeaveRequest } from '@cityreach/shared'
 import { CalendarDays } from 'lucide-react'
 import { toast } from 'sonner'
 import { EmptyState } from '@/components/common/EmptyState'

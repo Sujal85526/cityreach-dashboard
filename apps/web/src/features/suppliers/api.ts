@@ -1,4 +1,4 @@
-import { COLLECTIONS, supplierInputSchema, type Supplier, type SupplierInput } from '@dm/shared'
+import { COLLECTIONS, supplierInputSchema, type Supplier, type SupplierInput } from '@cityreach/shared'
 import {
   collection,
   doc,

@@ -1,4 +1,4 @@
-import type { Notification } from '@dm/shared'
+import type { Notification } from '@cityreach/shared'
 import { TonePill } from '@/components/common/StatusPill'
 import { formatAgo } from '@/lib/format'
 import { cn } from '@/lib/utils'

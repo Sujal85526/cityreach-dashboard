@@ -9,7 +9,7 @@ import {
   type Branch,
   type PeriodType,
   type StockMovement,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { collection, getDocs, orderBy, query, Timestamp, where } from 'firebase/firestore'
 import { loadPeriodData } from '@/features/performance/api'
 import { downloadCsv, toCsv } from '@/lib/csv'

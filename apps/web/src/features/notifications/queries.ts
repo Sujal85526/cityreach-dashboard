@@ -1,4 +1,4 @@
-import type { Notification } from '@dm/shared'
+import type { Notification } from '@cityreach/shared'
 import { useMutation } from '@tanstack/react-query'
 import { useCurrentUser } from '@/features/auth/session'
 import { useLive } from '@/lib/live'

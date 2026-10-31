@@ -4,7 +4,7 @@ import {
   type EntityRef,
   type NotificationTone,
   type NotificationType,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { collection, doc, serverTimestamp, type Transaction, type WriteBatch } from 'firebase/firestore'
 import type { SessionUser } from '@/features/auth/api'
 import { db } from './firebase'

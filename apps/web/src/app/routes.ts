@@ -1,4 +1,4 @@
-import { isManagerRole, type Role } from '@dm/shared'
+import { isManagerRole, type Role } from '@cityreach/shared'
 import {
   Bell,
   BarChart3,

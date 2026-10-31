@@ -9,7 +9,7 @@ import {
   nextServiceOn,
   type Equipment,
   type Maintenance,
-} from '@dm/shared'
+} from '@cityreach/shared'
 import { doc } from 'firebase/firestore'
 import { Hammer, Wrench } from 'lucide-react'
 import { TonePill } from '@/components/common/StatusPill'

@@ -1,4 +1,4 @@
-import { DEFAULT_SHOP_RADIUS_METERS, type Branch } from '@dm/shared'
+import { DEFAULT_SHOP_RADIUS_METERS, type Branch } from '@cityreach/shared'
 import { Crosshair, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
