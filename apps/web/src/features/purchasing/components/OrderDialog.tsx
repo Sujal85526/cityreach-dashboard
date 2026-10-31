@@ -166,12 +166,18 @@ export function OrderDialog({
             {lines.map((l, i) => {
               const item = items.find((it) => it.id === l.itemId)
               return (
-                <div key={i} className="grid grid-cols-[1fr_5rem_6rem_2.25rem] items-center gap-2">
+                <div
+                  key={i}
+                  className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2.75rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_5rem_6rem_2.25rem]"
+                >
                   <Select
                     value={l.itemId || undefined}
                     onValueChange={(itemId) => setLine(i, { itemId })}
                   >
-                    <SelectTrigger className="w-full" aria-label={`Item ${i + 1}`}>
+                    <SelectTrigger
+                      className="col-span-3 w-full sm:col-span-1"
+                      aria-label={`Item ${i + 1}`}
+                    >
                       <SelectValue placeholder="Item" />
                     </SelectTrigger>
                     <SelectContent>
@@ -204,6 +210,7 @@ export function OrderDialog({
                     variant="ghost"
                     size="icon"
                     aria-label="Remove item"
+                    className="size-11 sm:size-9"
                     onClick={() => setLines(lines.filter((_, j) => j !== i))}
                     disabled={lines.length === 1}
                   >
