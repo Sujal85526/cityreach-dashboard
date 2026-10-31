@@ -137,6 +137,20 @@ export const router = createBrowserRouter([
                 ),
               },
               {
+                path: 'insights',
+                ...page(() =>
+                  import('@/features/insights/pages/InsightsPage').then((m) => m.InsightsPage),
+                ),
+              },
+              {
+                path: 'branches/all',
+                ...page(() =>
+                  import('@/features/branches/pages/AllBranchesPage').then(
+                    (m) => m.AllBranchesPage,
+                  ),
+                ),
+              },
+              {
                 path: 'branches',
                 ...page(() =>
                   import('@/features/branches/pages/BranchesPage').then((m) => m.BranchesPage),

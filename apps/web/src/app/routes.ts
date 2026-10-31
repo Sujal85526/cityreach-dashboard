@@ -12,6 +12,8 @@ import {
   GraduationCap,
   KanbanSquare,
   LayoutDashboard,
+  LayoutGrid,
+  Lightbulb,
   ListChecks,
   MessageSquareHeart,
   Package,
@@ -78,6 +80,7 @@ const MANAGER_NAV: NavGroup[] = [
     label: 'Business',
     items: [
       { to: '/finance', label: 'Sales & finance', icon: Wallet },
+      { to: '/insights', label: 'Insights', icon: Lightbulb },
       { to: '/reports', label: 'Performance Reports', icon: BarChart3 },
       { to: '/documents', label: 'Documents', icon: FolderLock },
       { to: '/settings', label: 'Settings', icon: Settings },
@@ -90,7 +93,14 @@ export const NAV: Record<Role, NavGroup[]> = {
   manager: MANAGER_NAV,
   owner: MANAGER_NAV.map((g) =>
     g.label === 'Business'
-      ? { ...g, items: [...g.items, { to: '/branches', label: 'Branches', icon: Building2 }] }
+      ? {
+          ...g,
+          items: [
+            ...g.items,
+            { to: '/branches/all', label: 'All branches', icon: LayoutGrid },
+            { to: '/branches', label: 'Branches', icon: Building2 },
+          ],
+        }
       : g,
   ),
   employee: [
