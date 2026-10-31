@@ -56,7 +56,7 @@ export interface Upload extends DocumentInput {
 
 /**
  * Compresses the file in the browser and stores it in pieces, together with its details and the
- * activity entry, in one batch. Refuses files still over 5 MB after compression.
+ * activity entry, in one batch. Refuses files still over 1 MB after compression (the demo keeps files in browser storage).
  */
 export async function uploadDocument(
   input: Upload,
@@ -64,11 +64,11 @@ export async function uploadDocument(
 ): Promise<{ originalSize: number; storedSize: number }> {
   const details = documentDetailsSchema.parse(input)
   if (input.file.size > MAX_UPLOAD_BYTES)
-    throw new Error(`That file is ${formatBytes(input.file.size)}. Pick one under 25 MB.`)
+    throw new Error(`That file is ${formatBytes(input.file.size)}. Pick one under 8 MB.`)
   const packed = await pack(input.file)
   if (packed.bytes.length > MAX_DOCUMENT_BYTES)
     throw new Error(
-      `Even compressed it's ${formatBytes(packed.bytes.length)}; the limit is 5 MB. Try a smaller scan or split the PDF.`,
+      `Even compressed it's ${formatBytes(packed.bytes.length)}; the demo limit is 1 MB. Try a smaller file.`,
     )
 
   const ref = doc(documents)
@@ -169,7 +169,7 @@ const localDate = (dateKey: string) => formatDate(new Date(`${dateKey}T12:00:00`
 /**
  * Automation (manager's app): one notification when a document enters its reminder window and one
  * when it expires, each sent once per expiry date (the marker is saved on the document).
- * Example: trade license expires 15 Jan, remind 30 days before → "expires in 30 days" on 16 Dec,
+ * Example: premises licence expires 15 Jan, remind 30 days before → "expires in 30 days" on 16 Dec,
  * "has expired" on 16 Jan.
  */
 export async function checkDocumentExpiry(branch: Branch, actor: SessionUser): Promise<number> {

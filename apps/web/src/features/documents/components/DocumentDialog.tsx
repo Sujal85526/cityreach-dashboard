@@ -40,7 +40,7 @@ const baseName = (file: string) => file.replace(/\.[^.]+$/, '').slice(0, 120)
 const SHOP = 'shop'
 
 /**
- * Upload a new document (no `editing`) or change an existing one. Staff papers (passport, visa…)
+ * Upload a new document (no `editing`) or change an existing one. Staff papers (passport, right to work…)
  * are linked to an employee; from a profile, `forEmployee` fills that in.
  */
 export function DocumentDialog({
@@ -56,7 +56,7 @@ export function DocumentDialog({
   const [file, setFile] = useState<File | null>(null)
   const [details, setDetails] = useState<DocumentDetails>({
     name: editing?.name ?? '',
-    category: editing?.category ?? (forEmployee ? 'Passport' : 'License'),
+    category: editing?.category ?? (forEmployee ? 'Passport' : 'Licence'),
     employeeId: editing?.employeeId ?? forEmployee?.id ?? null,
     note: editing?.note ?? '',
     expiresOn: editing?.expiresOn ?? null,
@@ -120,7 +120,7 @@ export function DocumentDialog({
             <DialogTitle>{editing ? 'Edit document' : 'Upload a document'}</DialogTitle>
             <DialogDescription>
               {forEmployee ? `${forEmployee.name}'s papers. ` : ''}Only managers can see documents.
-              Files are compressed; up to 5 MB each after compression.
+              Files are compressed and kept in this browser; up to 1 MB each after compression.
             </DialogDescription>
           </DialogHeader>
           {!editing && (
@@ -149,7 +149,7 @@ export function DocumentDialog({
               value={details.name}
               maxLength={120}
               onChange={(e) => set({ name: e.target.value })}
-              placeholder="e.g. Trade license 2026"
+              placeholder="e.g. Premises licence 2026"
             />
           </div>
           <div className="space-y-1.5">
@@ -233,7 +233,7 @@ export function DocumentDialog({
               value={details.note}
               maxLength={300}
               onChange={(e) => set({ note: e.target.value })}
-              placeholder="e.g. License no. 123456, renew at DED"
+              placeholder="e.g. Licence no. 123456, renew with the council"
             />
           </div>
           <DialogFooter>

@@ -2,20 +2,21 @@ import { z } from 'zod'
 import { dateKeySchema, idSchema, timestampsSchema } from './common'
 
 /**
- * The manager's private document store (licenses, contracts, paperwork). On the free plan there is
+ * The manager's private document store (licences, certificates, contracts, paperwork). On the free plan there is
  * no file storage, so a file is compressed in the browser and kept in the database in pieces:
  * documents/{id} holds the details, documentChunks/{id}_{n} the bytes (each under Firestore's
  * 1 MiB document limit).
  */
 export const DOCUMENT_CATEGORIES = [
-  'License',
+  'Licence',
+  'Certificate',
   'Contract',
   'Insurance',
   'Invoice',
   'Passport',
-  'Emirates ID',
-  'Visa',
-  'Labour contract',
+  'Right to work',
+  'DBS check',
+  'Employment contract',
   'Staff',
   'CV',
   'Other',
@@ -24,17 +25,17 @@ export const DOCUMENT_CATEGORIES = [
 /** Categories that belong to a person; the upload form asks which employee. */
 export const EMPLOYEE_DOCUMENT_CATEGORIES: readonly DocumentCategory[] = [
   'Passport',
-  'Emirates ID',
-  'Visa',
-  'Labour contract',
+  'Right to work',
+  'DBS check',
+  'Employment contract',
   'Staff',
 ]
 export type DocumentCategory = (typeof DOCUMENT_CATEGORIES)[number]
 
 /** Largest file after compression. */
-export const MAX_DOCUMENT_BYTES = 5 * 1024 * 1024
+export const MAX_DOCUMENT_BYTES = 1024 * 1024
 /** Largest file accepted before compression (keeps the phone's memory safe). */
-export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024
+export const MAX_UPLOAD_BYTES = 8 * 1024 * 1024
 /** Bytes per piece; well under the 1 MiB document limit. */
 export const DOCUMENT_CHUNK_BYTES = 750_000
 
@@ -62,7 +63,7 @@ export const documentSchema = z
       .max(Math.ceil(MAX_DOCUMENT_BYTES / DOCUMENT_CHUNK_BYTES)),
     uploadedBy: idSchema,
     uploadedByName: z.string(),
-    /** The employee this document belongs to (passport, visa…); null = a shop document. */
+    /** The employee this document belongs to (passport, right to work…); null = a shop document. */
     employeeId: idSchema.nullable().optional(),
     employeeName: z.string().nullable().optional(),
     /** Last valid day (local date); null = doesn't expire. */
