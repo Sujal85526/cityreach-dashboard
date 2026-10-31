@@ -197,7 +197,10 @@
 
 /* Phones: widen the tappable area of small controls to 44px without changing the layout. */
 @utility touch-target {
-  position: relative;
+  /* Only make it a positioned box when it isn't already fixed, absolute or sticky. */
+  &:not(.fixed, .absolute, .sticky, .relative) {
+    position: relative;
+  }
   &::before {
     content: '';
     position: absolute;
