@@ -45,10 +45,7 @@ export function DataTable<T>({
             {columns.map((c) => (
               <TableHead
                 key={c.key}
-                className={cn(
-                  'text-xs font-medium tracking-wide text-muted-foreground uppercase',
-                  c.className,
-                )}
+                className={c.className}
               >
                 {c.header}
               </TableHead>

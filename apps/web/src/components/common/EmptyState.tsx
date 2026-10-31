@@ -10,12 +10,13 @@ interface EmptyStateProps {
 
 export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed p-10 text-center">
-      <span className="flex size-12 items-center justify-center rounded-full bg-muted">
-        <Icon className="size-6 text-muted-foreground" aria-hidden />
+    <div className="animate-page-in flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed bg-muted/30 px-6 py-12 text-center">
+      <span className="relative flex size-14 items-center justify-center rounded-2xl bg-accent text-primary">
+        <Icon className="size-6" aria-hidden />
+        <span className="absolute -inset-2 -z-10 rounded-3xl bg-accent/50" aria-hidden />
       </span>
       <div className="space-y-1">
-        <p className="font-medium">{title}</p>
+        <p className="font-display text-lg font-medium">{title}</p>
         {description && <p className="max-w-sm text-sm text-muted-foreground">{description}</p>}
       </div>
       {action}
@@ -26,7 +27,7 @@ export function EmptyState({ icon: Icon, title, description, action }: EmptyStat
 /** Error state with retry, for failed queries. */
 export function ErrorState({ error, onRetry }: { error: Error; onRetry?: () => void }) {
   return (
-    <div role="alert" className="rounded-xl bg-danger-soft p-4 text-sm text-danger">
+    <div role="alert" className="rounded-2xl bg-danger-soft p-4 text-sm text-danger">
       <p className="font-medium">Couldn't load this data.</p>
       <p className="opacity-80">{error.message}</p>
       {onRetry && (

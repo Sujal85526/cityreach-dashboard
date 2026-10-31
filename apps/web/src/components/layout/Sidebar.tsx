@@ -1,7 +1,8 @@
-import { Coffee, LogOut, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
+import { LogOut, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { NavLink } from 'react-router'
 import { NAV } from '@/app/routes'
+import { LogoMark, Wordmark } from '@/components/brand/Logo'
 import { EmployeeAvatar } from '@/components/common/EmployeeAvatar'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useCurrentUser } from '@/features/auth/session'
@@ -16,7 +17,7 @@ interface SidebarProps {
   onNavigate?: () => void
 }
 
-/** Light sidebar with an espresso accent. Fixed on desktop (collapsible), inside a sheet on mobile. */
+/** Brand-green sidebar with the cream wordmark. Fixed on desktop (collapsible), inside a sheet on mobile. */
 export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProps) {
   const user = useCurrentUser()
   const [confirmLogout, setConfirmLogout] = useState(false)
@@ -24,23 +25,22 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
   return (
     <div className="flex h-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div
-        className={cn('flex items-center gap-3 py-5', collapsed ? 'flex-col px-2' : 'pr-3 pl-5')}
+        className={cn(
+          'flex items-center gap-3 pt-6 pb-5',
+          collapsed ? 'flex-col px-2' : 'pr-3 pl-6',
+        )}
       >
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-          <Coffee className="size-5" />
-        </span>
-        {!collapsed && (
-          <div className="min-w-0 flex-1 leading-tight whitespace-nowrap">
-            <div className="font-semibold text-foreground">Digital Manager</div>
-            <div className="text-xs text-muted-foreground">Coffee ops platform</div>
-          </div>
+        {collapsed ? (
+          <LogoMark className="size-7 text-sidebar-accent-foreground" />
+        ) : (
+          <Wordmark className="h-3.5 flex-1 self-center text-sidebar-accent-foreground" />
         )}
         {onToggle && (
           <Hint label="Expand sidebar" show={collapsed}>
             <button
               type="button"
               onClick={onToggle}
-              className="rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="rounded-lg p-2 text-sidebar-muted transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
               title={collapsed ? undefined : 'Collapse sidebar'}
             >
@@ -55,7 +55,10 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
       </div>
 
       <nav
-        className={cn('flex-1 space-y-3 overflow-y-auto py-1', collapsed ? 'px-2' : 'px-3')}
+        className={cn(
+          'flex-1 space-y-4 overflow-y-auto py-1 [scrollbar-width:thin]',
+          collapsed ? 'px-2' : 'px-3',
+        )}
         aria-label="Main"
       >
         {NAV[user.access.role].map((group) => (
@@ -63,7 +66,7 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
             {collapsed ? (
               <div className="mx-2 my-1 border-t border-sidebar-border" aria-hidden />
             ) : (
-              <p className="px-3 pt-1 pb-0.5 text-[11px] font-medium tracking-wider text-muted-foreground/80 uppercase">
+              <p className="px-3 pt-1 pb-1 text-[11px] font-medium tracking-[0.12em] text-sidebar-muted uppercase">
                 {group.label}
               </p>
             )}
@@ -76,11 +79,11 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
                   aria-label={collapsed ? label : undefined}
                   className={({ isActive }) =>
                     cn(
-                      'relative flex items-center gap-3 rounded-lg py-2 text-sm whitespace-nowrap transition-colors',
+                      'relative flex items-center gap-3 rounded-lg py-2 text-sm whitespace-nowrap transition-colors duration-200',
                       collapsed ? 'justify-center px-0' : 'px-3',
                       isActive
                         ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
-                        : 'hover:bg-muted hover:text-foreground',
+                        : 'hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
                     )
                   }
                 >
@@ -88,7 +91,7 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
                     <>
                       {isActive && (
                         <span
-                          className="absolute top-2 bottom-2 left-0 w-1 rounded-r-full bg-primary"
+                          className="absolute top-2 bottom-2 left-0 w-0.5 rounded-r-full bg-sidebar-accent-foreground"
                           aria-hidden
                         />
                       )}
@@ -113,18 +116,20 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
           <EmployeeAvatar name={user.name} id={user.uid} size="sm" />
           {!collapsed && (
             <div className="min-w-0 flex-1 leading-tight">
-              <div className="truncate text-sm font-medium text-foreground">{user.name}</div>
-              <div className="truncate text-xs text-muted-foreground capitalize">
+              <div className="truncate text-sm font-medium text-sidebar-accent-foreground">
+                {user.name}
+              </div>
+              <div className="truncate text-xs text-sidebar-muted capitalize">
                 {user.access.role}
               </div>
             </div>
           )}
-          <Hint label="Log out" show={collapsed}>
+          <Hint label="Switch role" show={collapsed}>
             <button
               type="button"
               onClick={() => setConfirmLogout(true)}
-              className="rounded-md p-2 hover:bg-muted hover:text-foreground"
-              aria-label="Log out"
+              className="rounded-lg p-2 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              aria-label="Switch role"
             >
               <LogOut className="size-4" aria-hidden />
             </button>

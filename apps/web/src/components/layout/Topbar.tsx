@@ -18,6 +18,7 @@ import { useCurrentUser } from '@/features/auth/session'
 import { NotificationBell } from '@/features/notifications/components/NotificationBell'
 import { useTheme } from '@/hooks/use-theme'
 import { LogoutDialog } from './LogoutDialog'
+import { RoleSwitcher } from './RoleSwitcher'
 
 export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
   const user = useCurrentUser()
@@ -28,7 +29,7 @@ export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
   const title = titleFor(pathname, user.access.role)
 
   return (
-    <header className="sticky top-0 z-20 flex items-center gap-3 border-b bg-background/90 px-4 py-3 backdrop-blur md:px-8">
+    <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border/70 bg-background/80 px-4 py-3 backdrop-blur-xl md:px-8">
       <Button
         variant="ghost"
         size="icon"
@@ -40,12 +41,12 @@ export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
       </Button>
 
       <div className="min-w-0 flex-1">
-        <p className="hidden text-xs text-muted-foreground sm:block">Digital Manager / {title}</p>
-        <h1 className="truncate text-xl font-semibold">{title}</h1>
+        <p className="hidden text-xs text-muted-foreground sm:block">City Reach / {title}</p>
+        <h1 className="truncate text-xl font-medium">{title}</h1>
       </div>
 
       {isManagerRole(user.access.role) && (
-        <label className="hidden h-9 w-72 items-center gap-2 rounded-lg border bg-card px-3 text-sm text-muted-foreground lg:flex">
+        <label className="hidden h-10 w-72 items-center gap-2 rounded-lg border bg-card px-3 text-sm text-muted-foreground transition-shadow focus-within:ring-2 focus-within:ring-ring/40 lg:flex">
           <Search className="size-4" aria-hidden />
           <input
             className="w-full bg-transparent outline-none placeholder:text-muted-foreground"
@@ -65,7 +66,7 @@ export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="flex items-center gap-2 rounded-lg border bg-card py-1 pr-2 pl-1 text-left"
+            className="flex items-center gap-2 rounded-xl border bg-card py-1 pr-2 pl-1 text-left shadow-xs transition-shadow hover:shadow-sm"
             aria-label="Account menu"
           >
             <EmployeeAvatar name={user.name} id={user.uid} size="sm" />
@@ -84,8 +85,9 @@ export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
             <div className="text-xs text-muted-foreground">{user.email}</div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <RoleSwitcher />
           <DropdownMenuItem onSelect={() => setConfirmLogout(true)}>
-            <LogOut /> Log out
+            <LogOut /> Back to role picker
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

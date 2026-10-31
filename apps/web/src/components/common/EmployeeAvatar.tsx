@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 const COLORS = [
   'bg-chart-1 text-primary-foreground',
   'bg-chart-2 text-foreground',
-  'bg-chart-3 text-primary-foreground',
+  'bg-chart-3 text-foreground',
   'bg-chart-4 text-primary-foreground',
   'bg-primary text-primary-foreground',
 ]

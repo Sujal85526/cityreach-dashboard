@@ -1,6 +1,6 @@
 import { isManagerRole } from '@cityreach/shared'
 import { useState } from 'react'
-import { Outlet } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet'
 import { useCurrentUser } from '@/features/auth/session'
 import { useAutomation } from '@/features/automation/useAutomation'
@@ -14,6 +14,7 @@ export function AppShell() {
   const [menuOpen, setMenuOpen] = useState(false)
   const sidebar = useSidebarCollapsed()
   const isManager = isManagerRole(useCurrentUser().access.role)
+  const { pathname } = useLocation()
 
   return (
     <div className="flex min-h-svh">
@@ -37,8 +38,11 @@ export function AppShell() {
       {isManager && <ManagerAutomation />}
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar onOpenMenu={() => setMenuOpen(true)} />
-        <main className="flex-1 space-y-6 p-4 md:p-8">
-          <Outlet />
+        <main className="mx-auto w-full max-w-[1400px] flex-1 p-4 md:p-8">
+          {/* Re-keyed per page so each route fades in; reduced-motion users get no animation. */}
+          <div key={pathname} className="animate-page-in space-y-6 md:space-y-8">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
