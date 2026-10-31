@@ -11,7 +11,7 @@ interface ActivityInput {
 
 /**
  * Adds an audit-log entry to a batch, so the action and its log entry are saved together.
- * `actorId` must be the signed-in user (enforced by firestore.rules).
+ * `actorId` is the signed-in demo user.
  */
 export function addActivity(
   batch: WriteBatch | Transaction,

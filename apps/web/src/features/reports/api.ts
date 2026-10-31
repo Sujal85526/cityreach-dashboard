@@ -27,7 +27,7 @@ import type { SessionUser } from '@/features/auth/api'
 import { listSnapshots, loadPeriodData } from '@/features/performance/api'
 import { addActivity } from '@/lib/activity'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 import { addNotification } from '@/lib/notify'
 import { buildReport, type ReportView } from './model'
 

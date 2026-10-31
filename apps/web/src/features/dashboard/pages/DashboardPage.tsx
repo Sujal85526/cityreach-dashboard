@@ -39,7 +39,7 @@ import { TaskWeekChart } from '../components/TaskWeekChart'
 import { averageScore, taskStats, taskWeek } from '../model'
 
 /**
- * Manager overview. Every number comes from Firestore (docs/PRODUCT.md §1): attendance records,
+ * Manager overview. Every number comes from the local store: attendance records,
  * the live task board, inventory, staff stats and the activity log, loaded in parallel.
  */
 export function DashboardPage() {

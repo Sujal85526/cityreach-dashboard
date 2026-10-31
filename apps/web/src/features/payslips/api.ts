@@ -23,7 +23,7 @@ import {
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 
 const payslips = collection(db, COLLECTIONS.payslips)
 export const payslipId = (uid: string, month: string) => `${uid}_${month}`

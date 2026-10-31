@@ -29,7 +29,7 @@ import {
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 import { formatDate } from '@/lib/format'
 import { addNotification } from '@/lib/notify'
 import { formatBytes, pack, unpack } from './compress'

@@ -13,10 +13,9 @@ export function FullScreenLoader() {
 }
 
 /**
- * Route guard for UX only. The same checks run again in firestore.rules on every request,
- * so bypassing this never exposes data.
+ * Route guard: sends each demo role to its own area. `role="manager"` also lets owners in
+ * (they run the branch too).
  */
-/** `role="manager"` also lets owners in (they run the branch too). */
 export function RequireRole({ role }: { role: Exclude<Role, 'owner'> }) {
   const session = useSession()
   const location = useLocation()

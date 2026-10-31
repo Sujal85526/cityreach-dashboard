@@ -9,7 +9,7 @@ interface LiveState<T> {
 }
 
 /**
- * Real-time data from a Firestore listener (`onSnapshot`). Used only where live updates matter
+ * Real-time data from a store listener (`onSnapshot`). Used only where live updates matter
  * (task board, my tasks, notification bell); everything else is a cached query.
  * `key` must change when the subscription's inputs change.
  */

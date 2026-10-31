@@ -24,7 +24,7 @@ import {
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 import { addNotification } from '@/lib/notify'
 
 const tasks = collection(db, COLLECTIONS.tasks)

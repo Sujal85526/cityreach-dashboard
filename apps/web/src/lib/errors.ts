@@ -1,4 +1,4 @@
-/** A message a user can act on, instead of raw Firebase / security-rule text. */
+/** A message a user can act on, instead of a raw technical error. */
 export function errorMessage(error: unknown): string {
   const code = (error as { code?: string } | null)?.code
   if (code === 'permission-denied')

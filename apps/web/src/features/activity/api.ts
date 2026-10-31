@@ -10,7 +10,7 @@ import {
   where,
 } from '@/lib/store'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 
 const activity = collection(db, COLLECTIONS.activity)
 

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 
 type Theme = 'light' | 'dark'
-const STORAGE_KEY = 'dm-theme'
-const CHANGE_EVENT = 'dm-theme-change'
+const STORAGE_KEY = 'cityreach-theme'
+const CHANGE_EVENT = 'cityreach-theme-change'
 
 function readTheme(): Theme {
   try {

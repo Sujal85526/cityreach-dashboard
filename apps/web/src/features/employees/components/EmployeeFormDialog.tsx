@@ -47,7 +47,7 @@ import { useCreateEmployee, useUpdateEmployee } from '../queries'
 const POSITIONS = ['Barista', 'Shift Lead', 'Cashier', 'Cleaner', 'Owner']
 const NO_SHIFT = 'none'
 const ROLE_LABEL = { owner: 'Owner', manager: 'Manager', employee: 'Employee' } as const
-/** Only an owner can make someone an owner (firestore.rules enforce it too). */
+/** Only an owner can make someone an owner. */
 const roleOptions = (actorIsOwner: boolean) =>
   actorIsOwner ? ROLE_LABEL : { manager: ROLE_LABEL.manager, employee: ROLE_LABEL.employee }
 const STATUS_LABEL = { active: 'Active', on_leave: 'On Leave', inactive: 'Inactive' } as const

@@ -11,7 +11,7 @@ import {
 } from '@/lib/store'
 import type { SessionUser } from '@/features/auth/api'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 
 const runs = collection(db, COLLECTIONS.checklistRuns)
 export const runId = (templateId: string, date: string) => `${templateId}_${date}`

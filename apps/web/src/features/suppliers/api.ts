@@ -12,7 +12,7 @@ import {
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 
 const suppliers = collection(db, COLLECTIONS.suppliers)
 const items = collection(db, COLLECTIONS.inventoryItems)

@@ -13,14 +13,14 @@ import {
 } from '@/lib/store'
 import type { SessionUser } from '@/features/auth/api'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 
 const notifications = collection(db, COLLECTIONS.notifications)
 export const NOTIFICATION_PAGE = 50
 
 /**
  * Whose bell: managers see the branch-wide alerts (recipientId == null), employees see the
- * ones addressed to them. Both queries match firestore.rules, so they're allowed as lists.
+ * ones addressed to them. Both are plain queries on the store.
  */
 function mine(user: SessionUser): Query {
   return isManagerRole(user.access.role)

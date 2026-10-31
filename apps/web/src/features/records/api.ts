@@ -15,11 +15,11 @@ import {
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 
 /**
  * Data access for the simple record modules (expenses, incidents, equipment, feedback…): every
- * record is branch-scoped and remembers who created it. firestore.rules decide who may do what
+ * record is branch-scoped and remembers who created it. the route guards decide who may do what
  * per collection (manager records, staff logs, personal records).
  */
 export interface StoredRecord {

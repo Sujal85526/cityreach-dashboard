@@ -24,7 +24,7 @@ import { listAttendanceRange } from '@/features/attendance/api'
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 import { attendancePct, hasData, measuredStaff, scoreFor, slice, type PeriodData } from './model'
 
 const performance = collection(db, COLLECTIONS.performance)

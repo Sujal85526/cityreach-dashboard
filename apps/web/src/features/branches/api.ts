@@ -12,7 +12,7 @@ import type { SessionUser } from '@/features/auth/api'
 import { newBranchDoc } from '@/features/settings/api'
 import { addActivity } from '@/lib/activity'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 
 const branches = collection(db, COLLECTIONS.branches)
 const userRef = (uid: string) => doc(db, COLLECTIONS.users, uid)

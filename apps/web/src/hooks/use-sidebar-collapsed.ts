@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-const STORAGE_KEY = 'dm-sidebar-collapsed'
+const STORAGE_KEY = 'cityreach-sidebar-collapsed'
 
 function readCollapsed(): boolean {
   try {

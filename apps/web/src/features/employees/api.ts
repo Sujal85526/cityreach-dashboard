@@ -28,7 +28,7 @@ import {
 } from '@/lib/store'
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 
 const users = collection(db, COLLECTIONS.users)
 const userRef = (uid: string) => doc(db, COLLECTIONS.users, uid)
@@ -45,7 +45,7 @@ export async function getEmployee(uid: string): Promise<User | null> {
   return snap.exists() ? fromDoc<User>(snap) : null
 }
 
-// Manager queries filter by branchId too: firestore.rules only allow lists they can prove are in the branch.
+// Manager queries filter by branchId too, so branches never see each other's people.
 
 /** Last 30 attendance records, newest first. */
 export async function listEmployeeAttendance(branchId: string, uid: string): Promise<Attendance[]> {
@@ -136,7 +136,7 @@ export async function updateEmployee(
   await batch.commit()
 }
 
-/** Deactivate (never delete) or reactivate. Inactive users are blocked by firestore.rules. */
+/** Deactivate (never delete) or reactivate. Inactive users can no longer pick themselves in the role switcher. */
 export async function setEmployeeStatus(
   employee: User,
   status: EmploymentStatus,

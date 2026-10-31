@@ -14,7 +14,7 @@ import { collection, getDocs, orderBy, query, Timestamp, where } from '@/lib/sto
 import { loadPeriodData } from '@/features/performance/api'
 import { downloadCsv, toCsv } from '@/lib/csv'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 
 export const EXPORTS = {
   attendance: 'Attendance records',

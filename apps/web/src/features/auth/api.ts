@@ -7,7 +7,7 @@ import {
 } from '@cityreach/shared'
 import { collection, doc, getDoc, getDocs, query, where } from '@/lib/store'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 
 export interface SessionUser {
   uid: string

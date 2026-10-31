@@ -36,7 +36,7 @@ import {
 import type { SessionUser } from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
 import { db } from '@/lib/store'
-import { fromDoc } from '@/lib/firestore'
+import { fromDoc } from '@/lib/from-doc'
 import { formatMinutes, formatTimeOfDay } from '@/lib/format'
 import { addNotification } from '@/lib/notify'
 
@@ -121,7 +121,7 @@ export function clockInTarget({ me, shifts, rota, branch }: ClockContext, now = 
 }
 
 /**
- * Clock in, in two writes that firestore.rules check:
+ * Clock in, in two writes:
  * 1. create the record with the server's time (`clockInAt == request.time`), status 'pending';
  * 2. read that time back, classify On Time / Late with the shared rule, and save the result
  *    together with the activity entry and the late-arrival notification.
