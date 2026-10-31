@@ -81,6 +81,26 @@ export function subscribeMyTasks(uid: string, onData: Listener, onError: ErrorLi
   )
 }
 
+/** The signed-in employee's tasks once, latest deadlines first (same query as the live list). */
+export async function listMyTasks(uid: string): Promise<Task[]> {
+  const snap = await getDocs(
+    query(tasks, where('assigneeId', '==', uid), orderBy('deadline', 'desc'), limit(50)),
+  )
+  return snap.docs.map((d) => fromDoc<Task>(d))
+}
+
+/** A branch's open tasks once (same query as the live board). */
+export async function listOpenTasks(branchId: string): Promise<Task[]> {
+  const snap = await getDocs(
+    query(
+      tasks,
+      where('branchId', '==', branchId),
+      where('status', 'in', ['pending', 'in_progress', 'overdue']),
+    ),
+  )
+  return snap.docs.map((d) => fromDoc<Task>(d))
+}
+
 /** Manager creates and assigns a task; the assignee gets a notification in the same batch. */
 export async function createTask(
   input: TaskInput,

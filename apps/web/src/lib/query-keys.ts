@@ -45,5 +45,9 @@ export const qk = {
   inventory: ['inventory'] as const,
   inventoryItems: (branchId: string) => ['inventory', 'items', branchId] as const,
   stockMovements: (itemId: string) => ['inventory', 'movements', itemId] as const,
+  movementsBetween: (branchId: string, from: string, to: string) =>
+    ['inventory', 'between', branchId, from, to] as const,
+  myBranches: (uid: string) => ['branches', 'mine', uid] as const,
+  branchSummary: (branchId: string) => ['branches', 'summary', branchId] as const,
   suppliers: (branchId: string) => ['suppliers', branchId] as const,
 }

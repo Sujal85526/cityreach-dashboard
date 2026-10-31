@@ -2,8 +2,10 @@ import {
   applyStockChange,
   COLLECTIONS,
   inventoryItemInputSchema,
+  shiftDate,
   shouldAlertStockChange,
   stockStatus,
+  zonedDateTime,
   type Branch,
   type InventoryItem,
   type PurchaseOrder,
@@ -22,6 +24,7 @@ import {
   query,
   runTransaction,
   serverTimestamp,
+  Timestamp,
   where,
   writeBatch,
   type Transaction,
@@ -55,6 +58,26 @@ export async function listMovements(branchId: string, itemId: string): Promise<S
       where('itemId', '==', itemId),
       orderBy('createdAt', 'desc'),
       limit(20),
+    ),
+  )
+  return snap.docs.map((d) => fromDoc<StockMovement>(d))
+}
+
+/** Every stock change between two local dates, for the waste report and reorder suggestions. */
+export async function listMovementsBetween(
+  branch: Branch,
+  from: string,
+  to: string,
+): Promise<StockMovement[]> {
+  const tz = branch.rules.timeZone
+  const snap = await getDocs(
+    query(
+      movements,
+      where('branchId', '==', branch.id),
+      where('createdAt', '>=', Timestamp.fromDate(zonedDateTime(from, '00:00', tz))),
+      where('createdAt', '<', Timestamp.fromDate(zonedDateTime(shiftDate(to, 1), '00:00', tz))),
+      orderBy('createdAt', 'desc'),
+      limit(2000),
     ),
   )
   return snap.docs.map((d) => fromDoc<StockMovement>(d))
