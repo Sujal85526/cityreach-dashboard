@@ -72,6 +72,7 @@ export async function listDemoPeople(): Promise<DemoPerson[]> {
     query(collection(db, COLLECTIONS.users), where('status', '==', 'active')),
   )
   return snap.docs
+    .filter((d) => !d.get('extraBranch')) // staff of the owner's other branches aren't sign-in choices
     .map((d) => fromDoc<User>(d))
     .map((u) => ({ uid: u.id, name: u.name, role: u.role, position: u.position }))
 }

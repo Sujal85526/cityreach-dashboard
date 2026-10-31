@@ -63,6 +63,13 @@ export function seedBusiness(
   writer.update(db.collection(COLLECTIONS.users).doc(MANAGER.uid), { role: 'owner' })
   writer.update(db.collection(COLLECTIONS.users).doc('jamal'), { probationEndsOn: day(52) })
 
+  // Two people whose salary has not been set yet: Insights warns that the real staff cost is higher.
+  for (const uid of ['tomas', 'ella']) {
+    writer.update(db.collection(COLLECTIONS.users).doc(uid), { salary: null, allowances: 0 })
+    for (const id of Object.keys(db.data[COLLECTIONS.payslips] ?? {}))
+      if (id.startsWith(`${uid}_`)) delete (db.data[COLLECTIONS.payslips] ?? {})[id]
+  }
+
   // ---- Equipment and maintenance ----
   const equipment = [
     ['espresso', 'La Marzocco Linea', 'Espresso machine', 'LM-2210473', -400, -50, 90, 140, 'working', null, null],
@@ -312,13 +319,13 @@ export function seedBusiness(
     'GV-10388',
   )
 
-  // ---- Finance: 45 days of takings (weekend peak, gentle upward trend) ----
+  // ---- Finance: six months of takings (weekend peak, upward trend, a seasonal wobble) ----
   const weekdayFactor = [1.05, 0.82, 0.86, 0.9, 0.95, 1.12, 1.35]
   const closing = ['sofia', 'liam', 'noah', 'ella']
-  for (let back = 45; back >= 1; back--) {
+  for (let back = 190; back >= 1; back--) {
     const date = day(-back)
     const weekday = new Date(`${date}T12:00:00Z`).getUTCDay()
-    const trend = 1 + (0.12 * (45 - back)) / 45
+    const trend = (1 + (0.3 * (190 - back)) / 190) * (1 + 0.07 * Math.sin(back / 24))
     const total = Math.round(1250 * (weekdayFactor[weekday] ?? 1) * trend * (0.92 + rand() * 0.16))
     const card = Math.round(total * (0.54 + rand() * 0.04))
     const online = Math.round(total * (0.14 + rand() * 0.04))
@@ -332,8 +339,8 @@ export function seedBusiness(
     })
   }
 
-  // Expenses over the last three calendar months (amounts include VAT where the supplier charges it).
-  const monthStarts = [0, 1, 2].map((m) => {
+  // Expenses over the last six calendar months (amounts include VAT where the supplier charges it).
+  const monthStarts = [0, 1, 2, 3, 4, 5].map((m) => {
     let d = `${today.slice(0, 8)}01`
     for (let i = 0; i < m; i++) d = addDays(d, -1).slice(0, 8) + '01'
     return d.slice(0, 7)
@@ -358,7 +365,7 @@ export function seedBusiness(
   for (const month of monthStarts)
     for (const [category, description, amount, vatable, paymentMethod, dd] of expenseTemplates) {
       const date = `${month}-${dd}`
-      if (date > today || date < day(-62)) continue
+      if (date > today || date < day(-190)) continue
       expenseNo++
       const wobble = category === 'Supplies' || category === 'Utilities' ? 0.95 + rand() * 0.1 : 1
       const total = Math.round(amount * wobble)

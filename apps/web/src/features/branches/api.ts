@@ -2,6 +2,7 @@ import {
   branchSummary,
   COLLECTIONS,
   monthEnd,
+  monthLabourCost,
   salesTotal,
   toDateKey,
   type Branch,
@@ -68,8 +69,17 @@ export async function loadBranchSummary(branch: Branch, actor: SessionUser) {
     listBranchLeave(branch.id),
     listEmployees(branch.id),
   ])
+  // A month in progress: only the part of the monthly pay earned so far, as on the Insights page.
+  const end = monthEnd(month)
+  const share = Number(today.slice(8)) / Number(end.slice(8))
+  const labour = monthLabourCost(
+    staff.filter((s) => s.status !== 'inactive'),
+    payslips,
+    share,
+  )
   return branchSummary({
     now,
+    labourCost: labour.cost,
     sales: sales.reduce((sum, d) => sum + salesTotal(d), 0),
     expenses: expenses.reduce((sum, e) => sum + e.amount, 0),
     payroll: payslips.reduce((sum, p) => sum + p.net, 0),

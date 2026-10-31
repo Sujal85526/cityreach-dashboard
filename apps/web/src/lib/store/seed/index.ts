@@ -10,6 +10,7 @@ import {
 } from '@cityreach/shared'
 import { registerSeed } from '../engine'
 import { SeedDb, type SeedCollections } from './adapter'
+import { seedBranches } from './branches'
 import { seedBusiness } from './business'
 import { seedExtras } from './extras'
 
@@ -179,6 +180,7 @@ export function buildSeed(now = new Date()): SeedCollections {
 
   seedExtras(db, BRANCH_ID, today, names)
   seedBusiness(db, BRANCH_ID, today, names)
+  seedBranches(db, today)
   // The manager account used by the role switcher keeps its own role.
   writer.update(db.collection(COLLECTIONS.users).doc(MANAGER.uid), { role: 'manager' })
   return db.data

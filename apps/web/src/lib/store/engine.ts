@@ -14,7 +14,7 @@ export type WriteOp =
 
 const STORAGE_KEY = 'cityreach-demo-data'
 /** Bump when the seed or document shapes change, so browsers holding older demo data start fresh. */
-const SEED_VERSION = 2
+const SEED_VERSION = 3
 
 let data: Collections = {}
 let loaded = false
