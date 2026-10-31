@@ -13,6 +13,8 @@ export type WriteOp =
   | { type: 'delete'; collection: string; id: string }
 
 const STORAGE_KEY = 'cityreach-demo-data'
+/** Bump when the seed or document shapes change, so browsers holding older demo data start fresh. */
+const SEED_VERSION = 2
 
 let data: Collections = {}
 let loaded = false
@@ -26,6 +28,7 @@ export function registerSeed(build: () => Collections) {
 }
 
 interface Persisted {
+  version: number
   seededOn: string
   data: Collections
 }
@@ -35,7 +38,7 @@ function persist() {
   clearTimeout(saveTimer)
   saveTimer = setTimeout(() => {
     try {
-      const payload: Persisted = { seededOn: seededOn, data }
+      const payload: Persisted = { version: SEED_VERSION, seededOn, data }
       localStorage.setItem(STORAGE_KEY, serialize(payload))
     } catch {
       // Storage full or blocked: the demo keeps working from memory until the tab closes.
@@ -53,7 +56,7 @@ function ensureLoaded() {
     if (raw) {
       const parsed = deserialize<Persisted>(raw)
       // Sample dates are relative to the day the data was created; refresh it daily.
-      if (parsed.seededOn === today()) {
+      if (parsed.version === SEED_VERSION && parsed.seededOn === today()) {
         data = parsed.data
         seededOn = parsed.seededOn
         return
