@@ -41,12 +41,18 @@ export interface OrderDraft {
   note: string
 }
 
+export interface OrderPrefill {
+  supplierId: string
+  lines: { itemId: string; quantity: number; unitPrice: number }[]
+}
+
 /**
  * New or draft purchase order: a supplier, the items with quantities and prices (the supplier's
  * own items are suggested first), expected delivery, and the supplier's invoice and due date.
  */
 export function OrderDialog({
   existing,
+  prefill,
   suppliers,
   items,
   pending,
@@ -54,13 +60,17 @@ export function OrderDialog({
   onClose,
 }: {
   existing: PurchaseOrder | null
+  /** A new order filled in from the reorder suggestions. */
+  prefill?: OrderPrefill
   suppliers: Supplier[]
   items: InventoryItem[]
   pending: boolean
   onSave: (draft: OrderDraft) => void
   onClose: () => void
 }) {
-  const [supplierId, setSupplierId] = useState(existing?.supplierId ?? suppliers[0]?.id ?? '')
+  const [supplierId, setSupplierId] = useState(
+    existing?.supplierId ?? prefill?.supplierId ?? suppliers[0]?.id ?? '',
+  )
   const [expectedOn, setExpectedOn] = useState(existing?.expectedOn ?? '')
   const [invoiceNumber, setInvoiceNumber] = useState(existing?.invoiceNumber ?? '')
   const [paymentDueOn, setPaymentDueOn] = useState(existing?.paymentDueOn ?? '')
@@ -70,7 +80,12 @@ export function OrderDialog({
       itemId: l.itemId,
       quantity: String(l.quantity),
       unitPrice: String(l.unitPrice),
-    })) ?? [{ itemId: '', quantity: '1', unitPrice: '0' }],
+    })) ??
+      prefill?.lines.map((l) => ({
+        itemId: l.itemId,
+        quantity: String(l.quantity),
+        unitPrice: String(l.unitPrice),
+      })) ?? [{ itemId: '', quantity: '1', unitPrice: '0' }],
   )
   const supplierItems = [...items].sort(
     (a, b) => Number(b.supplierId === supplierId) - Number(a.supplierId === supplierId),

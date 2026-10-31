@@ -2,6 +2,7 @@ import type { PurchaseOrder } from '@cityreach/shared'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CreditCard, PackageCheck, Plus, ShoppingCart, Truck } from 'lucide-react'
 import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { DataTable, type Column } from '@/components/common/DataTable'
 import { EmptyState, ErrorState } from '@/components/common/EmptyState'
@@ -26,7 +27,7 @@ import { useToday } from '@/hooks/use-today'
 import { errorMessage } from '@/lib/errors'
 import { formatDay, formatMoney } from '@/lib/format'
 import { qk, refreshLists } from '@/lib/query-keys'
-import { OrderDialog, type OrderDraft } from '../components/OrderDialog'
+import { OrderDialog, type OrderDraft, type OrderPrefill } from '../components/OrderDialog'
 
 const STATUS = {
   draft: ['Draft', 'neutral'],
@@ -56,7 +57,19 @@ export function PurchasingPage() {
     },
     onSuccess: () => refreshLists(queryClient, qk.recordsOf('purchaseOrders'), qk.inventory),
   })
-  const [editing, setEditing] = useState<PurchaseOrder | 'new' | null>(null)
+  // Reorder suggestions open this page with a new order filled in.
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [prefill, setPrefill] = useState(
+    (location.state as { reorder?: OrderPrefill } | null)?.reorder,
+  )
+  const [editing, setEditing] = useState<PurchaseOrder | 'new' | null>(prefill ? 'new' : null)
+  const closeDialog = () => {
+    setEditing(null)
+    if (!prefill) return
+    setPrefill(undefined)
+    void navigate('.', { replace: true, state: null }) // a reload must not reopen it
+  }
 
   const error = orders.error ?? suppliers.error ?? items.error
   if (error) return <ErrorState error={error} onRetry={() => void orders.refetch()} />
@@ -99,7 +112,7 @@ export function PurchasingPage() {
       {
         onSuccess: () => {
           toast.success('Purchase order saved')
-          setEditing(null)
+          closeDialog()
         },
         onError: (e) => toast.error(errorMessage(e)),
       },
@@ -292,11 +305,12 @@ export function PurchasingPage() {
       {editing && suppliers.data && items.data && (
         <OrderDialog
           existing={editing === 'new' ? null : editing}
+          prefill={prefill}
           suppliers={suppliers.data}
           items={items.data}
           pending={save.isPending}
           onSave={saveDraft}
-          onClose={() => setEditing(null)}
+          onClose={closeDialog}
         />
       )}
     </div>
