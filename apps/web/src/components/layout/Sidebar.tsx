@@ -81,7 +81,7 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
                   aria-label={collapsed ? label : undefined}
                   className={({ isActive }) =>
                     cn(
-                      'relative flex items-center gap-3 rounded-lg py-2 text-sm whitespace-nowrap transition-colors duration-200',
+                      'relative flex items-center gap-3 rounded-lg py-2.5 text-sm whitespace-nowrap transition-colors duration-200',
                       collapsed ? 'justify-center px-0' : 'px-3',
                       isActive
                         ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'

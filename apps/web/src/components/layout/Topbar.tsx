@@ -66,7 +66,7 @@ export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="flex items-center gap-2 rounded-xl border bg-card py-1 pr-2 pl-1 text-left shadow-xs transition-shadow hover:shadow-sm"
+            className="flex items-center gap-2 rounded-xl border bg-card py-1 pr-2 pl-1 max-md:min-h-11 text-left shadow-xs transition-shadow hover:shadow-sm"
             aria-label="Account menu"
           >
             <EmployeeAvatar name={user.name} id={user.uid} size="sm" />

@@ -195,6 +195,20 @@
   font-family: var(--font-sans);
 }
 
+/* Phones: widen the tappable area of small controls to 44px without changing the layout. */
+@utility touch-target {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+
 /* Motion: tasteful and short; all of it stops for people who ask for less. */
 @keyframes page-in {
   from {

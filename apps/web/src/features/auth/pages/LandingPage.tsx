@@ -155,7 +155,7 @@ export function LandingPage() {
                           <select
                             value={chosenEmployee}
                             onChange={(e) => setEmployeeId(e.target.value)}
-                            className="h-9 min-w-0 rounded-lg border bg-background px-2 text-sm"
+                            className="h-10 min-w-0 rounded-lg border bg-background px-2 text-sm max-md:h-11"
                           >
                             {employees.map((p) => (
                               <option key={p.uid} value={p.uid}>

@@ -203,7 +203,10 @@ export function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-lg">Attendance summary</CardTitle>
             <CardAction>
-              <Link to="/attendance" className="text-sm text-primary hover:underline">
+              <Link
+                to="/attendance"
+                className="text-sm text-primary hover:underline max-md:touch-target"
+              >
                 Details
               </Link>
             </CardAction>
@@ -216,7 +219,10 @@ export function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-lg">Task completion</CardTitle>
             <CardAction>
-              <Link to="/tasks" className="text-sm text-primary hover:underline">
+              <Link
+                to="/tasks"
+                className="text-sm text-primary hover:underline max-md:touch-target"
+              >
                 Board
               </Link>
             </CardAction>
@@ -232,7 +238,10 @@ export function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-lg">Inventory alerts</CardTitle>
             <CardAction>
-              <Link to="/inventory" className="text-sm text-primary hover:underline">
+              <Link
+                to="/inventory"
+                className="text-sm text-primary hover:underline max-md:touch-target"
+              >
                 Inventory
               </Link>
             </CardAction>
@@ -264,7 +273,10 @@ export function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-lg">Upcoming tasks</CardTitle>
             <CardAction>
-              <Link to="/tasks" className="text-sm text-primary hover:underline">
+              <Link
+                to="/tasks"
+                className="text-sm text-primary hover:underline max-md:touch-target"
+              >
                 All tasks
               </Link>
             </CardAction>
@@ -295,7 +307,10 @@ export function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-lg">Performance trend</CardTitle>
             <CardAction>
-              <Link to="/reports" className="text-sm text-primary hover:underline">
+              <Link
+                to="/reports"
+                className="text-sm text-primary hover:underline max-md:touch-target"
+              >
                 Reports
               </Link>
             </CardAction>
@@ -325,7 +340,10 @@ export function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-lg">Notifications</CardTitle>
             <CardAction>
-              <Link to="/notifications" className="text-sm text-primary hover:underline">
+              <Link
+                to="/notifications"
+                className="text-sm text-primary hover:underline max-md:touch-target"
+              >
                 View all
               </Link>
             </CardAction>
