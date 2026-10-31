@@ -28,7 +28,7 @@ export async function downloadReportPdf(
   pdf
     .setFontSize(9)
     .text(
-      `Generated ${new Date().toLocaleString('en-GB')} by Digital Manager · rule-based, no AI`,
+      `Generated ${new Date().toLocaleString('en-GB')} by City Reach · rule-based, no AI`,
       40,
       86,
     )

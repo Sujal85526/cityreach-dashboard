@@ -23,7 +23,7 @@ const LABELS: Record<NotificationType, { title: string; example: string }> = {
   },
   document_expiry: {
     title: 'Document expiring / expired',
-    example: '"Trade license expires on 15 Jan 2027."',
+    example: '"Food hygiene certificate expires on 15 Jan 2027."',
   },
   temperature_alert: {
     title: 'Temperature out of range',

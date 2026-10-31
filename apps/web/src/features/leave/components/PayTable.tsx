@@ -48,7 +48,7 @@ export function PayTable({
 }) {
   const records = useAttendanceRange(`${month}-01`, `${month}-31`)
   const payslips = useMonthPayslips(month)
-  const shopName = useBranch().data?.name ?? 'Digital Manager'
+  const shopName = useBranch().data?.name ?? 'City Reach'
   const [open, setOpen] = useState<User | null>(null)
 
   const error = records.error ?? payslips.error
@@ -77,7 +77,7 @@ export function PayTable({
               bonus: 0,
               otherDeductions: 0,
               deductionNote: '',
-              paymentMethod: 'WPS',
+              paymentMethod: 'BACS',
               paymentRef: '',
             })
             return {

@@ -182,7 +182,7 @@ export function OrderDialog({
                     step={0.01}
                     value={l.unitPrice}
                     onChange={(e) => setLine(i, { unitPrice: e.target.value })}
-                    aria-label="Price per unit (AED)"
+                    aria-label="Price per unit (£)"
                   />
                   <Button
                     type="button"
@@ -210,7 +210,7 @@ export function OrderDialog({
                 Total <span className="font-semibold tabular-nums">{formatMoney(total)}</span>
               </span>
             </div>
-            <p className="text-xs text-muted-foreground">Quantity · price per unit (AED)</p>
+            <p className="text-xs text-muted-foreground">Quantity · price per unit (£)</p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">

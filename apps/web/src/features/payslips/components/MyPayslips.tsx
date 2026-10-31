@@ -11,7 +11,7 @@ import { useMyPayslips } from '../queries'
 /** Employee: their saved payslips, newest first, each as a PDF. */
 export function MyPayslips() {
   const slips = useMyPayslips()
-  const shopName = useBranch().data?.name ?? 'Digital Manager'
+  const shopName = useBranch().data?.name ?? 'City Reach'
   if (slips.error) return <ErrorState error={slips.error} />
   if (!slips.data) return <Skeleton className="h-24 w-full" />
   if (slips.data.length === 0)

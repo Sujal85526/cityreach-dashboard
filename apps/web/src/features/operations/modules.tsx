@@ -123,7 +123,7 @@ export const handoversModule = ({ today, isManager }: ModuleContext): RecordModu
       options: ['Morning', 'Evening', 'Night', 'Other'],
     },
     { key: 'notes', label: 'Notes for the next shift', type: 'textarea' },
-    { key: 'cashCount', label: 'Cash in till (AED)', type: 'money', optional: true },
+    { key: 'cashCount', label: 'Cash in till (£)', type: 'money', optional: true },
   ],
   defaults: () => ({ date: today, shiftName: 'Morning' }),
   columns: [

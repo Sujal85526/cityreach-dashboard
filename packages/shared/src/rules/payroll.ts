@@ -2,7 +2,7 @@ import { monthlyPay } from './leave'
 import { shiftLengthMinutes } from './shifts'
 
 /**
- * Payslip maths (monthly). UAE practice: a day's pay is basic salary ÷ 30, an hour's pay is a
+ * Payslip maths (monthly). A day's pay is basic salary ÷ 30, an hour's pay is a
  * day's pay ÷ 8, and overtime is paid at 125 % of the hourly basic pay.
  */
 export const OVERTIME_MULTIPLIER = 1.25

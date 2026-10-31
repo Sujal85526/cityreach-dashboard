@@ -125,5 +125,5 @@ export function titleFor(pathname: string, role: Role): string {
       (item) => pathname === item.to || (item.to !== '/' && pathname.startsWith(`${item.to}/`)),
     )
     .sort((a, b) => b.to.length - a.to.length)[0]
-  return match?.label ?? 'Digital Manager'
+  return match?.label ?? 'City Reach'
 }

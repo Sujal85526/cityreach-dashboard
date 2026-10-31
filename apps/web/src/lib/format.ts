@@ -71,11 +71,10 @@ export function formatAgo(date: Date, now = new Date()): string {
 export const formatQty = (quantity: number, unit: string) =>
   `${Number(quantity.toFixed(3))} ${unit}`
 
-/** "AED 2,700" (the shop's currency is AED; up to 2 decimals, none when whole). */
-/** Whole amounts without decimals ("AED 3,000"), otherwise always two ("AED 3,446.30"). */
+/** Whole amounts without decimals ("£3,000"), otherwise always two ("£3,446.30"). */
 export const formatMoney = (n: number) => {
   const digits = Number.isInteger(Math.round(n * 100) / 100) ? 0 : 2
-  return `AED ${n.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits })}`
+  return `£${n.toLocaleString('en-GB', { minimumFractionDigits: digits, maximumFractionDigits: digits })}`
 }
 
 /** Local date key "2026-10-20" → "20 Oct 2026" (no timezone shift). */

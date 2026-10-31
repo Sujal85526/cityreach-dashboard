@@ -48,7 +48,7 @@ export function BranchesPage() {
     name: '',
     address: '',
     phone: '',
-    timeZone: current?.rules.timeZone ?? 'Asia/Dubai',
+    timeZone: current?.rules.timeZone ?? 'Europe/London',
   })
 
   if (!current) return <Skeleton className="h-64 w-full rounded-xl" />

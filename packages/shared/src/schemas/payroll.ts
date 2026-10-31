@@ -2,8 +2,8 @@ import { z } from 'zod'
 import { idSchema, timestampsSchema } from './common'
 
 export const PAYSLIP_STATUSES = ['draft', 'paid'] as const
-/** WPS = paid through the UAE Wage Protection System (bank / exchange house). */
-export const SALARY_PAYMENT_METHODS = ['WPS', 'Bank transfer', 'Cash'] as const
+/** BACS = paid by bank transfer through the BACS payment system. */
+export const SALARY_PAYMENT_METHODS = ['BACS', 'Bank transfer', 'Cash'] as const
 
 /**
  * payslips/{uid}_{YYYY-MM}: the month's pay for one employee, saved by the manager. The figures are
@@ -32,7 +32,7 @@ export const payslipSchema = z
     net: z.number().min(0),
     status: z.enum(PAYSLIP_STATUSES),
     paidAt: z.date().nullable(),
-    /** How it was paid and the WPS / bank reference (record only; no government submission). */
+    /** How it was paid and the payment reference (record only; no payroll submission). */
     paymentMethod: z.enum(SALARY_PAYMENT_METHODS).nullable().optional(),
     paymentRef: z.string().max(60).nullable().optional(),
     preparedBy: idSchema,

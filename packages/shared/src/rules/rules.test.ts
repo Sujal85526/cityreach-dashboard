@@ -382,7 +382,7 @@ describe('leave and pay', () => {
 
   it('uses the employee override, else the type default; unpaid has no limit', () => {
     expect(allowanceFor(annual, { annual: 25 })).toBe(25)
-    expect(allowanceFor(annual, undefined)).toBe(30)
+    expect(allowanceFor(annual, undefined)).toBe(28)
     expect(allowanceFor(unpaid, { unpaid: 5 })).toBeNull()
   })
 

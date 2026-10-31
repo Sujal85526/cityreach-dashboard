@@ -87,7 +87,7 @@ export function DocumentsPage() {
         <CardHeader>
           <PageHeader
             title="Documents"
-            description="Licenses, contracts and staff papers (passports, visas, Emirates IDs). Only managers can see them; you're reminded before anything expires."
+            description="Licences, certificates, contracts and staff papers (passports, right to work, DBS checks). Only managers can see them; you're reminded before anything expires."
             actions={
               <Button onClick={() => setUploading(true)}>
                 <Plus /> Upload

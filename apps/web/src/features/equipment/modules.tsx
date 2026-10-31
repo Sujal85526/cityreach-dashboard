@@ -183,7 +183,7 @@ export const maintenanceModule = (
     },
     { key: 'kind', label: 'Type', type: 'select', options: ['Service', 'Repair', 'Breakdown'] },
     { key: 'date', label: 'Date', type: 'date' },
-    { key: 'cost', label: 'Cost (AED)', type: 'money', min: 0 },
+    { key: 'cost', label: 'Cost (£)', type: 'money', min: 0 },
     { key: 'notes', label: 'Notes', type: 'textarea', optional: true },
   ],
   defaults: () => ({ date: today, kind: 'Service', cost: '0' }),

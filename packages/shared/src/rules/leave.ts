@@ -14,11 +14,11 @@ export interface LeaveType {
 }
 
 export const DEFAULT_LEAVE_TYPES: LeaveType[] = [
-  { id: 'annual', name: 'Annual leave', daysPerYear: 30, paid: true },
-  { id: 'sick', name: 'Sick leave', daysPerYear: 15, paid: true },
+  { id: 'annual', name: 'Annual leave', daysPerYear: 28, paid: true },
+  { id: 'sick', name: 'Sick leave', daysPerYear: 10, paid: true },
   { id: 'emergency', name: 'Emergency leave', daysPerYear: 5, paid: true },
   { id: 'maternity', name: 'Maternity leave', daysPerYear: 60, paid: true },
-  { id: 'paternity', name: 'Paternity leave', daysPerYear: 5, paid: true },
+  { id: 'paternity', name: 'Paternity leave', daysPerYear: 10, paid: true },
   { id: 'bereavement', name: 'Bereavement leave', daysPerYear: 5, paid: true },
   { id: 'unpaid', name: 'Unpaid leave', daysPerYear: null, paid: false },
 ]
@@ -126,8 +126,8 @@ export function payFacts(records: { status: string; leavePaid?: boolean }[]): {
 const money = (n: number) => Math.round(n * 100) / 100
 
 /**
- * Monthly pay estimate (UAE practice: a day's pay is the monthly salary ÷ 30).
- * Example: AED 3,000, 2 unpaid leave days + 1 absence → AED 100/day, AED 300 deducted, AED 2,700.
+ * Monthly pay estimate (a day's pay is the monthly salary ÷ 30).
+ * Example: £3,000, 2 unpaid leave days + 1 absence → £100/day, £300 deducted, £2,700.
  */
 export function monthlyPay(salary: number, unpaidLeaveDays: number, absentDays: number) {
   const dailyRate = money(salary / 30)

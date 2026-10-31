@@ -17,7 +17,7 @@ import { useEmployeeLeave } from '@/features/leave/queries'
 import { formatDay, formatMoney } from '@/lib/format'
 
 /**
- * End of service: gratuity (UAE rules, on basic salary), unused annual leave paid out, salary for
+ * End of service: end-of-service pay (on basic salary), unused annual leave paid out, salary for
  * the final month up to the last day, minus other deductions. A calculation to check and print,
  * not a payment.
  */
@@ -52,7 +52,7 @@ export function SettlementDialog({
   })
 
   const lines: [string, string][] = [
-    [`Gratuity (${r.years} years of service)`, formatMoney(r.gratuity)],
+    [`End-of-service pay (${r.years} years of service)`, formatMoney(r.gratuity)],
     [`Unused annual leave (${Number(unusedDays) || 0} days)`, formatMoney(r.leavePay)],
     [`Salary for ${r.daysThisMonth} days this month`, formatMoney(r.salaryDue)],
     ['Other deductions', `− ${formatMoney(Number(deductions) || 0)}`],
@@ -80,7 +80,7 @@ export function SettlementDialog({
       .setFontSize(8)
       .setTextColor(120)
       .text(
-        'Gratuity: 21 days of basic pay per year for the first 5 years, 30 days after; capped at 2 years of pay; none under 1 year.',
+        'End-of-service pay: 21 days of basic pay per year for the first 5 years, 30 days after; capped at 2 years of pay; none under 1 year.',
         40,
         162 + lines.length * 20 + 44,
       )
@@ -93,7 +93,7 @@ export function SettlementDialog({
         <DialogHeader>
           <DialogTitle>Final settlement: {employee.name}</DialogTitle>
           <DialogDescription>
-            Joined {formatDay(joinedOn)}. UAE end-of-service rules on the basic salary
+            Joined {formatDay(joinedOn)}. End-of-service pay is worked out on the basic salary
             {employee.salary == null ? ' (no salary set yet: add it under Pay & leave)' : ''}.
           </DialogDescription>
         </DialogHeader>

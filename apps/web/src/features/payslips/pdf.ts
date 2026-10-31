@@ -78,6 +78,6 @@ export async function downloadPayslipPdf(slip: Payslip, shopName: string) {
   pdf
     .setFontSize(8)
     .setTextColor(120)
-    .text('Prepared with Digital Manager. Figures from attendance and leave records.', 40, end + 56)
+    .text('Prepared with City Reach. Figures from attendance and leave records.', 40, end + 56)
   pdf.save(`payslip_${slip.employeeName.replace(/\s+/g, '-')}_${slip.month}.pdf`)
 }

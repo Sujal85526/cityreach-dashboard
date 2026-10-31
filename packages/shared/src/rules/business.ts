@@ -1,5 +1,5 @@
 /**
- * Rules for the operations, finance and HR modules: end-of-service gratuity, final settlement,
+ * Rules for the operations, finance and HR modules: end-of-service pay, final settlement,
  * temperature checks, equipment servicing, purchase orders, monthly profit, VAT dates, rota.
  * All dates are local "YYYY-MM-DD"; amounts are in the shop's currency.
  */
@@ -7,7 +7,7 @@ import { addDays, daysUntil } from './expiry'
 
 const money = (n: number) => Math.round(n * 100) / 100
 
-// ---- End of service (UAE, Federal Decree-Law 33/2021, private sector) ----
+// ---- End of service (contractual long-service payment) ----
 
 const plusYears = (dateKey: string, years: number) =>
   `${Number(dateKey.slice(0, 4)) + years}${dateKey.slice(4)}`
@@ -25,7 +25,7 @@ export function serviceYears(joinedOn: string, lastDay: string): number {
 }
 
 /**
- * Gratuity on basic salary: nothing under one year; 21 days' basic pay a year for the first five
+ * End-of-service pay on basic salary: nothing under one year; 21 days' basic pay a year for the first five
  * years and 30 days a year after that (part years pro rata); never more than two years' pay.
  * Example: basic 3,000 (100 a day), 6.5 years → 5 × 21 + 1.5 × 30 = 150 days → 15,000.
  */

@@ -135,7 +135,7 @@ function PayLeaveDialog({
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-1.5">
-            <Label htmlFor="salary">Monthly basic salary (AED)</Label>
+            <Label htmlFor="salary">Monthly basic salary (£)</Label>
             <Input
               id="salary"
               type="number"
@@ -151,7 +151,7 @@ function PayLeaveDialog({
             </p>
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="allowances">Monthly allowances (AED)</Label>
+            <Label htmlFor="allowances">Monthly allowances (£)</Label>
             <Input
               id="allowances"
               type="number"

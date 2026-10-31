@@ -53,7 +53,7 @@ export function PayslipDialog({
   const [other, setOther] = useState(existing ? String(existing.otherDeductions || '') : '')
   const [note, setNote] = useState(existing?.deductionNote ?? '')
   const [method, setMethod] = useState<(typeof SALARY_PAYMENT_METHODS)[number]>(
-    existing?.paymentMethod ?? 'WPS',
+    existing?.paymentMethod ?? 'BACS',
   )
   const [paymentRef, setPaymentRef] = useState(existing?.paymentRef ?? '')
   const save = useSavePayslip()
@@ -171,7 +171,7 @@ export function PayslipDialog({
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="pay-ref">{method === 'WPS' ? 'WPS reference' : 'Reference'}</Label>
+            <Label htmlFor="pay-ref">{method === 'BACS' ? 'BACS reference' : 'Reference'}</Label>
             <Input
               id="pay-ref"
               value={paymentRef}

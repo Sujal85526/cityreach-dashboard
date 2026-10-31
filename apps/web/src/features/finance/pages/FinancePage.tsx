@@ -26,8 +26,8 @@ import { errorMessage } from '@/lib/errors'
 import { formatDay, formatMoney } from '@/lib/format'
 import { expensesModule, salesModule } from '../modules'
 
-/** UAE VAT is 5 %; sales prices include it, so the VAT in a sale is 5/105 of it. */
-const VAT_IN_PRICE = 5 / 105
+/** UK VAT is 20 %; sales prices include it, so the VAT in a sale is 20/120 of it. */
+const VAT_IN_PRICE = 20 / 120
 const lastDayOf = (month: string) => addDays(`${addDays(`${month}-28`, 4).slice(0, 7)}-01`, -1)
 
 /**

@@ -9,7 +9,7 @@ import { useDocuments } from '../queries'
 import { DocumentDialog } from './DocumentDialog'
 import { DocumentTable } from './DocumentTable'
 
-/** Employee profile (manager): their passport, Emirates ID, visa, contract… with expiry status. */
+/** Employee profile (manager): their passport, right to work, DBS check, contract… with expiry status. */
 export function EmployeeDocumentsCard({ employee }: { employee: Pick<User, 'id' | 'name'> }) {
   const docs = useDocuments()
   const today = toDateKey(new Date(), useTimeZone())
@@ -36,7 +36,7 @@ export function EmployeeDocumentsCard({ employee }: { employee: Pick<User, 'id' 
             <EmptyState
               icon={FolderLock}
               title="No documents yet"
-              description="Add their passport, Emirates ID, visa or contract to be reminded before they expire."
+              description="Add their passport, right to work, DBS check or contract to be reminded before they expire."
             />
           }
         />

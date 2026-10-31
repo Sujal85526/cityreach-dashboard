@@ -11,7 +11,7 @@ export interface BranchRules {
 }
 
 export const DEFAULT_BRANCH_RULES: BranchRules = {
-  timeZone: 'Asia/Dubai',
+  timeZone: 'Europe/London',
   attendance: { graceMinutes: 5, absentAfterMinutes: 60, earlyLeaveGraceMinutes: 10 },
   inventory: { criticalRatio: 0.5 },
   performance: DEFAULT_PERFORMANCE_WEIGHTS,
@@ -26,7 +26,7 @@ export const DEFAULT_TASK_CATEGORIES = [
   'Inventory',
 ]
 
-/** Open 07:00–23:00, closed on Sunday (0). */
+/** Open 07:00–23:00 Monday to Saturday; shorter hours on Sunday (0). */
 export const DEFAULT_BUSINESS_HOURS = [0, 1, 2, 3, 4, 5, 6].map((day) => ({
   day,
   open: '07:00',

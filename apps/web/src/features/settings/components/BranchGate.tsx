@@ -1,5 +1,5 @@
 import { DEFAULT_BRANCH_RULES } from '@cityreach/shared'
-import { Coffee } from 'lucide-react'
+import { Store } from 'lucide-react'
 import { Outlet } from 'react-router'
 import { toast } from 'sonner'
 import { errorMessage } from '@/lib/errors'
@@ -45,11 +45,11 @@ function BranchSetup() {
     <div className="flex min-h-svh items-center justify-center bg-muted/30 p-4">
       <div className="w-full max-w-xl space-y-4">
         <div className="flex items-center gap-2 text-lg font-semibold">
-          <Coffee className="size-5 text-primary" /> Welcome to Digital Manager
+          <Store className="size-5 text-primary" /> Welcome to City Reach
         </div>
         <Form {...form}>
           <SettingsCard
-            title="Set up your coffee shop"
+            title="Set up your business"
             description="One-time setup. Hours, rules and categories start with sensible defaults you can change in Settings."
             onSubmit={onSubmit}
             saving={create.isPending}
