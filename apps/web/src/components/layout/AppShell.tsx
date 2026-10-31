@@ -2,6 +2,7 @@ import { isManagerRole } from '@cityreach/shared'
 import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet'
+import { AssistantWidget } from '@/features/assistant/components/AssistantWidget'
 import { useCurrentUser } from '@/features/auth/session'
 import { useAutomation } from '@/features/automation/useAutomation'
 import { useSidebarCollapsed } from '@/hooks/use-sidebar-collapsed'
@@ -38,13 +39,15 @@ export function AppShell() {
       {isManager && <ManagerAutomation />}
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar onOpenMenu={() => setMenuOpen(true)} />
-        <main className="mx-auto w-full max-w-[1400px] flex-1 p-4 md:p-8">
+        {/* Bottom padding keeps the assistant button off the last row. */}
+        <main className="mx-auto w-full max-w-[1400px] flex-1 p-4 pb-20 md:p-8 md:pb-20">
           {/* Re-keyed per page so each route fades in; reduced-motion users get no animation. */}
           <div key={pathname} className="animate-page-in space-y-6 md:space-y-8">
             <Outlet />
           </div>
         </main>
       </div>
+      <AssistantWidget />
     </div>
   )
 }
