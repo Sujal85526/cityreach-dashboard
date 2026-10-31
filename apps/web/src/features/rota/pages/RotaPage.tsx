@@ -208,7 +208,7 @@ export function RotaPage() {
                                 )
                               }}
                               className={cn(
-                                'h-9 w-full rounded-md border px-1.5 text-xs',
+                                'h-9 w-full rounded-md border px-1.5 text-xs max-md:h-11',
                                 planned ? 'bg-success-soft' : 'bg-muted',
                                 !entry && 'border-dashed',
                               )}
