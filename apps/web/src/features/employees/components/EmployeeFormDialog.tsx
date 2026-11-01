@@ -1,18 +1,22 @@
 import {
+  canManageCredentials,
   EMPLOYMENT_STATUSES,
   newEmployeeSchema,
   employeeFormSchema,
+  loginIdSchema,
+  passwordSchema,
   ROLES,
   type NewEmployee,
   type User,
 } from '@cityreach/shared'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm, type Control, type FieldPath, type Resolver } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { errorMessage } from '@/lib/errors'
+import { PasswordInput } from '@/components/common/PasswordInput'
 import { SuggestInput } from '@/components/common/SuggestInput'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,6 +30,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -39,6 +44,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { AuthError } from '@/features/auth/api'
+import { useLoginId } from '@/features/auth/queries'
 import { useCurrentUser } from '@/features/auth/session'
 import { useShifts } from '@/features/settings/queries'
 import { shiftLabel } from '@/lib/format'
@@ -57,6 +64,8 @@ type FormValues = NewEmployee
 const EMPTY: FormValues = {
   name: '',
   email: '',
+  loginId: '',
+  password: '',
   phone: '',
   position: 'Barista',
   role: 'employee',
@@ -64,8 +73,16 @@ const EMPTY: FormValues = {
   shiftId: null,
   probationEndsOn: null,
 }
-// Editing never changes the email, so it is carried along unvalidated.
-const editSchema = employeeFormSchema.extend({ email: z.string() })
+/**
+ * Editing never changes the email, so it is carried along unvalidated. The login ID and the
+ * (optional) new password are checked only when this person may change them.
+ */
+const editSchema = (canEditLogin: boolean) =>
+  employeeFormSchema.extend({
+    email: z.string(),
+    loginId: canEditLogin ? loginIdSchema : z.string(),
+    password: canEditLogin ? z.union([z.literal(''), passwordSchema]) : z.string(),
+  })
 
 interface Props {
   open: boolean
@@ -76,27 +93,54 @@ interface Props {
 
 export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
   const isEdit = Boolean(employee)
-  const actorIsOwner = useCurrentUser().access.role === 'owner'
+  const actor = useCurrentUser()
+  const actorIsOwner = actor.access.role === 'owner'
+  // A manager looks after employees' logins; only an owner changes a manager's. Not your own here.
+  const canEditLogin = Boolean(
+    employee && employee.id !== actor.uid && canManageCredentials(actor.access.role, employee.role),
+  )
+  const loginId = useLoginId(employee?.id ?? '')
   const create = useCreateEmployee()
   const update = useUpdateEmployee()
   const shifts = useShifts()
+  const schema = useMemo(
+    () => (isEdit ? editSchema(canEditLogin) : newEmployeeSchema),
+    [isEdit, canEditLogin],
+  )
   const form = useForm<FormValues>({
-    resolver: zodResolver(isEdit ? editSchema : newEmployeeSchema) as Resolver<FormValues>,
+    resolver: zodResolver(schema) as unknown as Resolver<FormValues>,
     defaultValues: EMPTY,
   })
 
+  const currentLoginId = loginId.data ?? ''
   useEffect(() => {
-    if (open) form.reset(employee ? { ...EMPTY, ...employee } : EMPTY)
-  }, [open, employee, form])
+    if (open)
+      form.reset(employee ? { ...EMPTY, ...employee, loginId: currentLoginId } : EMPTY)
+  }, [open, employee, form, currentLoginId])
 
   const pending = create.isPending || update.isPending
-  const onSubmit = form.handleSubmit(async ({ email, ...values }) => {
+  const onSubmit = form.handleSubmit(async ({ email, loginId: id, password, ...values }) => {
     try {
-      if (employee) await update.mutateAsync({ current: employee, input: values })
-      else await create.mutateAsync({ ...values, email })
-      toast.success(employee ? 'Employee updated' : `${values.name} added to the team`)
+      if (employee)
+        await update.mutateAsync({
+          current: employee,
+          input: values,
+          login: canEditLogin ? { loginId: id, password } : undefined,
+        })
+      else await create.mutateAsync({ ...values, email, loginId: id, password })
+      toast.success(
+        employee
+          ? password
+            ? 'Employee updated and password reset'
+            : 'Employee updated'
+          : `${values.name} added to the team`,
+      )
       onOpenChange(false)
     } catch (error) {
+      if (error instanceof AuthError && error.code === 'taken') {
+        form.setError('loginId', { message: error.message }, { shouldFocus: true })
+        return
+      }
       toast.error(friendlyError(error))
     }
   })
@@ -109,7 +153,7 @@ export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
           <DialogDescription>
             {isEdit
               ? 'Changes apply immediately.'
-              : 'Adds them to the team. In the demo you can switch to any employee from the profile menu.'}
+              : 'Adds them to the team and creates the login they sign in with.'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -124,6 +168,28 @@ export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
               <TextField control={form.control} name="email" label="Email" type="email" />
             )}
             <TextField control={form.control} name="phone" label="Phone" type="tel" />
+            {(!isEdit || canEditLogin) && (
+              <>
+                <TextField
+                  control={form.control}
+                  name="loginId"
+                  label="Login ID"
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  hint="Letters, numbers, dots, dashes. Not case-sensitive."
+                />
+                <PasswordField
+                  control={form.control}
+                  label={isEdit ? 'New password (optional)' : 'Password'}
+                  hint={
+                    isEdit
+                      ? 'Leave empty to keep the current password.'
+                      : 'At least 8 characters. Share it with them safely.'
+                  }
+                />
+              </>
+            )}
             <FormField
               control={form.control}
               name="position"
@@ -219,12 +285,14 @@ function TextField({
   name,
   label,
   className,
+  hint,
   ...input
 }: {
   control: Control<FormValues>
   name: FieldPath<FormValues>
   label: string
   className?: string
+  hint?: string
 } & React.ComponentProps<'input'>) {
   return (
     <FormField
@@ -236,6 +304,34 @@ function TextField({
           <FormControl>
             <Input {...input} {...field} value={(field.value as string | null) ?? ''} />
           </FormControl>
+          {hint && <FormDescription>{hint}</FormDescription>}
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
+}
+
+function PasswordField({
+  control,
+  label,
+  hint,
+}: {
+  control: Control<FormValues>
+  label: string
+  hint: string
+}) {
+  return (
+    <FormField
+      control={control}
+      name="password"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <PasswordInput {...field} autoComplete="new-password" />
+          </FormControl>
+          <FormDescription>{hint}</FormDescription>
           <FormMessage />
         </FormItem>
       )}

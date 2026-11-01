@@ -1,10 +1,13 @@
 import {
+  canManageCredentials,
   COLLECTIONS,
+  loginUpdateSchema,
   newEmployeeSchema,
   employeeFormSchema,
   noteTextSchema,
   type Attendance,
   type EmployeeForm,
+  type LoginUpdate,
   type EmploymentStatus,
   type NewEmployee,
   type NoteKind,
@@ -26,7 +29,14 @@ import {
   writeBatch,
   db,
 } from '@/lib/store'
-import type { SessionUser } from '@/features/auth/api'
+import {
+  AuthError,
+  assertLoginIdAvailable,
+  buildCredential,
+  setCredentialInBatch,
+  updateCredential,
+  type SessionUser,
+} from '@/features/auth/api'
 import { addActivity } from '@/lib/activity'
 import { fromDoc } from '@/lib/from-doc'
 
@@ -75,11 +85,17 @@ export async function listEmployeeTasks(branchId: string, uid: string): Promise<
     .sort((a, b) => b.deadline.getTime() - a.deadline.getTime())
 }
 
-/** Creates the profile and its activity entry in one batch (the demo has no passwords). */
+/**
+ * Creates the profile, the login (ID + hashed password) and the activity entry in one batch.
+ * The login ID must be new; the password is hashed before it is stored.
+ */
 export async function createEmployee(input: NewEmployee, actor: SessionUser): Promise<string> {
-  const { email, ...form } = newEmployeeSchema.parse(input)
+  const { email, loginId, password, ...form } = newEmployeeSchema.parse(input)
+  await assertLoginIdAvailable(loginId)
+  const credential = await buildCredential({ loginId, password }, actor.access.branchId)
   const uid = `emp-${Math.random().toString(36).slice(2, 8)}`
   const batch = writeBatch(db)
+  setCredentialInBatch(batch, uid, credential)
   batch.set(userRef(uid), {
     ...form,
     email,
@@ -109,8 +125,19 @@ export async function updateEmployee(
   current: User,
   input: EmployeeForm,
   actor: SessionUser,
+  login?: LoginUpdate,
 ): Promise<void> {
   const form = employeeFormSchema.parse(input)
+  const credentialChange = login ? loginUpdateSchema.parse(login) : null
+  if (credentialChange && actor.uid !== current.id) {
+    if (!canManageCredentials(actor.access.role, current.role))
+      throw new AuthError('forbidden', "Only an owner can change a manager's login or password.")
+    // Validates and reserves the ID first, so a clash stops the whole save.
+    await updateCredential(current.id, {
+      loginId: credentialChange.loginId,
+      password: credentialChange.password || undefined,
+    })
+  }
   const batch = writeBatch(db)
   batch.update(userRef(current.id), { ...form, updatedAt: serverTimestamp() })
 

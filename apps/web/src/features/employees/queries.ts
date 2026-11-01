@@ -1,4 +1,4 @@
-import type { EmployeeForm, EmploymentStatus, NewEmployee, NoteKind, User } from '@cityreach/shared'
+import type { EmployeeForm, LoginUpdate, EmploymentStatus, NewEmployee, NoteKind, User } from '@cityreach/shared'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCurrentUser } from '@/features/auth/session'
 import { qk, refreshLists } from '@/lib/query-keys'
@@ -54,8 +54,9 @@ export function useCreateEmployee() {
 
 export function useUpdateEmployee() {
   const actor = useCurrentUser()
-  return useEmployeeMutation(({ current, input }: { current: User; input: EmployeeForm }) =>
-    updateEmployee(current, input, actor),
+  return useEmployeeMutation(
+    ({ current, input, login }: { current: User; input: EmployeeForm; login?: LoginUpdate }) =>
+      updateEmployee(current, input, actor, login),
   )
 }
 
