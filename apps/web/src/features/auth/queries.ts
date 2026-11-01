@@ -56,8 +56,13 @@ export function useSignOut() {
 export function useChangePassword() {
   const actor = useCurrentUser()
   return useMutation({
-    mutationFn: ({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }) =>
-      changeOwnPassword(actor, currentPassword, newPassword),
+    mutationFn: ({
+      currentPassword,
+      newPassword,
+    }: {
+      currentPassword: string
+      newPassword: string
+    }) => changeOwnPassword(actor, currentPassword, newPassword),
   })
 }
 

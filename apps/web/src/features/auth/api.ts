@@ -136,7 +136,8 @@ export async function getProfile(uid: string): Promise<User | null> {
 
 /* ---------- passwords ---------- */
 
-export type AuthErrorCode = 'invalid' | 'locked' | 'inactive' | 'taken' | 'forbidden' | 'invalid_device'
+export type AuthErrorCode =
+  'invalid' | 'locked' | 'inactive' | 'taken' | 'forbidden' | 'invalid_device'
 
 /** An expected sign-in failure, with a message that is safe to show as it is. */
 export class AuthError extends Error {
@@ -219,7 +220,8 @@ export async function getLoginId(uid: string): Promise<string | null> {
  */
 export async function assertLoginIdAvailable(loginId: string, exceptUid?: string) {
   const parsed = loginIdSchema.safeParse(loginId)
-  if (!parsed.success) throw new AuthError('taken', parsed.error.issues[0]?.message ?? 'Invalid login ID')
+  if (!parsed.success)
+    throw new AuthError('taken', parsed.error.issues[0]?.message ?? 'Invalid login ID')
   const existing = await findCredentialByLoginId(loginId)
   if (existing && existing.id !== exceptUid)
     throw new AuthError('taken', `The login ID "${normalizeLoginId(loginId)}" is already taken.`)
@@ -241,7 +243,11 @@ export async function buildCredential(
 }
 
 /** Adds the write of a brand-new login to a batch (used when an employee is created). */
-export function setCredentialInBatch(batch: WriteBatch, uid: string, credential: Omit<Credential, 'id'>) {
+export function setCredentialInBatch(
+  batch: WriteBatch,
+  uid: string,
+  credential: Omit<Credential, 'id'>,
+) {
   batch.set(credentialRef(uid), { ...credential })
 }
 
@@ -365,7 +371,8 @@ export async function finishDeviceRegistration(
     new TextDecoder().decode(fromBase64Url(response.clientDataJSON)),
   ) as { challenge?: string }
   const issued = takeChallenge(String(challenge.challenge), 'register')
-  if (issued.uid !== actor.uid) throw new AuthError('forbidden', 'That setup belongs to someone else.')
+  if (issued.uid !== actor.uid)
+    throw new AuthError('forbidden', 'That setup belongs to someone else.')
   let verified
   try {
     verified = await verifyRegistration(response, { challenge: String(challenge.challenge), ...rp })
@@ -417,9 +424,9 @@ export async function finishDeviceLogin(
   response: AssertionResponse,
   rp: RelyingParty,
 ): Promise<SessionUser> {
-  const parsed = JSON.parse(
-    new TextDecoder().decode(fromBase64Url(response.clientDataJSON)),
-  ) as { challenge?: string }
+  const parsed = JSON.parse(new TextDecoder().decode(fromBase64Url(response.clientDataJSON))) as {
+    challenge?: string
+  }
   takeChallenge(String(parsed.challenge), 'login')
   const snap = await getDoc(deviceRef(response.credentialId))
   if (!snap.exists() || snap.get('rpId') !== rp.rpId)
