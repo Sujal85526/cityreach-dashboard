@@ -114,8 +114,7 @@ export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
 
   const currentLoginId = loginId.data ?? ''
   useEffect(() => {
-    if (open)
-      form.reset(employee ? { ...EMPTY, ...employee, loginId: currentLoginId } : EMPTY)
+    if (open) form.reset(employee ? { ...EMPTY, ...employee, loginId: currentLoginId } : EMPTY)
   }, [open, employee, form, currentLoginId])
 
   const pending = create.isPending || update.isPending

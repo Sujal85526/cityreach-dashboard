@@ -3,7 +3,7 @@ import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { useSignOut } from '@/features/auth/queries'
 import { errorMessage } from '@/lib/errors'
 
-/** "Back to role picker?" confirmation, shared by the sidebar button and the profile menu. */
+/** Sign-out confirmation, shared by the sidebar button and the profile menu. */
 export function LogoutDialog({
   open,
   onOpenChange,
@@ -16,9 +16,9 @@ export function LogoutDialog({
     <ConfirmDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Back to the role picker?"
-      description="Your demo changes stay saved in this browser. Pick any role again to continue."
-      confirmLabel="Switch role"
+      title="Sign out?"
+      description="Your demo changes stay saved in this browser. Sign in again to continue."
+      confirmLabel="Sign out"
       pending={signOut.isPending}
       onConfirm={() => signOut.mutate(undefined, { onError: (e) => toast.error(errorMessage(e)) })}
     />

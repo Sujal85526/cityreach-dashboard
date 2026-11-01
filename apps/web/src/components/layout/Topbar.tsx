@@ -1,7 +1,7 @@
 import { isManagerRole } from '@cityreach/shared'
-import { ChevronDown, LogOut, Menu, Moon, Search, Sun } from 'lucide-react'
+import { ChevronDown, KeyRound, LogOut, Menu, Moon, Search, Sun } from 'lucide-react'
 import { useState } from 'react'
-import { useLocation } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { EmployeeAvatar } from '@/components/common/EmployeeAvatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -88,8 +88,13 @@ export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <RoleSwitcher />
+          <DropdownMenuItem asChild>
+            <Link to={isManagerRole(user.access.role) ? '/settings/security' : '/me/security'}>
+              <KeyRound /> Password &amp; fingerprint
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setConfirmLogout(true)}>
-            <LogOut /> Back to role picker
+            <LogOut /> Sign out
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
