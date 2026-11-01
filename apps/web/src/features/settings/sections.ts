@@ -4,6 +4,7 @@ import {
   CalendarDays,
   Clock,
   Gauge,
+  KeyRound,
   MapPin,
   ShieldCheck,
   SlidersHorizontal,
@@ -76,6 +77,12 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
     title: 'Branches',
     description: 'Run several locations (owner)',
     icon: Building2,
+  },
+  {
+    slug: 'security',
+    title: 'Security',
+    description: 'Your password and fingerprint sign-in',
+    icon: KeyRound,
   },
   {
     slug: 'permissions',

@@ -240,6 +240,12 @@ export const router = createBrowserRouter([
               ),
             ),
           },
+          {
+            path: 'security',
+            ...page(() =>
+              import('@/features/settings/pages/MySecurityPage').then((m) => m.MySecurityPage),
+            ),
+          },
         ],
       },
     ],

@@ -33,8 +33,8 @@ export function ResetDemoCard() {
           <div className="font-medium">Demo data</div>
           <p className="text-sm text-muted-foreground">
             Everything you change here is saved in this browser only. Reset brings back the original
-            staff, attendance, tasks, stock, sales and documents. The sample dates refresh each day
-            automatically.
+            staff, attendance, tasks, stock, sales and documents, the demo passwords, and removes
+            any fingerprints you set up. The sample dates refresh each day automatically.
           </p>
           <Button
             variant="outline"

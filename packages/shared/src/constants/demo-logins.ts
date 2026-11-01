@@ -22,5 +22,4 @@ export const DEMO_LOGINS: readonly DemoLogin[] = [
  * Login ID of a seeded user: the three demo logins above, otherwise the user id itself
  * (`liam`, `noah`, `sq-hana`…), which is already unique across all branches.
  */
-export const seedLoginId = (uid: string) =>
-  DEMO_LOGINS.find((d) => d.uid === uid)?.loginId ?? uid
+export const seedLoginId = (uid: string) => DEMO_LOGINS.find((d) => d.uid === uid)?.loginId ?? uid

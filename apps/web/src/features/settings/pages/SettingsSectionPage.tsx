@@ -9,6 +9,7 @@ import { LeaveTypesForm } from '../components/LeaveTypesForm'
 import { NotificationPrefsForm } from '../components/NotificationPrefsForm'
 import { PerformanceWeightsForm } from '../components/PerformanceWeightsForm'
 import { RulesForm } from '../components/RulesForm'
+import { SecuritySection } from '../components/SecuritySection'
 import { ShiftsCard } from '../components/ShiftsCard'
 import { ShopInfoForm } from '../components/ShopInfoForm'
 import { ShopLocationForm } from '../components/ShopLocationForm'
@@ -42,6 +43,7 @@ export function SettingsSectionPage() {
     tasks: <TaskCategoriesForm key={key} branch={b} />,
     notifications: <NotificationPrefsForm key={key} branch={b} />,
     performance: <PerformanceWeightsForm key={key} branch={b} />,
+    security: <SecuritySection />,
   }[section ?? '']
 
   if (!body) return <Navigate to="/settings" replace />
