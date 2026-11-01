@@ -32,7 +32,7 @@ export const isFix = (r: GeoFix | LocationProblem | null): r is GeoFix =>
 const PHOTO_PX = 240
 
 /**
- * Demo "selfie": a generated portrait placeholder (soft green backdrop, head and shoulders in
+ * Demo "selfie": a generated portrait placeholder (soft ink backdrop, head and shoulders in
  * warm white) stamped with the time, standing in for a camera photo.
  */
 export function mockSelfie(now = new Date()): string {
@@ -42,12 +42,12 @@ export function mockSelfie(now = new Date()): string {
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('Could not create the demo photo. Try again.')
   const css = getComputedStyle(document.documentElement)
-  const brand = css.getPropertyValue('--brand').trim() || '#0c2c21'
-  const cream = css.getPropertyValue('--brand-cream').trim() || '#f8f3e9'
+  const brand = css.getPropertyValue('--brand').trim() || '#1f1c19'
+  const cream = css.getPropertyValue('--brand-cream').trim() || '#fbf9f6'
 
   const bg = ctx.createLinearGradient(0, 0, PHOTO_PX, PHOTO_PX)
   bg.addColorStop(0, brand)
-  bg.addColorStop(1, '#1d5a43')
+  bg.addColorStop(1, '#5a524a')
   ctx.fillStyle = bg
   ctx.fillRect(0, 0, PHOTO_PX, PHOTO_PX)
   ctx.fillStyle = cream

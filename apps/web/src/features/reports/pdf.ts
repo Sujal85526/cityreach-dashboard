@@ -21,7 +21,7 @@ export async function downloadReportPdf(
   const pdf = new jsPDF({ unit: 'pt', format: 'a4' })
   const title = `${type === 'weekly' ? 'Weekly' : 'Monthly'} report · ${periodLabel(type, key)}`
   const s = report.summary
-  const green: [number, number, number] = [22, 61, 46]
+  const ink: [number, number, number] = [31, 28, 25]
 
   pdf.setFontSize(18).text(shopName, 40, 50)
   pdf.setFontSize(12).setTextColor(90).text(title, 40, 70)
@@ -58,7 +58,7 @@ export async function downloadReportPdf(
         s.inventoryAlerts,
       ],
     ],
-    headStyles: { fillColor: green },
+    headStyles: { fillColor: ink },
     styles: { halign: 'center' },
   })
 
@@ -99,7 +99,7 @@ export async function downloadReportPdf(
       r.lateArrivals,
       r.comment ?? '',
     ]),
-    headStyles: { fillColor: green },
+    headStyles: { fillColor: ink },
     columnStyles: { 7: { cellWidth: 140 } },
     styles: { fontSize: 9 },
   })
