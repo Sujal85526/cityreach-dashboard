@@ -3,6 +3,7 @@ import { AppShell } from '@/components/layout/AppShell'
 import { LandingPage } from '@/features/auth/pages/LandingPage'
 import { BranchGate } from '@/features/settings/components/BranchGate'
 import { FullScreenLoader, RequireRole } from './guards'
+import { RouteError } from './RouteError'
 
 /**
  * Each page is its own download, fetched the first time it's opened. An employee clocking in
@@ -13,9 +14,10 @@ const page = (load: () => Promise<React.ComponentType>): Pick<RouteObject, 'lazy
 })
 
 export const router = createBrowserRouter([
-  { path: '/login', element: <LandingPage /> },
+  { path: '/login', element: <LandingPage />, errorElement: <RouteError /> },
   {
     element: <RequireRole role="manager" />,
+    errorElement: <RouteError />,
     children: [
       {
         element: <BranchGate />,
@@ -193,6 +195,7 @@ export const router = createBrowserRouter([
   {
     path: '/me',
     element: <RequireRole role="employee" />,
+    errorElement: <RouteError />,
     children: [
       {
         element: <AppShell />,
