@@ -172,7 +172,8 @@ const staticAnswer = (intent: Intent, c: AskContext): Answer | null => {
           }
     case 'howPassword':
       return {
-        text: 'There is no password in this demo. Use Switch role in the account menu (top right) to move between Owner, Manager and Employee.',
+        text: 'Change your password in Settings, Security (or the account menu, top right, then Password & fingerprint). Forgotten it? Ask your manager to reset it, or use the demo logins on the sign-in screen.',
+        link: { to: isManager ? '/settings/security' : '/me/security', label: 'Open Security' },
       }
     default:
       return null

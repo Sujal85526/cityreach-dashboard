@@ -135,8 +135,8 @@ export function FingerprintCard() {
           </ul>
         ) : (
           <p className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground">
-            No fingerprint set up yet. Once one is set up it is listed here, and you can use
-            Sign in with fingerprint on the login screen.
+            No fingerprint set up yet. Once one is set up it is listed here, and you can use Sign in
+            with fingerprint on the login screen.
           </p>
         )}
       </div>

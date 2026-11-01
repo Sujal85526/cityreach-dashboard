@@ -128,12 +128,12 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
               </div>
             </div>
           )}
-          <Hint label="Switch role" show={collapsed}>
+          <Hint label="Sign out" show={collapsed}>
             <button
               type="button"
               onClick={() => setConfirmLogout(true)}
               className="rounded-lg p-2 transition-colors hover:bg-muted hover:text-foreground"
-              aria-label="Switch role"
+              aria-label="Sign out"
             >
               <LogOut className="size-4" aria-hidden />
             </button>
