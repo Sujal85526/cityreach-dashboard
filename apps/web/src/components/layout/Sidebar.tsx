@@ -17,7 +17,7 @@ interface SidebarProps {
   onNavigate?: () => void
 }
 
-/** Brand-green sidebar with the cream wordmark. Fixed on desktop (collapsible), inside a sheet on mobile. */
+/** White sidebar with the cream wordmark. Fixed on desktop (collapsible), inside a sheet on mobile. */
 export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProps) {
   const user = useCurrentUser()
   const [confirmLogout, setConfirmLogout] = useState(false)
@@ -27,7 +27,7 @@ export function Sidebar({ collapsed = false, onToggle, onNavigate }: SidebarProp
       <div
         className={cn('flex items-center gap-3 pt-5 pb-5', collapsed ? 'flex-col px-2' : 'px-4')}
       >
-        {/* The logo lockup as supplied: cream wordmark on a brand-green plate. */}
+        {/* The logo lockup as supplied: cream wordmark on an ink plate. */}
         {collapsed ? (
           <span className="flex size-10 items-center justify-center rounded-xl bg-brand text-brand-cream">
             <LogoMark className="size-5" />

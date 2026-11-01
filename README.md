@@ -59,6 +59,6 @@ documents, rota). The camera, GPS and file upload are believable local mocks. Se
 
 ## Design
 
-The brand colours come from the logo: deep forest green `#0c2c21` and warm white `#f8f3e9`.
+The theme is "Ink & Stone": near-black ink on warm stone and white with a soft peach accent, all defined as tokens in `apps/web/src/index.css`.
 All colours are tokens in `apps/web/src/index.css` (light and dark theme); type is Inter with
 Fraunces for headings. The wordmark is traced from the supplied artwork.
