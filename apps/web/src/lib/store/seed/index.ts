@@ -18,7 +18,7 @@ import { seedExtras } from './extras'
 export const BRANCH_ID = 'central'
 export const OWNER = { uid: 'amara', name: 'Amara Okafor', position: 'Owner' }
 export const MANAGER = { uid: 'daniel', name: 'Daniel Brooks', position: 'General Manager' }
-const EMAIL_DOMAIN = 'cityreach.demo'
+const EMAIL_DOMAIN = 'cityreach.co.uk'
 const email = (uid: string) => `${uid}@${EMAIL_DOMAIN}`
 
 /** Builds the whole demo business, with dates relative to today. Pure: no I/O. */

@@ -184,7 +184,7 @@ export function seedBranches(db: SeedDb, today: string) {
         status: 'active',
         extraBranch: true,
         name: p.name,
-        email: `${uid(p.key)}@cityreach.demo`,
+        email: `${uid(p.key)}@cityreach.co.uk`,
         phone: `+44 7700 900 ${3 + e}${prefix === 'sq' ? '1' : '2'}0`,
         position: p.position,
         shiftId: `${prefix}-${p.shift}`,
