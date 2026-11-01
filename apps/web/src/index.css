@@ -5,51 +5,51 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * City Reach design tokens. Two brand colours come straight from the logo artwork:
- *   --brand        #0c2c21  deep forest green (the logo background, the accent)
- *   --brand-cream  #f8f3e9  warm white (the wordmark, the page background tint)
- * Neutrals are warm greys/creams around them. Components use these tokens only
- * (bg-card, text-muted-foreground, bg-success-soft…); never hard-code colours in components.
+ * City Reach design tokens: "Ink & Stone". Near-black ink on warm stone and white, with one soft
+ * peach accent used for icons, tints and the active menu item.
+ *   --brand        ink, the logo plate, buttons and the main chart series
+ *   --brand-cream  warm white, the wordmark colour and text on ink
+ * Components use these tokens only (bg-card, text-muted-foreground, bg-success-soft…);
+ * never hard-code colours in components.
  */
 :root {
   --radius: 0.875rem;
 
-  --brand: #0c2c21;
-  --brand-cream: #f8f3e9;
+  --brand: oklch(0.21 0.012 60);
+  --brand-cream: oklch(0.98 0.004 80);
 
-  --background: oklch(0.978 0.008 88);
-  --foreground: oklch(0.235 0.03 165);
-  --card: oklch(0.997 0.003 88);
+  --background: oklch(0.975 0.004 80);
+  --foreground: oklch(0.21 0.012 60);
+  --card: oklch(1 0 0);
   --card-foreground: var(--foreground);
-  --popover: oklch(0.997 0.003 88);
+  --popover: oklch(1 0 0);
   --popover-foreground: var(--foreground);
-  --muted: oklch(0.955 0.01 88);
-  --muted-foreground: oklch(0.5 0.02 150);
-  --border: oklch(0.915 0.01 88);
-  --input: oklch(0.89 0.012 88);
-  --ring: oklch(0.5 0.05 150);
+  --muted: oklch(0.955 0.005 80);
+  --muted-foreground: oklch(0.5 0.01 70);
+  --border: oklch(0.92 0.005 80);
+  --input: oklch(0.9 0.005 80);
+  --ring: oklch(0.55 0.1 40);
 
   --primary: var(--brand);
   --primary-foreground: var(--brand-cream);
-  --primary-hover: oklch(0.34 0.055 165);
-  --secondary: oklch(0.955 0.01 88);
+  --primary-hover: oklch(0.32 0.012 60);
+  --secondary: oklch(0.955 0.005 80);
   --secondary-foreground: var(--foreground);
-  --accent: oklch(0.945 0.022 135);
+  --accent: oklch(0.95 0.02 50);
   --accent-foreground: var(--foreground);
   --destructive: oklch(0.55 0.17 28);
 
-  /* Warm white sidebar; only the logo plate at its top is brand green. */
-  --sidebar: oklch(0.992 0.004 88);
-  --sidebar-foreground: oklch(0.42 0.02 150);
-  --sidebar-muted: oklch(0.62 0.015 110);
-  --sidebar-accent: oklch(0.945 0.022 135);
+  /* White sidebar; the logo plate at its top is ink. */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.42 0.01 70);
+  --sidebar-muted: oklch(0.62 0.01 70);
+  --sidebar-accent: oklch(0.95 0.02 50);
   --sidebar-accent-foreground: var(--brand);
   --sidebar-border: var(--border);
 
   /* Status pills: on time / in stock / completed, late / low, absent / critical / overdue, info */
-  /* Muted sage, never a saturated flag green. */
-  --success: oklch(0.47 0.07 145);
-  --success-soft: oklch(0.94 0.028 135);
+  --success: oklch(0.5 0.08 160);
+  --success-soft: oklch(0.95 0.025 160);
   --warning: oklch(0.56 0.11 70);
   --warning-soft: oklch(0.955 0.045 85);
   --danger: oklch(0.55 0.17 28);
@@ -58,48 +58,47 @@
   --info-soft: oklch(0.95 0.025 230);
 
   --chart-1: var(--brand);
-  --chart-2: oklch(0.7 0.05 140);
-  --chart-3: oklch(0.82 0.06 85);
-  --chart-4: oklch(0.64 0.11 38);
-  --chart-5: oklch(0.86 0.035 135);
-  --chart-grid: oklch(0.92 0.008 88);
+  --chart-2: oklch(0.64 0.13 45);
+  --chart-3: oklch(0.82 0.07 75);
+  --chart-4: oklch(0.7 0.05 250);
+  --chart-5: oklch(0.88 0.02 80);
+  --chart-grid: oklch(0.93 0.004 80);
 
-  --shadow-xs: 0 1px 2px oklch(0.25 0.03 165 / 0.05);
-  --shadow-card: 0 1px 2px oklch(0.25 0.03 165 / 0.04), 0 4px 14px -4px oklch(0.25 0.03 165 / 0.06);
-  --shadow-lift:
-    0 2px 4px oklch(0.25 0.03 165 / 0.05), 0 14px 32px -10px oklch(0.25 0.03 165 / 0.16);
+  --shadow-xs: 0 1px 2px oklch(0.2 0.01 60 / 0.05);
+  --shadow-card: 0 1px 2px oklch(0.2 0.01 60 / 0.04), 0 6px 20px -8px oklch(0.2 0.01 60 / 0.08);
+  --shadow-lift: 0 2px 4px oklch(0.2 0.01 60 / 0.05), 0 14px 32px -10px oklch(0.2 0.01 60 / 0.16);
 }
 
 .dark {
-  --background: oklch(0.185 0.025 165);
-  --foreground: oklch(0.955 0.012 88);
-  --card: oklch(0.225 0.03 165);
+  --background: oklch(0.17 0.006 60);
+  --foreground: oklch(0.955 0.006 80);
+  --card: oklch(0.215 0.007 60);
   --card-foreground: var(--foreground);
-  --popover: oklch(0.24 0.03 165);
+  --popover: oklch(0.23 0.007 60);
   --popover-foreground: var(--foreground);
-  --muted: oklch(0.265 0.03 165);
-  --muted-foreground: oklch(0.72 0.025 150);
-  --border: oklch(0.31 0.03 165);
-  --input: oklch(0.34 0.03 165);
-  --ring: oklch(0.72 0.06 145);
+  --muted: oklch(0.26 0.007 60);
+  --muted-foreground: oklch(0.7 0.01 70);
+  --border: oklch(0.3 0.007 60);
+  --input: oklch(0.34 0.008 60);
+  --ring: oklch(0.72 0.1 45);
 
-  /* Same green hue, lifted so it reads on the dark canvas. */
-  --primary: oklch(0.82 0.05 140);
-  --primary-foreground: oklch(0.2 0.035 165);
-  --primary-hover: oklch(0.88 0.05 140);
-  --secondary: oklch(0.27 0.03 165);
-  --accent: oklch(0.3 0.03 155);
+  /* Light ink on the dark canvas. */
+  --primary: oklch(0.94 0.008 80);
+  --primary-foreground: oklch(0.2 0.01 60);
+  --primary-hover: oklch(0.99 0.004 80);
+  --secondary: oklch(0.26 0.007 60);
+  --accent: oklch(0.3 0.025 50);
   --destructive: oklch(0.68 0.17 25);
 
-  --sidebar: oklch(0.155 0.025 165);
-  --sidebar-foreground: oklch(0.8 0.02 140);
-  --sidebar-muted: oklch(0.62 0.03 150);
-  --sidebar-accent: oklch(0.27 0.04 165);
+  --sidebar: oklch(0.145 0.006 60);
+  --sidebar-foreground: oklch(0.78 0.01 70);
+  --sidebar-muted: oklch(0.6 0.01 70);
+  --sidebar-accent: oklch(0.27 0.03 50);
   --sidebar-accent-foreground: var(--brand-cream);
-  --sidebar-border: oklch(0.27 0.03 165);
+  --sidebar-border: oklch(0.26 0.007 60);
 
-  --success: oklch(0.78 0.08 145);
-  --success-soft: oklch(0.3 0.04 150);
+  --success: oklch(0.76 0.09 160);
+  --success-soft: oklch(0.3 0.04 160);
   --warning: oklch(0.8 0.12 80);
   --warning-soft: oklch(0.32 0.05 80);
   --danger: oklch(0.72 0.15 25);
@@ -107,12 +106,12 @@
   --info: oklch(0.76 0.09 230);
   --info-soft: oklch(0.3 0.04 230);
 
-  --chart-1: oklch(0.82 0.05 140);
-  --chart-2: oklch(0.6 0.05 145);
-  --chart-3: oklch(0.8 0.07 90);
-  --chart-4: oklch(0.7 0.12 35);
-  --chart-5: oklch(0.5 0.06 160);
-  --chart-grid: oklch(0.3 0.025 165);
+  --chart-1: oklch(0.94 0.008 80);
+  --chart-2: oklch(0.72 0.13 45);
+  --chart-3: oklch(0.8 0.08 75);
+  --chart-4: oklch(0.7 0.06 250);
+  --chart-5: oklch(0.45 0.01 70);
+  --chart-grid: oklch(0.3 0.006 60);
 
   --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.3);
   --shadow-card: 0 1px 2px oklch(0 0 0 / 0.25), 0 6px 18px -6px oklch(0 0 0 / 0.35);
