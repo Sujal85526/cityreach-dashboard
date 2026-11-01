@@ -346,7 +346,7 @@ export function seedBusiness(
     return d.slice(0, 7)
   })
   const expenseTemplates = [
-    ['Rent', 'Shop rent (monthly)', 4500, false, 'Bank transfer', '01'],
+    ['Rent', 'Shop rent (monthly)', 4500, false, 'Bank transfer', '26'],
     ['Utilities', 'Electricity and gas', 640, true, 'Bank transfer', '05'],
     ['Utilities', 'Water and drainage', 118, false, 'Bank transfer', '09'],
     ['Utilities', 'Broadband and card terminal', 74, true, 'Bank transfer', '12'],

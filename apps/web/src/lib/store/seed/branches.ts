@@ -265,17 +265,20 @@ export function seedBranches(db: SeedDb, today: string) {
       ['Supplies', 'Weekly stock top-up', Math.round(plan.dailySales * 0.7)],
       ['Utilities', 'Electricity and gas', 520],
     ]
-    expenses.forEach(([category, description, amount], i) =>
+    // Monthly bills fall late in the month, so the first days never show a month of costs against a few days of sales.
+    expenses.forEach(([category, description, amount], i) => {
+      const date = `${month}-${24 + i}`
+      if (date > today) return
       put(COLLECTIONS.expenses, `${prefix}-expense-${i + 1}`, {
         ...base(),
-        date: `${month}-0${i + 1}`,
+        date,
         category,
         description,
         amount,
         vat: 0,
         paymentMethod: 'Bank transfer',
-      }),
-    )
+      })
+    })
 
     // ---- Last month's payslips ----
     const lastMonth = addDays(`${month}-01`, -1).slice(0, 7)
