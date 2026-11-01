@@ -1,9 +1,7 @@
 /**
- * The demo logins shown on the sign-in screen ("Try the demo"). The password is public on
- * purpose: this is a demo with no backend, so there is nothing to protect.
+ * Login IDs of the seeded people the README documents. The shared password is kept out of the
+ * app code on purpose (see README -> Demo logins); only tests know it.
  */
-export const DEMO_PASSWORD = 'Demo@1234'
-
 export interface DemoLogin {
   role: 'owner' | 'manager' | 'employee'
   /** Login ID the person types. */

@@ -4,7 +4,6 @@ import {
   userAccessSchema,
   type Credential,
   type DeviceCredential,
-  type Role,
   type User,
   type UserAccess,
   deviceLabelSchema,
@@ -46,8 +45,8 @@ export interface SessionUser {
 
 /**
  * The session is just "which person is signed in", kept in localStorage. Role and branch still
- * come from that person's profile in the store. Signing in (password, fingerprint or the demo
- * quick-enter) ends in `startSession`.
+ * come from that person's profile in the store. Signing in (password or fingerprint) ends in
+ * `startSession`.
  *
  * Everything below `getProfile` is the part of the app that a real backend would own: checking
  * passwords, issuing and verifying fingerprint challenges, and starting a server session. The
@@ -93,35 +92,10 @@ export function subscribeToSession(callback: (user: SessionUser | null) => void)
   }
 }
 
-export interface DemoPerson {
-  uid: string
-  name: string
-  role: Role
-  position: string
-}
-
-/** Everyone who can be picked on the landing screen. */
-export async function listDemoPeople(): Promise<DemoPerson[]> {
-  const snap = await getDocs(
-    query(collection(db, COLLECTIONS.users), where('status', '==', 'active')),
-  )
-  return snap.docs
-    .filter((d) => !d.get('extraBranch')) // staff of the owner's other branches aren't sign-in choices
-    .map((d) => fromDoc<User>(d))
-    .map((u) => ({ uid: u.id, name: u.name, role: u.role, position: u.position }))
-}
-
 function startSession(session: SessionUser) {
   localStorage.setItem(STORAGE_KEY, session.uid)
   listeners.forEach((l) => l())
   return session
-}
-
-/** Demo quick-enter ("Try the demo" and the role switcher): acts as the person, no password. */
-export async function signInAs(uid: string): Promise<SessionUser> {
-  const session = await loadSession(uid)
-  if (!session) throw new Error('That person is not available in the demo.')
-  return startSession(session)
 }
 
 export async function signOut() {
@@ -296,7 +270,7 @@ export async function changeOwnPassword(
 const devices = collection(db, COLLECTIONS.deviceCredentials)
 const deviceRef = (id: string) => doc(db, COLLECTIONS.deviceCredentials, id)
 
-/** Where the page is served from. A server knows this itself; in the demo the page tells us. */
+/** Where the page is served from. A server knows this itself; here the page tells us. */
 export interface RelyingParty {
   rpId: string
   origin: string

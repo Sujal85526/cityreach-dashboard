@@ -10,16 +10,8 @@ import { Label } from '@/components/ui/label'
 import { AuthError } from '../api'
 import { useSignInWithPassword } from '../queries'
 
-/** What the "Try the demo" strip puts into the form. */
-export interface Prefill {
-  loginId: string
-  password: string
-  /** Changes on every click so the same person can be filled in twice. */
-  nonce: number
-}
-
 /** ID + password sign-in with inline errors, a show/hide button and a lockout countdown. */
-export function LoginForm({ prefill }: { prefill: Prefill | null }) {
+export function LoginForm() {
   const signIn = useSignInWithPassword()
   const [failure, setFailure] = useState<string | null>(null)
   const [lockedFor, setLockedFor] = useState(0)
@@ -27,15 +19,7 @@ export function LoginForm({ prefill }: { prefill: Prefill | null }) {
     resolver: zodResolver(loginFormSchema),
     defaultValues: { loginId: '', password: '' },
   })
-  const { register, handleSubmit, setValue, setFocus, formState } = form
-
-  useEffect(() => {
-    if (!prefill) return
-    setValue('loginId', prefill.loginId, { shouldValidate: false })
-    setValue('password', prefill.password, { shouldValidate: false })
-    setFailure(null)
-    setFocus('password')
-  }, [prefill, setValue, setFocus])
+  const { register, handleSubmit, setFocus, formState } = form
 
   // Count the lockout down, so the button comes back by itself.
   useEffect(() => {

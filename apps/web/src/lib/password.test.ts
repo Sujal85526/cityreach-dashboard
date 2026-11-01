@@ -1,4 +1,4 @@
-import { DEMO_PASSWORD } from '@cityreach/shared'
+import { DEMO_PASSWORD } from '@/test/demo-password'
 import { describe, expect, it } from 'vitest'
 import { hashPassword, verifyPassword } from './password'
 import { SEED_PASSWORD_RECORD, SEED_SALT } from './store/seed/credentials'

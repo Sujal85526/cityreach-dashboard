@@ -161,7 +161,7 @@ const envWith = (
 const user = {
   uid: 'maya',
   name: 'Maya Patel',
-  email: 'maya@cityreach.demo',
+  email: 'maya@cityreach.co.uk',
   access: { role: 'employee', branchId: 'central' },
 } as SessionUser
 

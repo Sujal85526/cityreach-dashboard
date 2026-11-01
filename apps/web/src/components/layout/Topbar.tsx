@@ -18,7 +18,6 @@ import { useCurrentUser } from '@/features/auth/session'
 import { NotificationBell } from '@/features/notifications/components/NotificationBell'
 import { useTheme } from '@/hooks/use-theme'
 import { LogoutDialog } from './LogoutDialog'
-import { RoleSwitcher } from './RoleSwitcher'
 
 export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
   const user = useCurrentUser()
@@ -87,7 +86,6 @@ export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
             <div className="text-xs text-muted-foreground">{user.email}</div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <RoleSwitcher />
           <DropdownMenuItem asChild>
             <Link to={isManagerRole(user.access.role) ? '/settings/security' : '/me/security'}>
               <KeyRound /> Password &amp; fingerprint

@@ -1,20 +1,17 @@
-import { DEMO_PASSWORD } from '@cityreach/shared'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Navigate } from 'react-router'
 import { preloadHomePages } from '@/app/preload'
 import { homePathFor } from '@/app/routes'
 import { Wordmark } from '@/components/brand/Logo'
-import { DemoStrip } from '../components/DemoStrip'
 import { FingerprintButton } from '../components/FingerprintButton'
-import { LoginForm, type Prefill } from '../components/LoginForm'
+import { LoginForm } from '../components/LoginForm'
 import { useSession } from '../session'
 
 const delay = (ms: number) => ({ '--delay': `${ms}ms` }) as React.CSSProperties
 
-/** Branded sign-in screen: ID + password, fingerprint, and a "Try the demo" strip for clients. */
+/** Branded sign-in screen: login ID + password, or fingerprint. */
 export function LandingPage() {
   const session = useSession()
-  const [prefill, setPrefill] = useState<Prefill | null>(null)
 
   useEffect(() => {
     const id = setTimeout(preloadHomePages, 300)
@@ -44,12 +41,12 @@ export function LandingPage() {
             className="animate-fade-up text-base leading-relaxed text-brand-cream/70"
             style={delay(90)}
           >
-            Staff, attendance, tasks, stock and sales for growing local businesses. This is a live
-            demo: sign in with an ID and password, or try one of the demo logins.
+            Staff, attendance, tasks, stock and sales for growing local businesses. Sign in to see
+            your whole business at a glance.
           </p>
         </div>
         <p className="relative hidden text-xs tracking-wide text-brand-cream/50 lg:block">
-          Demo data lives only in your browser. Nothing is sent anywhere.
+          © {new Date().getFullYear()} City Reach. All rights reserved.
         </p>
       </aside>
 
@@ -63,7 +60,7 @@ export function LandingPage() {
           </header>
 
           <div className="space-y-5">
-            <LoginForm prefill={prefill} />
+            <LoginForm />
             <div className="flex items-center gap-3 text-xs tracking-wide text-muted-foreground uppercase">
               <span className="h-px flex-1 bg-border" aria-hidden />
               or
@@ -71,10 +68,6 @@ export function LandingPage() {
             </div>
             <FingerprintButton />
           </div>
-
-          <DemoStrip
-            onUse={(loginId) => setPrefill({ loginId, password: DEMO_PASSWORD, nonce: Date.now() })}
-          />
         </div>
       </main>
     </div>

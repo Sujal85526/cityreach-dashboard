@@ -17,7 +17,7 @@ export function LogoutDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Sign out?"
-      description="Your demo changes stay saved in this browser. Sign in again to continue."
+      description="You will need your login ID and password, or your fingerprint, to get back in."
       confirmLabel="Sign out"
       pending={signOut.isPending}
       onConfirm={() => signOut.mutate(undefined, { onError: (e) => toast.error(errorMessage(e)) })}

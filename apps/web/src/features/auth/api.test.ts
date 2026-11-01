@@ -1,4 +1,5 @@
-import { DEMO_LOGINS, DEMO_PASSWORD, COLLECTIONS } from '@cityreach/shared'
+import { COLLECTIONS, DEMO_LOGINS } from '@cityreach/shared'
+import { DEMO_PASSWORD } from '@/test/demo-password'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createEmployee, updateEmployee } from '@/features/employees/api'
 import { collection, db, getDocs, resetDemoData, updateDoc, doc, Timestamp } from '@/lib/store'
@@ -37,7 +38,7 @@ const rejection = (p: Promise<unknown>) =>
     (e: unknown) => e as AuthError,
   )
 const person = {
-  email: 'new.hire@cityreach.demo',
+  email: 'new.hire@cityreach.co.uk',
   phone: '',
   position: 'Barista',
   role: 'employee' as const,
@@ -70,6 +71,12 @@ describe('seeded logins', () => {
 })
 
 describe('signing in', () => {
+  it('has no way in without a valid ID and password (no quick-enter)', async () => {
+    const api = await import('./api')
+    expect(Object.keys(api).filter((k) => /signInAs|listDemo/.test(k))).toEqual([])
+    expect(memory.has('cityreach-session')).toBe(false)
+  })
+
   it('ignores case and surrounding spaces in the ID', async () => {
     expect((await signInWithPassword('  Owner ', DEMO_PASSWORD)).uid).toBe('amara')
   })

@@ -5,10 +5,8 @@ import {
   countKnownDevices,
   getLoginId,
   getProfile,
-  listDemoPeople,
   listDevices,
   removeDevice,
-  signInAs,
   signInWithPassword,
   signOut,
 } from './api'
@@ -18,21 +16,9 @@ import { loginWithFingerprint, setUpFingerprint } from './fingerprint'
 export const useProfile = (uid: string) =>
   useQuery({ queryKey: qk.employee(uid), queryFn: () => getProfile(uid) })
 
-export const useDemoPeople = () =>
-  useQuery({ queryKey: ['demoPeople'], queryFn: listDemoPeople, staleTime: 0 })
-
 /** The login ID of a person, for the manager's edit dialog and the profile. */
 export const useLoginId = (uid: string) =>
   useQuery({ queryKey: ['loginId', uid], queryFn: () => getLoginId(uid), staleTime: 0 })
-
-/** Switching person clears cached data, so one role never sees the previous role's screens. */
-export function useSignIn() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: (uid: string) => signInAs(uid),
-    onSuccess: () => queryClient.clear(),
-  })
-}
 
 export function useSignInWithPassword() {
   const queryClient = useQueryClient()
