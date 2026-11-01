@@ -14,7 +14,7 @@ export type WriteOp =
 
 const STORAGE_KEY = 'cityreach-demo-data'
 /** Bump when the seed or document shapes change, so browsers holding older demo data start fresh. */
-const SEED_VERSION = 5
+const SEED_VERSION = 6
 
 let data: Collections = {}
 let loaded = false
@@ -78,6 +78,12 @@ function ensureLoaded() {
         seededOn = parsed.seededOn
         return
       }
+      // Same seed version, new day: refresh the samples but keep who can sign in.
+      if (parsed.version === SEED_VERSION) {
+        data = parsed.data
+        reset(false, true)
+        return
+      }
     }
   } catch {
     // Corrupt or blocked storage: start from the seed.
@@ -85,10 +91,29 @@ function ensureLoaded() {
   reset(false)
 }
 
+/**
+ * Sign-in data that survives the automatic daily refresh, so a fingerprint or a changed password
+ * keeps working tomorrow. It is dropped only for people who no longer exist, and by an explicit
+ * "Reset demo data" (which restores the demo passwords).
+ */
+const KEPT_ON_REFRESH = { credentials: 'id', deviceCredentials: 'userId' } as const
+
+function keepSignIns(old: Collections, fresh: Collections) {
+  const users = fresh.users ?? {}
+  for (const [name, owner] of Object.entries(KEPT_ON_REFRESH)) {
+    for (const [id, d] of Object.entries(old[name] ?? {})) {
+      const uid = owner === 'id' ? id : String(d[owner])
+      if (users[uid]) (fresh[name] ??= {})[id] = d
+    }
+  }
+}
+
 /** Replaces everything with freshly seeded demo data. */
-export function reset(notify = true) {
+export function reset(notify = true, keepLogins = false) {
   if (!seeder) throw new Error('Demo data seed is not registered')
+  const before = data
   data = seeder()
+  if (keepLogins) keepSignIns(before, data)
   seededOn = today()
   loaded = true
   persist()
