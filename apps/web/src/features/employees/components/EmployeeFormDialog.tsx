@@ -156,7 +156,7 @@ export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2" noValidate>
+          <form onSubmit={onSubmit} className="grid items-start gap-4 sm:grid-cols-2" noValidate>
             <TextField
               control={form.control}
               name="name"
@@ -166,9 +166,15 @@ export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
             {!isEdit && (
               <TextField control={form.control} name="email" label="Email" type="email" />
             )}
-            <TextField control={form.control} name="phone" label="Phone" type="tel" />
+            <TextField
+              control={form.control}
+              name="phone"
+              label="Phone"
+              type="tel"
+              className={isEdit ? 'sm:col-span-2' : undefined}
+            />
             {(!isEdit || canEditLogin) && (
-              <>
+              <div className="grid items-start gap-4 sm:col-span-2 sm:grid-cols-2">
                 <TextField
                   control={form.control}
                   name="loginId"
@@ -187,7 +193,7 @@ export function EmployeeFormDialog({ open, onOpenChange, employee }: Props) {
                       : 'At least 8 characters. Share it with them safely.'
                   }
                 />
-              </>
+              </div>
             )}
             <FormField
               control={form.control}
