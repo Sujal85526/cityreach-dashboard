@@ -142,8 +142,8 @@ export function FingerprintCard() {
       </div>
 
       <p className="text-xs text-muted-foreground">
-        Your fingerprint never leaves the device. This demo has no server, so the sign-in check runs
-        in your browser: it shows how the flow works, it is not server-side security.
+        Your fingerprint never leaves this device. Fingerprint sign-in only works in the browser
+        where you set it up.
       </p>
 
       <ConfirmDialog

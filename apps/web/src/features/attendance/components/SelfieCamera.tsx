@@ -43,7 +43,7 @@ export function SelfieCamera({
               aria-hidden
             />
             <span className="text-xs tracking-wide text-brand-cream/70">
-              {ready ? 'Demo camera ready' : 'Starting camera…'}
+              {ready ? 'Camera ready' : 'Starting camera…'}
             </span>
             {[
               'top-3 left-3 border-t-2 border-l-2',

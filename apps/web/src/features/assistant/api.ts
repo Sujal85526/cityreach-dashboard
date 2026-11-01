@@ -172,7 +172,7 @@ const staticAnswer = (intent: Intent, c: AskContext): Answer | null => {
           }
     case 'howPassword':
       return {
-        text: 'Change your password in Settings, Security (or the account menu, top right, then Password & fingerprint). Forgotten it? Ask your manager to reset it, or use the demo logins on the sign-in screen.',
+        text: 'Change your password in Settings, Security (or the account menu, top right, then Password & fingerprint). Forgotten it? Ask your manager to reset it.',
         link: { to: isManager ? '/settings/security' : '/me/security', label: 'Open Security' },
       }
     default:

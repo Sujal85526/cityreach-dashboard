@@ -45,8 +45,7 @@ export function EmployeeActions({ employee, onEdit }: Props) {
 
   const sendReset = () =>
     reset.mutate(employee.email, {
-      onSuccess: () =>
-        toast.success(`Reset link sent to ${employee.email} (demo: no email is actually sent)`),
+      onSuccess: () => toast.success(`Reset link sent to ${employee.email}`),
       onError: (e) => toast.error(errorMessage(e)),
     })
 

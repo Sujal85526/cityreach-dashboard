@@ -68,7 +68,7 @@ export async function uploadDocument(
   const packed = await pack(input.file)
   if (packed.bytes.length > MAX_DOCUMENT_BYTES)
     throw new Error(
-      `Even compressed it's ${formatBytes(packed.bytes.length)}; the demo limit is 1 MB. Try a smaller file.`,
+      `Even compressed it's ${formatBytes(packed.bytes.length)}; the limit is 1 MB. Try a smaller file.`,
     )
 
   const ref = doc(documents)

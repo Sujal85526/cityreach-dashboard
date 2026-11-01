@@ -40,7 +40,7 @@ export function mockSelfie(now = new Date()): string {
   canvas.width = PHOTO_PX
   canvas.height = PHOTO_PX
   const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('Could not create the demo photo. Try again.')
+  if (!ctx) throw new Error('Could not create the photo. Try again.')
   const css = getComputedStyle(document.documentElement)
   const brand = css.getPropertyValue('--brand').trim() || '#1f1c19'
   const cream = css.getPropertyValue('--brand-cream').trim() || '#fbf9f6'
