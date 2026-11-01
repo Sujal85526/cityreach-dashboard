@@ -1,6 +1,7 @@
-import { ArrowLeft, HandCoins, Mail, Pencil, Phone, UserX } from 'lucide-react'
+import { ArrowLeft, HandCoins, KeyRound, Mail, Pencil, Phone, UserX } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
+import { useLoginId } from '@/features/auth/queries'
 import { EmployeeAvatar } from '@/components/common/EmployeeAvatar'
 import { EmptyState, ErrorState } from '@/components/common/EmptyState'
 import { StatusPill } from '@/components/common/StatusPill'
@@ -23,6 +24,7 @@ import { useEmployee } from '../queries'
 export function EmployeeProfilePage() {
   const { uid = '' } = useParams()
   const employee = useEmployee(uid)
+  const loginId = useLoginId(uid)
   const shifts = useShifts()
   const branch = useBranch()
   const [editing, setEditing] = useState(false)
@@ -69,6 +71,11 @@ export function EmployeeProfilePage() {
                 <span className="flex items-center gap-1">
                   <Mail className="size-3.5" /> {e.email}
                 </span>
+                {loginId.data && (
+                  <span className="flex items-center gap-1">
+                    <KeyRound className="size-3.5" aria-hidden /> ID {loginId.data}
+                  </span>
+                )}
                 {e.phone && (
                   <span className="flex items-center gap-1">
                     <Phone className="size-3.5" /> {e.phone}

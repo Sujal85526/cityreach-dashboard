@@ -45,7 +45,7 @@ export function LandingPage() {
             style={delay(90)}
           >
             Staff, attendance, tasks, stock and sales for growing local businesses. This is a live
-            demo: explore it as the owner, a manager or an employee.
+            demo: sign in with an ID and password, or try one of the demo logins.
           </p>
         </div>
         <p className="relative hidden text-xs tracking-wide text-brand-cream/50 lg:block">
