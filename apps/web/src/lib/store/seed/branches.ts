@@ -242,7 +242,7 @@ export function seedBranches(db: SeedDb, today: string) {
     }
 
     // ---- Sales (weekend peak) and this month's expenses ----
-    for (let back = 70; back >= 1; back--) {
+    for (let back = 70; back >= 0; back--) {
       const date = day(-back)
       const weekday = new Date(`${date}T12:00:00Z`).getUTCDay()
       const total = Math.round(

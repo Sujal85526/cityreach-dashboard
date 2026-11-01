@@ -322,7 +322,7 @@ export function seedBusiness(
   // ---- Finance: six months of takings (weekend peak, upward trend, a seasonal wobble) ----
   const weekdayFactor = [1.05, 0.82, 0.86, 0.9, 0.95, 1.12, 1.35]
   const closing = ['sofia', 'liam', 'noah', 'ella']
-  for (let back = 190; back >= 1; back--) {
+  for (let back = 190; back >= 0; back--) {
     const date = day(-back)
     const weekday = new Date(`${date}T12:00:00Z`).getUTCDay()
     const trend = (1 + (0.3 * (190 - back)) / 190) * (1 + 0.07 * Math.sin(back / 24))
