@@ -34,6 +34,10 @@ export const COLLECTIONS = {
   activity: 'activity',
   performance: 'performance',
   reports: 'reports',
+  /** Login ID + password hash per user (doc id = user id). Kept apart from `users` so profile reads never carry hashes. */
+  credentials: 'credentials',
+  /** WebAuthn (fingerprint / Face ID) credentials registered in this browser; doc id = credential id. */
+  deviceCredentials: 'deviceCredentials',
 } as const
 
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS]

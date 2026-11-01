@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { ROLES } from '../constants/collections'
+import { loginIdSchema, passwordSchema } from './auth'
 import { idSchema, timeOfDaySchema, timestampsSchema } from './common'
 
 export const EMPLOYMENT_STATUSES = ['active', 'on_leave', 'inactive'] as const
@@ -64,9 +65,11 @@ export const employeeFormSchema = userSchema.pick({
 })
 export type EmployeeForm = z.infer<typeof employeeFormSchema>
 
-/** Adding an employee: profile details plus the contact email (the demo has no logins). */
+/** Adding an employee: profile details, the contact email, and the sign-in they will use. */
 export const newEmployeeSchema = employeeFormSchema.extend({
   email: z.email('Enter a valid email'),
+  loginId: loginIdSchema,
+  password: passwordSchema,
 })
 export type NewEmployee = z.infer<typeof newEmployeeSchema>
 
