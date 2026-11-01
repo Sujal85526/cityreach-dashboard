@@ -57,7 +57,10 @@ export function AssistantPanel({ isOpen, onClose }: { isOpen: boolean; onClose: 
   const bottom = useRef<HTMLDivElement>(null)
   const input = useRef<HTMLInputElement>(null)
 
-  useEffect(() => bottom.current?.scrollIntoView({ block: 'end' }), [messages, isOpen])
+  useEffect(() => {
+    // Braces matter: an effect must return nothing or a cleanup function, never scrollIntoView's result.
+    bottom.current?.scrollIntoView({ block: 'end' })
+  }, [messages, isOpen])
   useEffect(() => {
     if (isOpen) input.current?.focus()
   }, [isOpen])
