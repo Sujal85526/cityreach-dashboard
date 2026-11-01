@@ -35,7 +35,7 @@ implemented over plain objects:
   re-seeded, so the sample dates always look current.
 - `seed/` builds the demo business: staff, shifts, two weeks of attendance, tasks, stock,
   suppliers, purchase orders, sales and expenses, payslips, feedback, documents, rota and more.
-- Settings -> Reset demo data wipes everything and re-seeds.
+- Settings -> Reset data wipes everything and re-seeds.
 
 ## Demo mocks for server-side things
 

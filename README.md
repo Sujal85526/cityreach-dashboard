@@ -10,7 +10,7 @@ data lives in your browser.
 
 ## What you can do
 
-Sign in with a login ID and password (or the **Try the demo** strip on the sign-in screen) and explore:
+Sign in with a login ID and password (the logins are listed under [Demo logins](#demo-logins) below, not in the app) and explore:
 
 ![Role picker](docs/screenshots/landing.jpg)
 
@@ -21,7 +21,7 @@ Sign in with a login ID and password (or the **Try the demo** strip on the sign-
   payslips, leave requests, training & goals.
 
 Writes really work: clock in, create and move tasks, receive stock, approve leave, add sales, and
-so on. Changes are saved to `localStorage`. **Settings -> Reset demo data** restores the
+so on. Changes are saved to `localStorage`. **Settings -> Reset data** restores the
 original sample business (it also refreshes itself daily so the dates always look current).
 
 | Manager, tablet                            | Employee, phone                                            |
@@ -47,11 +47,10 @@ Password for everyone: `Demo@1234`.
 | Employee | `employee`                                                                 | Maya Patel                   |
 | Others   | `liam`, `noah`, `sofia`, `jamal`, `ella`, `priya`, `tomas`, `sq-hana`, ... | the rest of the seeded staff |
 
-The **Try the demo** strip on the sign-in screen shows these: **Use** fills the form, **Enter**
-skips it (the old no-password quick-enter, and the account menu's _Switch role_, still work so a
-client can look around quickly). IDs are not case-sensitive. After 5 wrong passwords in a row an
-account waits 30 seconds. **Settings -> Reset demo data** restores the demo passwords and removes
-fingerprints; the automatic daily refresh keeps passwords and fingerprints.
+The sign-in screen does not show these, and there is no quick-enter: every sign-in needs a valid
+ID and password (or a registered fingerprint). IDs are not case-sensitive. After 5 wrong passwords
+in a row an account waits 30 seconds. **Settings -> Reset data** restores the original passwords
+and removes fingerprints; the automatic daily refresh keeps passwords and fingerprints.
 
 ### How fingerprint works
 
@@ -84,8 +83,8 @@ keeps, and the app checks the signature with the public key stored at set-up.
 This is a demo with **no server**, so none of this is server-side security.
 
 - Passwords are never stored in plain text (PBKDF2-SHA256, 210,000 rounds, a random salt per
-  password, WebCrypto), but the hashes live in this browser's `localStorage`, and the demo
-  quick-enter signs anyone in without a password. Anyone with this browser's storage or devtools can
+  password, WebCrypto), but the hashes live in this browser's `localStorage`, and the signed-in
+  session is just a value in `localStorage`. Anyone with this browser's storage or devtools can
   bypass every check.
 - The fingerprint checks run in the browser against the stored public key. They show the real flow
   and reject forged or replayed responses, but real security needs them on a server.
