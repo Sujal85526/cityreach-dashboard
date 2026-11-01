@@ -87,7 +87,7 @@ export function FinancePage() {
           icon={Wallet}
           loading={loading}
           value={formatMoney(salesSum)}
-          caption={`${sales.data?.length ?? 0} days entered`}
+          caption={`${sales.data?.length ?? 0} ${sales.data?.length === 1 ? 'day' : 'days'} entered`}
         />
         <StatCard
           label="Expenses"

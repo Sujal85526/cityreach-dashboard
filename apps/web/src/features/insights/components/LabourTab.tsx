@@ -119,7 +119,7 @@ export function LabourTab() {
           icon={Wallet}
           loading={loading}
           value={formatMoney(salesSum)}
-          caption={`${sales.days?.length ?? 0} days entered`}
+          caption={`${sales.days?.length ?? 0} ${sales.days?.length === 1 ? 'day' : 'days'} entered`}
         />
       </div>
 
