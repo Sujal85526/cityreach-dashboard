@@ -94,7 +94,7 @@ export function FinancePage() {
           icon={Receipt}
           loading={loading}
           value={formatMoney(expenseSum)}
-          caption={`${expenses.data?.length ?? 0} expenses`}
+          caption={`${expenses.data?.length ?? 0} ${expenses.data?.length === 1 ? 'expense' : 'expenses'}`}
         />
         <StatCard
           label="Payroll"

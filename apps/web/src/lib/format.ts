@@ -74,7 +74,11 @@ export const formatQty = (quantity: number, unit: string) =>
 /** Whole amounts without decimals ("£3,000"), otherwise always two ("£3,446.30"). */
 export const formatMoney = (n: number) => {
   const digits = Number.isInteger(Math.round(n * 100) / 100) ? 0 : 2
-  return `£${n.toLocaleString('en-GB', { minimumFractionDigits: digits, maximumFractionDigits: digits })}`
+  const abs = Math.abs(n).toLocaleString('en-GB', {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  })
+  return `${n < 0 ? '-' : ''}£${abs}`
 }
 
 /** Local date key "2026-10-20" → "20 Oct 2026" (no timezone shift). */
