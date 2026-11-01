@@ -185,7 +185,7 @@ export function DashboardPage() {
           label="Live activity"
           icon={ActivityIcon}
           loading={lastHour.isPending}
-          value={`${lastHour.data ?? 0} events`}
+          value={`${lastHour.data ?? 0} ${lastHour.data === 1 ? 'event' : 'events'}`}
           caption="In the last hour"
         />
       </div>
